@@ -25,6 +25,7 @@ import { WHITE_NOTES, BLACK_NOTES } from "#scripts/const";
 <style lang="scss">
 
 .keyboard {
+  padding: 0.1rem;
   display: flex;
   flex-flow: row nowrap;
   gap: 0.1rem;
@@ -32,8 +33,11 @@ import { WHITE_NOTES, BLACK_NOTES } from "#scripts/const";
 }
 
 .key {
-  width: 1rem;
-  height: 3rem;
+  width: 1.5rem;
+  height: 4rem;
+  display: flex;
+  justify-content: center;
+  align-items: end;
   @include font-fun;
   font-size: 75%;
   color: #aaa;

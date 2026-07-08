@@ -2,11 +2,13 @@
 
 import "#styles/essence.scss";
 
+import { synth } from "#scripts/synth";
+
 import { bind_keybinds } from "./keybinds";
 
 import Overlay from "#parts/overlay.svelte";
 import Keyboard from "#parts/keyboard.svelte";
-import Envelope from "#parts/envelope.svelte";
+import GraphEditor from "#parts/graph-editor.svelte";
 
 import { onMount } from "svelte";
 
@@ -22,12 +24,20 @@ onMount(() => {
 
 <main>
   <div class="core">
-    <div class="left"></div>
+    <div class="side">
+      <GraphEditor bind:value={synth.wave}
+        bounds={{ x: { upper: 2 * Math.PI }, y: { lower: -1.0 }}}
+      />
 
-    <div class="right">
-      <Envelope />
-      <Envelope />
-      <Envelope />
+      <GraphEditor bind:value={synth.env} />
+    </div>
+
+    <div class="side">
+      <GraphEditor bind:value={synth.env} />
+      <GraphEditor bind:value={synth.wave}
+        bounds={{ x: { upper: 2 * Math.PI }, y: { lower: -1.0 }}}
+      />
+
     </div>
   </div>
   
@@ -39,6 +49,8 @@ onMount(() => {
 
 <style lang="scss">
 
+$flex-gap: 0.4rem;
+
 main {
   width: 100vw;
   height: 100vh;
@@ -46,22 +58,21 @@ main {
   flex-flow: column nowrap;
   justify-content: stretch;
   align-items: stretch;
+  gap: $flex-gap;
 }
 
 .core {
   flex: 1;
   display: flex;
   flex-flow: row nowrap;
+  gap: $flex-gap;
 }
 
-.left {
-  flex: 1;
-}
-
-.right {
+.side {
   flex: 1;
   display: flex;
   flex-flow: column nowrap;
+  gap: $flex-gap;
 }
 
 .lower {

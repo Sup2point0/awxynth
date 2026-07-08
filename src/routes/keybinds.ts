@@ -9,6 +9,8 @@ export function bind_keybinds()
 
 function handle_keydown(e: KeyboardEvent)
 {
+  if (document.activeElement?.tagName.toLowerCase() === "textarea") return;
+
   keybind: {
     switch (e.key.toUpperCase()) {
       case "A":   synth.play(Note.A,       4); break keybind;

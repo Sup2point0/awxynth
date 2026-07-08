@@ -11,6 +11,8 @@ export class Synth
 
   active_notes = new SvelteSet<OctavedNoteRepr>();
 
+  wave: latex = $state(DEFAULTS.WAVE);
+
   env: latex = $state(DEFAULTS.ENV);
 
   /**
