@@ -1,11 +1,15 @@
-import type { int } from "#scripts/types";
 import { Note } from "#scripts/types";
+import type { int, OctavedNoteRepr } from "#scripts/types";
 import { PITCHES } from "#scripts/const";
+
+import { SvelteSet } from "svelte/reactivity";
 
 
 export class Synth
 {
   ctx: AudioContext | null = null;
+
+  active_notes = new SvelteSet<OctavedNoteRepr>();
 
   /**
    * Setup the synthesiser.
@@ -24,8 +28,6 @@ export class Synth
   play(note: Note, octave: int)
   {
     if (!this.ctx) return;
-
-    console.log(`playing ${Note[note]} of octave ${octave}`);
     
     let real = new Float32Array(4096);
     let imag = new Float32Array(4096);
@@ -42,8 +44,12 @@ export class Synth
 
     osc.frequency.value = PITCHES[octave][note];
     osc.start();
+    this.active_notes.add(`${note}${octave}`);
 
-    setTimeout(() => osc.stop(), 1000);
+    setTimeout(() => {
+      osc.stop()
+      this.active_notes.delete(`${note}${octave}`);
+    }, 100);
   }
 }
 

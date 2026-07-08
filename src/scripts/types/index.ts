@@ -1,3 +1,3 @@
 export * from "./root";
 
-export { Note } from "./notes";
+export { Note, type OctavedNoteRepr } from "./notes";
