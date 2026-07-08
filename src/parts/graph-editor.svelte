@@ -58,6 +58,17 @@ onMount(() =>
       }
     }
   });
+
+  (window
+    .matchMedia("(prefers-color-scheme: dark)")
+    .addEventListener("change", ({ matches }) => {
+      if (matches) {
+        desmos.updateSettings({ invertedColors: true });
+      } else {
+        desmos.updateSettings({ invertedColors: false });
+      }
+    })
+  );
 });
 
 $effect(() => {
@@ -102,11 +113,12 @@ $effect(() => {
   padding: 0.5rem;
   display: flex;
   align-items: center;
-  background-color: white;
+  background-color: light-dark(white, black);
   border: 1px solid grey;
 
   .input {
     width: 100%;
+    color: light-dark(black, white);
     border: none;
     outline: none;
     box-shadow: none;
