@@ -4,6 +4,9 @@ import { onMount } from "svelte";
 
 
 let ctx: AudioContext;
+let osc: OscillatorNode;
+
+let freq = $state(440);
 
 
 onMount(() => {
@@ -16,10 +19,15 @@ onMount(() => {
 
   ctx = new AudioContext();
   let wavetable = ctx.createPeriodicWave(real, imag);
-  let osc = ctx.createOscillator();
+  osc = ctx.createOscillator();
   osc.setPeriodicWave(wavetable);
   osc.connect(ctx.destination);
   osc.start(0);
+});
+
+$effect(() => {
+  freq;
+  if (osc) osc.frequency.value = freq;
 });
 
 </script>
@@ -28,3 +36,5 @@ onMount(() => {
 <button onclick={() => ctx.resume()}>
   Play
 </button>
+
+<input type="range" bind:value={freq} />
