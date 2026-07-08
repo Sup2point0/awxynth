@@ -1,1 +1,1 @@
-export { synth } from "./synth";
+export { synth } from "./synth.svelte.ts";

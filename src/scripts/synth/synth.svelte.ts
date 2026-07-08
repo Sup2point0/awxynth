@@ -1,6 +1,6 @@
 import { Note } from "#scripts/types";
-import type { int, OctavedNoteRepr } from "#scripts/types";
-import { PITCHES } from "#scripts/const";
+import type { latex, OctavedNoteRepr } from "#scripts/types";
+import { DEFAULTS, PITCHES } from "#scripts/const";
 
 import { SvelteSet } from "svelte/reactivity";
 
@@ -10,6 +10,8 @@ export class Synth
   ctx: AudioContext | null = null;
 
   active_notes = new SvelteSet<OctavedNoteRepr>();
+
+  env: latex = $state(DEFAULTS.ENV);
 
   /**
    * Setup the synthesiser.

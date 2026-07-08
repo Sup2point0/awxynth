@@ -6,13 +6,6 @@ import { synth } from "#scripts/synth";
 import { Note, type int } from "#scripts/types";
 import { WHITE_NOTES, BLACK_NOTES } from "#scripts/const";
 
-
-interface Props {
-  octave: int;
-}
-
-let { octave }: Props = $props();
-
 </script>
 
 

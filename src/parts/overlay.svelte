@@ -8,10 +8,6 @@ import { blur } from "svelte/transition";
 
 let open = $state(true);
 
-onMount(() => {
-  setTimeout(close, 1000);
-});
-
 
 function close() {
   open = false;
@@ -30,6 +26,7 @@ function close() {
     transition:blur={{ duration: 1000 }}
   >
     <h1> awxynth </h1>
+    <p> click to start </p>
   </aside>
 {/if}
 
@@ -42,9 +39,12 @@ aside {
   position: fixed;
   top: 0;
   left: 0;
+  z-index: 100;
   display: flex;
+  flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
+  gap: 2rem;
   background: linear-gradient(to right in oklch, #ff0090, #9090f1);
 }
 
@@ -52,6 +52,11 @@ h1 {
   @include font-fun;
   font-size: 250%;
   color: white;
+}
+
+p {
+  @include font-fun;
+  color: oklch(0.8074 0.1603 75.71);
 }
 
 </style>

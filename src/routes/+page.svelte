@@ -6,6 +6,7 @@ import { bind_keybinds } from "./keybinds";
 
 import Overlay from "#parts/overlay.svelte";
 import Keyboard from "#parts/keyboard.svelte";
+import Envelope from "#parts/envelope.svelte";
 
 import { onMount } from "svelte";
 
@@ -19,18 +20,26 @@ onMount(() => {
 
 <Overlay />
 
-<div class="root">
-  <main></main>
-  
-  <div class="keyboard-container">
-    <Keyboard octave={4} />
+<main>
+  <div class="core">
+    <div class="left"></div>
+
+    <div class="right">
+      <Envelope />
+      <Envelope />
+      <Envelope />
+    </div>
   </div>
-</div>
+  
+  <div class="lower">
+    <Keyboard />
+  </div>
+</main>
 
 
 <style lang="scss">
 
-.root {
+main {
   width: 100vw;
   height: 100vh;
   display: flex;
@@ -39,12 +48,23 @@ onMount(() => {
   align-items: stretch;
 }
 
-main {
+.core {
   flex: 1;
-  background: lightgrey;
+  display: flex;
+  flex-flow: row nowrap;
 }
 
-.keyboard-container {
+.left {
+  flex: 1;
+}
+
+.right {
+  flex: 1;
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+.lower {
   flex: 0;
   background: #444;
 }
