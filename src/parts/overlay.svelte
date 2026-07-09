@@ -44,18 +44,19 @@ aside {
   flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
-  gap: 2rem;
+  gap: 4rem;
   background: linear-gradient(to right in oklch, #ff0090, #9090f1);
 }
 
 h1 {
   @include font-fun;
-  font-size: 250%;
+  font-size: 500%;
   color: white;
 }
 
 p {
   @include font-fun;
+  font-size: 150%;
   color: oklch(0.8074 0.1603 75.71);
 }
 
