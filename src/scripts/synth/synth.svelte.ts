@@ -1,6 +1,6 @@
 import { Note } from "#scripts/types";
-import type { int, latex, OctavedNoteRepr } from "#scripts/types";
-import { DEFAULTS, PITCHES } from "#scripts/const";
+import type { int, Amplitude, Latex, OctavedNoteRepr } from "#scripts/types";
+import { FUNC_SAMPLE_RES, DEFAULTS, NOTE_FREQUENCIES } from "#scripts/const";
 
 import { SvelteSet } from "svelte/reactivity";
 
@@ -11,9 +11,29 @@ export class Synth
 
   active_notes = new SvelteSet<OctavedNoteRepr>();
 
-  wave: latex = $state(DEFAULTS.WAVE);
+  /**
+   * LaTeX source of the synth's wave function.
+   */
+  wave_latex: Latex = $state(DEFAULTS.WAVE);
 
-  env: latex = $state(DEFAULTS.ENV);
+  /**
+   * Amplitude-over-time data of the synth's wave function.
+   * 
+   * The array must be `FUNC_SAMPLE_RES` long.
+   */
+  wave_amps: Amplitude[] = [];
+
+  /**
+   * LaTeX source of the synth's ADSR envelope function.
+   */
+  env_latex: Latex = $state(DEFAULTS.ENV);
+  
+  /**
+   * Amplitude-over-time data of the synth's ADSR envelope function.
+   * 
+   * The array must be `FUNC_SAMPLE_RES` long.
+   */
+  env_amps: Amplitude[] = [];
 
   /**
    * Setup the synthesiser.
@@ -25,30 +45,41 @@ export class Synth
     if (this.ctx) return;
 
     this.ctx = new AudioContext();
-
     this.ctx.resume();
   }
 
+  /**
+   * Play `note` at `octave`, using the synth's current wave and envelope functions.
+   */
   play(note: Note, octave: int)
   {
     if (!this.ctx) return;
+    if (this.wave_amps.length === 0) { window.alert("Internal Error: wave data is absent"); return; }
+    if (this.env_amps.length === 0) { window.alert("Internal Error: envelope data is absent"); return; }
+
+    let frequency = NOTE_FREQUENCIES[octave][note] ?? 400;  // FIXME
     
-    let buffer = this.ctx.createBuffer(1, 1000, 44100);
+    let buffer = this.ctx.createBuffer(1, 44100, 44100);
     let channel = buffer.getChannelData(0);
 
-    for (let i = 0; i < channel.length; i++) {
-      channel[i] = Math.random() * 2 - 1;
+    for (let i = 0; i < 44100; i++) {
+      let idx = (i * frequency / 44100) % FUNC_SAMPLE_RES;
+      channel[i] = this.wave_amps[Math.floor(idx)];
     }
+
+    console.log(`channel =`, channel);
 
     let osc = this.ctx.createBufferSource();
     osc.buffer = buffer;
+    osc.loop = true;
     osc.connect(this.ctx.destination);
 
     osc.start();
     this.active_notes.add(`${note}${octave}`);
 
     setTimeout(() => {
-      osc.stop()
+      osc.loop = false;
+      osc.stop();
       this.active_notes.delete(`${note}${octave}`);
     }, 100);
   }

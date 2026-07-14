@@ -4,7 +4,7 @@ import { Note, type int } from "#scripts/types";
 export const MAX_OCTAVE = 7;
 
 
-export const PITCHES: Record<int, Record<Note, int>> =
+export const NOTE_FREQUENCIES: Record<int, Record<Note, int>> =
 {
   4: {
     [Note.A]:       440,

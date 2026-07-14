@@ -3,15 +3,30 @@
 A generic graphing window for describing the shape of any parameter.
 -->
 
+<script module lang="ts">
+
+declare let Desmos: any;
+declare let MathQuill: any;
+
+</script>
+
+
 <script lang="ts">
 
-import type { latex } from "#scripts/types";
+import { FUNC_SAMPLE_RES } from "#scripts/const";
+import type { Amplitude, Latex } from "#scripts/types";
 
-import { onMount } from "svelte";
+import { onMount, untrack } from "svelte";
 
 
 interface Props {
-  value: latex;
+  /** The LaTeX source this editor controls. */
+  latex: Latex;
+
+  /** The amplitude-over-time data this editor's function emits. */
+  amps: Amplitude[];
+
+  /** The viewport bounds of this editor. */
   bounds?: {
     x?: { lower?: number; upper?: number };
     y?: { lower?: number; upper?: number };
@@ -19,7 +34,8 @@ interface Props {
 }
 
 let {
-  value = $bindable(),
+  latex = $bindable(),
+  amps = $bindable(),
   bounds,
 }: Props = $props();
 
@@ -28,16 +44,30 @@ let el_window: HTMLElement;
 let el_prompt: HTMLElement;
 let el_formula: HTMLElement;
 
-let desmos: unknown;
+let desmos: any;
+let formula_helper: any;
 
-onMount(() =>
+
+onMount(() => {
+  setup_desmos();
+  setup_mathquill();
+  update_desmos();
+});
+
+$effect(() => {
+  latex;
+  untrack(update_desmos);
+});
+
+
+function setup_desmos()
 {
   desmos = Desmos.GraphingCalculator(el_window, {
-    expressions: false,
+    expressions: true,
     settingsMenu: false, lockViewport: true,
     showGrid: true, graphPaper: false,
-    xAxisNumbers: false, yAxisNumbers: true,
-    xAxisStep: 0.5, yAxisStep: 0.5,
+    xAxisNumbers: true, yAxisNumbers: true,
+    xAxisStep: Math.PI / 2, yAxisStep: 1,
   });
 
   desmos.setMathBounds({
@@ -47,20 +77,10 @@ onMount(() =>
     top:    bounds?.y?.upper ?? 1,
   });
 
-  let MQ = MathQuill.getInterface(2);
-
-  MQ.StaticMath(el_prompt);
-
-  let field = MQ.MathField(el_formula, {
-    handlers: {
-      edit: () => {
-        value = field.latex();
-      }
-    }
-  });
-
-  (window
-    .matchMedia("(prefers-color-scheme: dark)")
+  desmos.setExpression({ id: "ft-internal", latex: `f([0...${FUNC_SAMPLE_RES-1}] / ${FUNC_SAMPLE_RES-1})` });
+  formula_helper = desmos.HelperExpression({ latex: `f([0...${FUNC_SAMPLE_RES-1}] / ${FUNC_SAMPLE_RES-1})` });
+  
+  window.matchMedia("(prefers-color-scheme: dark)")
     .addEventListener("change", ({ matches }) => {
       if (matches) {
         desmos.updateSettings({ invertedColors: true });
@@ -68,16 +88,37 @@ onMount(() =>
         desmos.updateSettings({ invertedColors: false });
       }
     })
-  );
-});
+  ;
+}
 
-$effect(() => {
-  value;
-
+function update_desmos()
+{
   if (desmos) {
-    desmos.setExpression({ id: "ft", latex: value });
+    desmos.setExpression({ id: "ft", latex: `f(t) = ${latex}` });
   }
-});
+  setTimeout(() => {
+    if (formula_helper?.listValue) {
+      amps = formula_helper.listValue;
+    }
+  }, 2);
+}
+
+function setup_mathquill()
+{
+  let MQ = MathQuill.getInterface(2);
+
+  MQ.StaticMath(el_prompt);
+
+  let field = MQ.MathField(el_formula, {
+    handlers: {
+      edit: () => {
+        latex = field.latex();
+      }
+    }
+  });
+
+  field.latex(latex);
+}
 
 </script>
 

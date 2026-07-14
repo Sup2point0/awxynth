@@ -25,16 +25,26 @@ onMount(() => {
 <main>
   <div class="core">
     <div class="side">
-      <GraphEditor bind:value={synth.wave}
+      <GraphEditor
+        bind:latex={synth.wave_latex}
+        bind:amps={synth.wave_amps}
         bounds={{ x: { upper: 2 * Math.PI }, y: { lower: -1.0 }}}
       />
 
-      <GraphEditor bind:value={synth.env} />
+      <GraphEditor
+        bind:latex={synth.env_latex}
+        bind:amps={synth.env_amps}
+      />
     </div>
 
     <div class="side">
-      <GraphEditor bind:value={synth.env} />
-      <GraphEditor bind:value={synth.wave}
+      <GraphEditor
+        bind:latex={synth.env_latex}
+        bind:amps={synth.env_amps}
+      />
+      <GraphEditor
+        bind:latex={synth.wave_latex}
+        bind:amps={synth.wave_amps}
         bounds={{ x: { upper: 2 * Math.PI }, y: { lower: -1.0 }}}
       />
 

@@ -1,8 +1,8 @@
-export class DEFAULTS
+/**
+ * Defaults for a synth.
+ */
+export const DEFAULTS =
 {
-  static readonly WAVE =
-    `y=\\frac{e^{1-x}-1}{e-1}`;
-
-  static readonly ENV =
-    `y=\\frac{e^{1-x}-1}{e-1}`;
-}
+  WAVE: String.raw `\sin{t}`,
+  ENV: String.raw `\frac{e^{1-t}-1}{e-1}`,
+};
