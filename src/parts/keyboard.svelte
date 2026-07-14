@@ -3,7 +3,6 @@
 <script lang="ts">
 
 import { synth } from "#scripts/synth";
-import { Note, type int } from "#scripts/types";
 import { MAX_OCTAVE, NUM_DEGREES, WHITE_NOTES, BLACK_NOTES } from "#scripts/const";
 
 </script>

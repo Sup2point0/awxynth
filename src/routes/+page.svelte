@@ -14,7 +14,7 @@ import { onMount } from "svelte";
 
 
 onMount(() => {
-  bind_keybinds();
+  return bind_keybinds();
 });
 
 </script>
