@@ -14,7 +14,7 @@ declare let MathQuill: any;
 <script lang="ts">
 
 import { FUNC_SAMPLE_RES } from "#scripts/const";
-import type { Amplitude, Latex } from "#scripts/types";
+import type { int, Amplitude, Latex } from "#scripts/types";
 
 import { onMount, untrack } from "svelte";
 
@@ -38,6 +38,11 @@ let {
   amps = $bindable(),
   bounds,
 }: Props = $props();
+
+let x_lower = $derived(bounds?.x?.lower ?? 0);
+let x_upper = $derived(bounds?.x?.upper ?? 1);
+let y_lower = $derived(bounds?.y?.lower ?? 0);
+let y_upper = $derived(bounds?.y?.upper ?? 1);
 
 
 let el_window: HTMLElement;
@@ -71,14 +76,15 @@ function setup_desmos()
   });
 
   desmos.setMathBounds({
-    left:   bounds?.x?.lower ?? 0,
-    right:  bounds?.x?.upper ?? 1,
-    bottom: bounds?.y?.lower ?? 0,
-    top:    bounds?.y?.upper ?? 1,
+    left:   x_lower, right: x_upper,
+    bottom: y_lower, top:   y_upper,
   });
 
-  desmos.setExpression({ id: "ft-internal", latex: `f([0...${FUNC_SAMPLE_RES-1}] / ${FUNC_SAMPLE_RES-1})` });
-  formula_helper = desmos.HelperExpression({ latex: `f([0...${FUNC_SAMPLE_RES-1}] / ${FUNC_SAMPLE_RES-1})` });
+  let w = FUNC_SAMPLE_RES - 1;
+  
+  formula_helper = desmos.HelperExpression({
+    latex: `f(${x_lower} + ${x_upper - x_lower} * [0...${w}] / ${w-1})`
+  });
   
   window.matchMedia("(prefers-color-scheme: dark)")
     .addEventListener("change", ({ matches }) => {
@@ -93,14 +99,23 @@ function setup_desmos()
 
 function update_desmos()
 {
-  if (desmos) {
-    desmos.setExpression({ id: "ft", latex: `f(t) = ${latex}` });
-  }
+  if (desmos == undefined) return;
+  
+  desmos.setExpression({ id: "ft", latex: `f(t) = ${latex}` });
+  try_sample_desmos(0);
+}
+
+function try_sample_desmos(tries: int)
+{
+  if (tries > 3) return;
+
   setTimeout(() => {
     if (formula_helper?.listValue) {
       amps = formula_helper.listValue;
+    } else {
+      try_sample_desmos(tries + 1);
     }
-  }, 2);
+  }, 200);
 }
 
 function setup_mathquill()

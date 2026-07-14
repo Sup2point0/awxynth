@@ -9,6 +9,8 @@ export class Synth
 {
   ctx: AudioContext | null = null;
 
+  octave: int = $state(DEFAULTS.OCTAVE);
+
   active_notes = new SvelteSet<OctavedNoteRepr>();
 
   /**
@@ -53,7 +55,22 @@ export class Synth
    */
   play(note: Note, octave: int)
   {
-    if (!this.ctx) return;
+    let osc = this.create_note(note, octave);
+    if (osc == undefined) return;
+
+    osc.start();
+    this.active_notes.add(`${note}${octave}`);
+
+    setTimeout(() => {
+      osc.loop = false;
+      osc.stop();
+      this.active_notes.delete(`${note}${octave}`);
+    }, 5000);
+  }
+
+  private create_note(note: Note, octave: int): AudioBufferSourceNode | undefined
+  {
+    if (!this.ctx) { window.alert("Internal Error: no AudioContext set"); return; }
     if (this.wave_amps.length === 0) { window.alert("Internal Error: wave data is absent"); return; }
     if (this.env_amps.length === 0) { window.alert("Internal Error: envelope data is absent"); return; }
 
@@ -63,7 +80,8 @@ export class Synth
     let channel = buffer.getChannelData(0);
 
     for (let i = 0; i < 44100; i++) {
-      let idx = (i * frequency / 44100) % FUNC_SAMPLE_RES;
+      let progress = frequency * i / 44100;
+      let idx = (progress * FUNC_SAMPLE_RES) % FUNC_SAMPLE_RES;
       channel[i] = this.wave_amps[Math.floor(idx)];
     }
 
@@ -71,17 +89,15 @@ export class Synth
 
     let osc = this.ctx.createBufferSource();
     osc.buffer = buffer;
-    osc.loop = true;
+    // osc.loop = true;
+
+    // let gain = this.ctx.createGain();
+
+    // osc.connect(gain);
+    // gain.connect(this.ctx.destination);
     osc.connect(this.ctx.destination);
 
-    osc.start();
-    this.active_notes.add(`${note}${octave}`);
-
-    setTimeout(() => {
-      osc.loop = false;
-      osc.stop();
-      this.active_notes.delete(`${note}${octave}`);
-    }, 100);
+    return osc;
   }
 }
 

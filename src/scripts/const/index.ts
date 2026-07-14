@@ -4,4 +4,4 @@ export { MAX_OCTAVE, NOTE_FREQUENCIES } from "./pitches";
 
 
 /** How many samples points of a shaping function to take over the time range. */
-export const FUNC_SAMPLE_RES = 10;
+export const FUNC_SAMPLE_RES = 400;
