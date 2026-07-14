@@ -1,5 +1,5 @@
 import { Note } from "#scripts/types";
-import type { latex, OctavedNoteRepr } from "#scripts/types";
+import type { int, latex, OctavedNoteRepr } from "#scripts/types";
 import { DEFAULTS, PITCHES } from "#scripts/const";
 
 import { SvelteSet } from "svelte/reactivity";
@@ -33,20 +33,17 @@ export class Synth
   {
     if (!this.ctx) return;
     
-    let real = new Float32Array(4096);
-    let imag = new Float32Array(4096);
+    let buffer = this.ctx.createBuffer(1, 1000, 44100);
+    let channel = buffer.getChannelData(0);
 
-    for (let x = 1; x < 4096; x += 2) {
-      imag[x] = 4.0 / (Math.PI * x);
+    for (let i = 0; i < channel.length; i++) {
+      channel[i] = Math.random() * 2 - 1;
     }
 
-    let wavetable = this.ctx.createPeriodicWave(real, imag);
-    
-    let osc = this.ctx.createOscillator();
-    osc.setPeriodicWave(wavetable);
+    let osc = this.ctx.createBufferSource();
+    osc.buffer = buffer;
     osc.connect(this.ctx.destination);
 
-    osc.frequency.value = PITCHES[octave][note];
     osc.start();
     this.active_notes.add(`${note}${octave}`);
 
