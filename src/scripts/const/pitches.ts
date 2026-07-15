@@ -1,6 +1,7 @@
 import { Note, type int } from "#scripts/types";
 
 
+export const MIN_OCTAVE = 0;
 export const MAX_OCTAVE = 7;
 
 
@@ -19,5 +20,8 @@ export const NOTE_FREQUENCIES: Record<int, Record<Note, int>> =
     [Note.F_SHARP]: 740,
     [Note.G]:       784,
     [Note.A_FLAT]:  830.6,
-  }
+  },
+  5: {
+    [Note.A]: 880,
+  },
 };

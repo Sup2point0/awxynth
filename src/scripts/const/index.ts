@@ -1,7 +1,7 @@
 export { DEFAULTS } from "./defaults";
 export { NUM_DEGREES, WHITE_NOTES, BLACK_NOTES } from "./notes";
-export { MAX_OCTAVE, NOTE_FREQUENCIES } from "./pitches";
+export { NOTE_FREQUENCIES, MIN_OCTAVE, MAX_OCTAVE } from "./pitches";
 
 
 /** How many samples points of a shaping function to take over the time range. */
-export const FUNC_SAMPLE_RES = 400;
+export const FUNC_SAMPLE_RES = 500;

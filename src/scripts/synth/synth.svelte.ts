@@ -1,8 +1,8 @@
 import { Note } from "#scripts/types";
 import type { int, Amplitude, Latex, OctavedNoteRepr } from "#scripts/types";
-import { FUNC_SAMPLE_RES, DEFAULTS, NOTE_FREQUENCIES } from "#scripts/const";
+import { NOTE_FREQUENCIES, MIN_OCTAVE, MAX_OCTAVE, FUNC_SAMPLE_RES, DEFAULTS } from "#scripts/const";
 
-import { SvelteSet } from "svelte/reactivity";
+import { SvelteMap } from "svelte/reactivity";
 
 
 export class Synth
@@ -11,7 +11,7 @@ export class Synth
 
   octave: int = $state(DEFAULTS.OCTAVE);
 
-  active_notes = new SvelteSet<OctavedNoteRepr>();
+  active_notes = new SvelteMap<OctavedNoteRepr, AudioBufferSourceNode>();
 
   /**
    * LaTeX source of the synth's wave function.
@@ -51,21 +51,64 @@ export class Synth
   }
 
   /**
-   * Play `note` at `octave`, using the synth's current wave and envelope functions.
+   * Start playing `note` at `octave`, using the synth's current wave and envelope functions.
+   * 
+   * Call `.stop()` with the same note to end it.
    */
-  play(note: Note, octave: int)
+  start(note: Note, octave: int)
   {
+    if (this.active_notes.has(this.repr(note, octave))) return;
+
     let osc = this.create_note(note, octave);
     if (osc == undefined) return;
 
     osc.start();
-    this.active_notes.add(`${note}${octave}`);
+    this.active_notes.set(this.repr(note, octave), osc);
+  }
 
-    setTimeout(() => {
-      osc.loop = false;
+  stop(note: Note, octave: int)
+  {
+    let osc = this.active_notes.get(this.repr(note, octave));
+    if (osc == undefined) return;
+
+    osc.stop();
+    this.active_notes.delete(this.repr(note, octave));
+  }
+
+  /**
+   * Shift the synth one octave in `direction`. Also shifts all currently playing notes.
+   * 
+   * No-op if the octave would exceed the synth bounds.
+   */
+  transpose_octave(direction: "down" | "up")
+  {
+    if (direction === "down" && this.octave <= MIN_OCTAVE) return;
+    if (direction === "up"   && this.octave >= MAX_OCTAVE) return;
+
+    let note_reprs = [];
+
+    for (let [note_repr, osc] of this.active_notes) {
+      note_reprs.push(note_repr);
       osc.stop();
-      this.active_notes.delete(`${note}${octave}`);
-    }, 5000);
+      this.active_notes.delete(note_repr);
+    }
+
+    switch (direction) {
+      case "down": this.octave--; break;
+      case "up":   this.octave++; break;
+    }
+
+    for (let note_repr of note_reprs) {
+      let note = note_repr.slice(0, -1) as Note;
+      let octave = Number(note_repr.at(-1)!);
+      
+      switch (direction) {
+        case "down": octave--; break;
+        case "up":   octave++; break;
+      }
+
+      this.start(note, octave);
+    }
   }
 
   private create_note(note: Note, octave: int): AudioBufferSourceNode | undefined
@@ -85,11 +128,9 @@ export class Synth
       channel[i] = this.wave_amps[Math.floor(idx)];
     }
 
-    console.log(`channel =`, channel);
-
     let osc = this.ctx.createBufferSource();
     osc.buffer = buffer;
-    // osc.loop = true;
+    osc.loop = true;
 
     // let gain = this.ctx.createGain();
 
@@ -98,6 +139,11 @@ export class Synth
     osc.connect(this.ctx.destination);
 
     return osc;
+  }
+
+  private repr(note: Note, octave: int): OctavedNoteRepr
+  {
+    return `${note}${octave}`;
   }
 }
 
