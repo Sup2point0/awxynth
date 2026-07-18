@@ -75,6 +75,12 @@ export class Synth
     this.active_notes.delete(this.repr(note, octave));
   }
 
+  /** Stop all current oscillators. For killing hanging oscillators. */
+  stop_all()
+  {
+    this.active_notes.clear();
+  }
+
   /**
    * Shift the synth one octave in `direction`. Also shifts all currently playing notes.
    * 

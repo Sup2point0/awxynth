@@ -42,6 +42,7 @@ function handle_keydown(e: KeyboardEvent)
 
       case "X": synth.transpose_octave("up"); break keybind;
       case "Z": synth.transpose_octave("down"); break keybind;
+      case " ": synth.stop_all(); break keybind;
 
       default: return;
     }
