@@ -3,16 +3,14 @@
 A generic graphing window for describing the shape of any parameter.
 -->
 
-<script module>
-
-const SHAPER_LATEX_FORMAT = /[a-z] *(\\left)?\( *[a-z] *(\\right)?\)/;
-
-</script>
-
 <script lang="ts">
 
 import { FUNC_SAMPLE_RES, Theme, Colour } from "#scripts/const";
 import type { int, Amplitude, Latex } from "#scripts/types";
+
+import * as setup from "./setup";
+import * as sync from "./sync";
+import { Id, is_shaper } from "./expressions";
 
 import { onMount } from "svelte";
 
@@ -50,54 +48,20 @@ let el_window: HTMLElement; let desmos_window: Desmos.Calculator;
 /** Helper expression for sampling the user's curve. */
 let formula_helper: any;
 
-enum Id {
-  SHAPER        = "shaper",
-  SHAPER_RENDER = "shaper-render",
-  SHAPER_FILL   = "shaper-fill",
-}
-
 
 let is_focused = $state(false);
 
 $effect(() => {
-  is_focused;
-
-  desmos_window?.updateSettings({
-    xAxisNumbers: is_focused, yAxisNumbers: is_focused,
-  });
-
-  desmos_window?.setExpression({
-    id: Id.SHAPER_FILL,
-    fillOpacity: (is_focused ? 1.5 : 1) * Theme.WAVE_OPACITY
-  });
+  sync.focus_window(desmos_window, is_focused);
 });
 
 
 onMount(() => {
-  setup_desmos_window();
+  desmos_window = setup.desmos_window(el_window, { x_lower, x_upper, y_lower, y_upper });
   setup_desmos_editor();
   sync_all();
 });
 
-
-/* NOTE: Does not initialise any expressions, those are left for `sync_with_editor()` to avoid duplication */
-function setup_desmos_window()
-{
-  desmos_window = Desmos.GraphingCalculator(el_window, {
-    invertedColors: true,
-    expressions: false,
-    showGrid: true,
-    xAxisNumbers: false, yAxisNumbers: false,
-    xAxisStep: Math.PI / 2, yAxisStep: 1,
-    settingsMenu: true,
-    lockViewport: true,
-  });
-
-  desmos_window.setMathBounds({
-    left:   x_lower, right: x_upper,
-    bottom: y_lower, top:   y_upper,
-  });
-}
 
 function setup_desmos_editor()
 {
@@ -107,38 +71,33 @@ function setup_desmos_editor()
     expressions: true, expressionsTopbar: false,
     audio: false,
   });
-
-  let w = FUNC_SAMPLE_RES - 1;
-
   desmos_editor.setExpression({
     id: Id.SHAPER,
     latex,
   });
-  
-  formula_helper = desmos_editor.HelperExpression({
-    latex: `f(${x_lower} + ${x_upper - x_lower} * [0...${w}] / ${w-1})`
-  });
-
+  // @ts-ignore: outdated types
   desmos_editor.observeEvent("change", (_, e) => {
     if (!e.isUserInitiated) return;
     sync_all();
   });
+  
+  let w = FUNC_SAMPLE_RES - 1;
+
+  formula_helper = desmos_editor.HelperExpression({
+    latex: `f(${x_lower} + ${x_upper - x_lower} * [0...${w}] / ${w-1})`
+  });
+
 }
 
 function sync_with_editor()
 {
   let expressions = desmos_editor.getExpressions();
   if (expressions == undefined) {
-    console.error("awxynth: Failed to fetch desmos expressions");
+    console.error(`awxynth: Failed to fetch desmos expressions`);
     return;
   }
 
-  let shaper_latex = expressions.find(expr => (
-    expr.id === Id.SHAPER && expr?.latex?.length
-    || expr?.latex?.match(SHAPER_LATEX_FORMAT)?.length
-  ))?.latex;
-  
-  console.log(`shaper_latex =`, shaper_latex);
+  let shaper_latex = expressions.find(expr => is_shaper(expr))?.latex;
   if (shaper_latex == undefined) return;
 
   latex = shaper_latex;
@@ -205,25 +164,6 @@ function sync_all()
 
 .window {
   flex: 2;
-}
-
-.formula {
-  flex: 0;
-  height: 4em;
-  min-height: 4em;
-  padding: 0.5rem;
-  display: flex;
-  align-items: center;
-  background-color: light-dark(white, black);
-  border: 1px solid grey;
-
-  .input {
-    width: 100%;
-    color: light-dark(black, white);
-    border: none;
-    outline: none;
-    box-shadow: none;
-  }
 }
 
 </style>

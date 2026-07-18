@@ -6,9 +6,11 @@ import { synth } from "#scripts/synth";
 
 import { bind_keybinds } from "./keybinds";
 
-import Overlay from "#parts/overlay.svelte";
-import Keyboard from "#parts/keyboard.svelte";
-import GraphEditor from "#parts/graph-editor.svelte";
+import {
+  GraphEditor,
+  Keyboard,
+  Overlay,
+} from "#parts";
 
 import { onMount } from "svelte";
 
