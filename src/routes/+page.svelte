@@ -89,7 +89,7 @@ main {
 
 .lower {
   flex: 0;
-  background: #444;
+  background: black;
 }
 
 </style>

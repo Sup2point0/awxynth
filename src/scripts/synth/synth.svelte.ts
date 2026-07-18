@@ -57,6 +57,7 @@ export class Synth
    */
   start(note: Note, octave: int)
   {
+    if (octave < MIN_OCTAVE || octave > MAX_OCTAVE) return;
     if (this.active_notes.has(this.repr(note, octave))) return;
 
     let osc = this.create_note(note, octave);

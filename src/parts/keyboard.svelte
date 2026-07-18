@@ -11,22 +11,22 @@ import { MAX_OCTAVE, NUM_DEGREES, WHITE_NOTES, BLACK_NOTES } from "#scripts/cons
 <ul class="keyboard">
   {#each { length: MAX_OCTAVE + 1 } as _, octave}
     {#each { length: NUM_DEGREES } as _, degree}
+
       {@const white = WHITE_NOTES[degree]}
       {@const black = BLACK_NOTES[degree]}
 
       <div class="segment">
-        <li class="key white"
-          class:active={synth.active_notes.has(`${white}${octave}`)}
-        >
-          {white} <sub>{octave}</sub>
+        <li class="key white" class:active={synth.active_notes.has(`${white}${octave}`)}>
+          {#if degree == 0}
+            {white} <sub>{octave}</sub>
+          {/if}
         </li>
 
         {#if black}
-          <li class="key black"
-            class:active={synth.active_notes.has(`${black}${octave}`)}
-          ></li>
+          <li class="key black" class:active={synth.active_notes.has(`${black}${octave}`)}></li>
         {/if}
       </div>
+
     {/each}
   {/each}
 </ul>
@@ -34,7 +34,12 @@ import { MAX_OCTAVE, NUM_DEGREES, WHITE_NOTES, BLACK_NOTES } from "#scripts/cons
 
 <style lang="scss">
 
-$note-width: 1.25rem;
+$degrees: 7;
+$octaves: 8 + 1;
+$total-notes: $degrees * $octaves;
+
+$note-gap: 0.12rem;
+$note-width: calc((100vw / $total-notes) - $note-gap);
 $note-height: 4rem;
 
 
@@ -42,7 +47,8 @@ $note-height: 4rem;
   padding: 0.1rem;
   display: flex;
   flex-flow: row nowrap;
-  gap: 0.1rem;
+  justify-content: stretch;
+  gap: $note-gap;
   list-style: none;
 }
 
@@ -54,18 +60,18 @@ $note-height: 4rem;
 .key {
   &.white {
     width: $note-width;
-    height: $note-height;;
+    height: $note-height;
     display: flex;
     justify-content: center;
     align-items: end;
     @include font-fun;
     font-size: 75%;
-    color: #aaa;
+    color: rgb(black, 25%);
     background: white;
   }
 
   &.black {
-    width: $note-width * 0.65;
+    width: calc($note-width * 0.65);
     height: $note-height * 0.6;
     position: absolute;
     top: 0;
@@ -76,7 +82,7 @@ $note-height: 4rem;
   }
 
   &.active {
-    background: pink;
+    background: $col-prot;
   }
 }
 
