@@ -1,22 +1,14 @@
 <!-- @component GraphEditor
- 
+
 A generic graphing window for describing the shape of any parameter.
 -->
 
-<script module lang="ts">
-
-declare let Desmos: any;
-declare let MathQuill: any;
-
-</script>
-
-
 <script lang="ts">
 
-import { FUNC_SAMPLE_RES } from "#scripts/const";
+import { FUNC_SAMPLE_RES, Theme, Colour } from "#scripts/const";
 import type { int, Amplitude, Latex } from "#scripts/types";
 
-import { onMount, untrack } from "svelte";
+import { onMount } from "svelte";
 
 
 interface Props {
@@ -39,73 +31,116 @@ let {
   bounds,
 }: Props = $props();
 
+// window viewport bounds
 let x_lower = $derived(bounds?.x?.lower ?? 0);
 let x_upper = $derived(bounds?.x?.upper ?? 1);
 let y_lower = $derived(bounds?.y?.lower ?? 0);
 let y_upper = $derived(bounds?.y?.upper ?? 1);
 
 
-let el_window: HTMLElement;
-let el_prompt: HTMLElement;
-let el_formula: HTMLElement;
+let el_editor: HTMLElement; let desmos_editor: Desmos.Calculator;
+let el_window: HTMLElement; let desmos_window: Desmos.Calculator;
 
-let desmos: any;
+/** Helper expression for sampling the user's curve. */
 let formula_helper: any;
+
+enum Id {
+  SHAPER        = "shaper",
+  SHAPER_RENDER = "shaper-render",
+  SHAPER_FILL   = "shaper-fill",
+}
+
+
+let is_focused = $state(false);
+
+$effect(() => {
+  is_focused;
+
+  desmos_window?.updateSettings({
+    xAxisNumbers: is_focused, yAxisNumbers: is_focused,
+  });
+
+  desmos_window?.setExpression({
+    id: Id.SHAPER_FILL,
+    fillOpacity: (is_focused ? 1.5 : 1) * Theme.WAVE_OPACITY
+  });
+});
 
 
 onMount(() => {
-  setup_desmos();
-  setup_mathquill();
-  update_desmos();
-});
-
-$effect(() => {
-  latex;
-  untrack(update_desmos);
+  setup_desmos_window();
+  setup_desmos_editor();
+  sync_with_editor();
 });
 
 
-function setup_desmos()
+/* NOTE: Does not initialise any expressions, those are left for `sync_with_editor()` to avoid duplication */
+function setup_desmos_window()
 {
-  desmos = Desmos.GraphingCalculator(el_window, {
-    expressions: true,
-    settingsMenu: false, lockViewport: true,
-    showGrid: true, graphPaper: false,
-    xAxisNumbers: true, yAxisNumbers: true,
+  desmos_window = Desmos.GraphingCalculator(el_window, {
+    invertedColors: true,
+    expressions: false,
+    showGrid: true,
+    xAxisNumbers: false, yAxisNumbers: false,
     xAxisStep: Math.PI / 2, yAxisStep: 1,
+    settingsMenu: true,
+    lockViewport: true,
   });
 
-  desmos.setMathBounds({
+  desmos_window.setMathBounds({
     left:   x_lower, right: x_upper,
     bottom: y_lower, top:   y_upper,
   });
+}
+
+function setup_desmos_editor()
+{
+  desmos_editor = Desmos.GraphingCalculator(el_editor, {
+    invertedColors: true,
+    graphpaper: false,
+    expressions: true, expressionsTopbar: false,
+    audio: false,
+  });
 
   let w = FUNC_SAMPLE_RES - 1;
-  
-  formula_helper = desmos.HelperExpression({
-    latex: `f(${x_lower} + ${x_upper - x_lower} * [0...${w}] / ${w-1})`
+
+  desmos_editor.setExpression({
+    id: Id.SHAPER,
+    latex,
   });
   
-  window.matchMedia("(prefers-color-scheme: dark)")
-    .addEventListener("change", ({ matches }) => {
-      if (matches) {
-        desmos.updateSettings({ invertedColors: true });
-      } else {
-        desmos.updateSettings({ invertedColors: false });
-      }
-    })
-  ;
+  formula_helper = desmos_editor.HelperExpression({
+    latex: `f(${x_lower} + ${x_upper - x_lower} * [0...${w}] / ${w-1})`
+  });
+
+  desmos_editor.observeEvent("change", (_, e) => {
+    if (!e.isUserInitiated) return;
+    sync_all();
+  });
 }
 
-function update_desmos()
+function sync_with_editor()
 {
-  if (desmos == undefined) return;
-  
-  desmos.setExpression({ id: "ft", latex: `f(t) = ${latex}` });
-  try_sample_desmos(0);
+  let shaper_latex = desmos_editor.getExpressions().find(expr => expr.id === Id.SHAPER)?.latex;
+  if (shaper_latex == undefined) return;
+
+  latex = shaper_latex;
+
+  desmos_window.setExpression({
+    id: Id.SHAPER_RENDER,
+    latex: shaper_latex,
+    color: Colour.GREEN_INV,
+  });
+  desmos_window.setExpression({
+    id: Id.SHAPER_FILL,
+    latex: String.raw `\min(f(x), 0) \le y \le \max(f(x), 0)`,
+    color: Colour.GREEN_INV,
+    lines: false,
+    fillOpacity: Theme.WAVE_OPACITY,
+  });
 }
 
-function try_sample_desmos(tries: int)
+function try_sample_desmos(tries: int = 0)
 {
   if (tries > 3) return;
 
@@ -118,32 +153,22 @@ function try_sample_desmos(tries: int)
   }, 200);
 }
 
-function setup_mathquill()
+function sync_all()
 {
-  let MQ = MathQuill.getInterface(2);
-
-  MQ.StaticMath(el_prompt);
-
-  let field = MQ.MathField(el_formula, {
-    handlers: {
-      edit: () => {
-        latex = field.latex();
-      }
-    }
-  });
-
-  field.latex(latex);
+  sync_with_editor();
+  try_sample_desmos();
 }
 
 </script>
 
 
-<div class="graph-editor">
+<div class="graph-editor"
+  onmouseenter={() => { is_focused = true; }}
+  onmouseleave={() => { is_focused = false; }}
+  role="application"
+>
+  <div class="editor" bind:this={el_editor}></div>
   <div class="window" bind:this={el_window}></div>
-  <div class="formula">
-    <div class="prompt" bind:this={el_prompt}>f\left( t \right) =</div>
-    <div class="input" bind:this={el_formula}></div>
-  </div>
 </div>
 
 
@@ -152,14 +177,17 @@ function setup_mathquill()
 .graph-editor {
   height: 100%;
   display: flex;
-  flex-flow: column nowrap;
+  flex-flow: row nowrap;
   align-items: stretch;
   background: #444;
 }
 
-.window {
+.editor {
   flex: 1;
-  min-height: 20vh;
+}
+
+.window {
+  flex: 2;
 }
 
 .formula {
