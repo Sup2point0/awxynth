@@ -23,6 +23,9 @@ onMount(() => {
 </script>
 
 
+<svelte:window onblur={() => synth.stop_all()} />
+
+
 <Overlay />
 
 <div class="root">
