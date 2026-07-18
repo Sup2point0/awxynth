@@ -97,7 +97,6 @@ function setup_desmos_editor()
   formula_helper = desmos_editor.HelperExpression({
     latex: `f(${x_lower} + ${x_upper - x_lower} * [0...${w}] / ${w-1})`
   });
-
 }
 
 function sync_with_editor()
@@ -131,13 +130,15 @@ function try_sample_desmos(tries: int = 0)
 {
   if (tries > 3) return;
 
-  setTimeout(() => {
-    if (formula_helper?.listValue) {
-      amps = formula_helper.listValue;
-    } else {
-      try_sample_desmos(tries + 1);
-    }
-  }, 200);
+  if (formula_helper?.listValue) {
+    amps = formula_helper.listValue;
+  }
+  else if (formula_helper?.numericValue) {
+    amps = [formula_helper.numericValue, formula_helper.numericValue];
+  }
+  else {
+    setTimeout(() => try_sample_desmos(tries + 1), 200);
+  }
 }
 
 function sync_all()
