@@ -1,8 +1,17 @@
 import { Note } from "#scripts/types";
-import type { int, Amplitude, Latex, OctavedNoteRepr } from "#scripts/types";
+import type { int, scalar, Amplitude, Latex, OctavedNoteRepr } from "#scripts/types";
 import { INTERNAL, DEFAULTS, NOTE_FREQUENCIES, MIN_OCTAVE, MAX_OCTAVE, FUNC_SAMPLE_RES } from "#scripts/const";
 
 import { SvelteMap } from "svelte/reactivity";
+
+
+/** A chain of audio nodes applied to a played note. */
+interface NoteNodeChain
+{
+  osc: AudioBufferSourceNode;
+  attack: GainNode;
+  release: GainNode;
+}
 
 
 /**
@@ -14,9 +23,10 @@ export class Synth
 {
   ctx: AudioContext | null = null;
 
+  gain: scalar = $state(1.0);
   octave: int = $state(DEFAULTS.OCTAVE);
 
-  active_notes = new SvelteMap<OctavedNoteRepr, AudioBufferSourceNode>();
+  active_notes = new SvelteMap<OctavedNoteRepr, NoteNodeChain>();
 
   // == OSCILLATORS == //
   osc1_latex: Latex = $state(DEFAULTS.WAVE);
@@ -51,28 +61,33 @@ export class Synth
   start(note: Note, octave: int)
   {
     if (octave < MIN_OCTAVE || octave > MAX_OCTAVE) return;
-    if (this.active_notes.has(this.repr(note, octave))) return;
+    if (this.active_notes.has(repr(note, octave))) return;
 
-    let osc = this.create_note(note, octave);
-    if (osc == undefined) return;
+    let nodes = this.create_note(note, octave);
+    if (nodes == undefined) return;
 
-    osc.start();
-    this.active_notes.set(this.repr(note, octave), osc);
+    nodes.osc.start();
+    this.active_notes.set(repr(note, octave), nodes);
   }
 
   stop(note: Note, octave: int)
   {
     if (octave < MIN_OCTAVE || octave > MAX_OCTAVE) return;
-    let osc = this.active_notes.get(this.repr(note, octave));
-    if (osc == undefined) return;
 
-    osc.stop();
-    this.active_notes.delete(this.repr(note, octave));
+    let nodes = this.active_notes.get(repr(note, octave));
+    if (nodes == undefined) return;
+
+    nodes.osc.stop();
+    this.active_notes.delete(repr(note, octave));
   }
 
   /** Stop all current oscillators. For killing hanging oscillators. */
   stop_all()
   {
+    for (let { osc } of this.active_notes.values()) {
+      osc.stop();
+    }
+
     this.active_notes.clear();
   }
 
@@ -88,9 +103,9 @@ export class Synth
 
     let note_reprs = [];
 
-    for (let [note_repr, osc] of this.active_notes) {
+    for (let [note_repr, nodes] of this.active_notes) {
       note_reprs.push(note_repr);
-      osc.stop();
+      nodes.osc.stop();
       this.active_notes.delete(note_repr);
     }
 
@@ -112,7 +127,7 @@ export class Synth
     }
   }
 
-  private create_note(note: Note, octave: int): AudioBufferSourceNode | undefined
+  private create_note(note: Note, octave: int): NoteNodeChain | undefined
   {
     if (!this.ctx) { console.error("Internal Error: no AudioContext set"); return; }
     if (this.osc1_amps.length === 0) { console.error("Internal Error: oscillator 1 shaper data is absent"); return; }
@@ -136,21 +151,26 @@ export class Synth
     osc.loop = true;
 
     let max_gain = this.ctx.createGain();
-    max_gain.gain.setValueAtTime(INTERNAL.MAX_GAIN, this.ctx.currentTime);
+    max_gain.gain.setValueAtTime(Math.min(this.gain, 1) * INTERNAL.MAX_GAIN, this.ctx.currentTime);
 
     osc.connect(max_gain);
     max_gain.connect(this.ctx.destination);
     osc.connect(this.ctx.destination);
 
-    return osc;
-  }
-
-  private repr(note: Note, octave: int): OctavedNoteRepr
-  {
-    return `${note}${octave}`;
+    return {
+      osc,
+      attack: null,
+      release: null,
+    };
   }
 }
 
 
 /** The global synthesiser instance. */
 export const synth = new Synth();
+
+
+function repr(note: Note, octave: int): OctavedNoteRepr
+{
+  return `${note}${octave}`;
+}
