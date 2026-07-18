@@ -40,6 +40,9 @@ export class Synth
   release_amps: Amplitude[] = [];
 
 
+  get now() { return this.ctx?.currentTime; }
+
+
   /**
    * Setup the synthesiser.
    * 
@@ -153,13 +156,16 @@ export class Synth
     let max_gain = this.ctx.createGain();
     max_gain.gain.setValueAtTime(Math.min(this.gain, 1) * INTERNAL.MAX_GAIN, this.ctx.currentTime);
 
-    osc.connect(max_gain);
+    let attack = this.ctx.createGain();
+    attack.gain.setValueCurveAtTime(this.attack_amps, this.now, 1)
+
+    osc.connect(attack);
+    attack.connect(max_gain);
     max_gain.connect(this.ctx.destination);
-    osc.connect(this.ctx.destination);
 
     return {
       osc,
-      attack: null,
+      attack,
       release: null,
     };
   }
