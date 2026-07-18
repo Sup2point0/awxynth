@@ -3,6 +3,12 @@
 A generic graphing window for describing the shape of any parameter.
 -->
 
+<script module>
+
+const SHAPER_LATEX_FORMAT = /[a-z] *(\\left)?\( *[a-z] *(\\right)?\)/;
+
+</script>
+
 <script lang="ts">
 
 import { FUNC_SAMPLE_RES, Theme, Colour } from "#scripts/const";
@@ -70,7 +76,7 @@ $effect(() => {
 onMount(() => {
   setup_desmos_window();
   setup_desmos_editor();
-  sync_with_editor();
+  sync_all();
 });
 
 
@@ -121,7 +127,18 @@ function setup_desmos_editor()
 
 function sync_with_editor()
 {
-  let shaper_latex = desmos_editor.getExpressions().find(expr => expr.id === Id.SHAPER)?.latex;
+  let expressions = desmos_editor.getExpressions();
+  if (expressions == undefined) {
+    console.error("awxynth: Failed to fetch desmos expressions");
+    return;
+  }
+
+  let shaper_latex = expressions.find(expr => (
+    expr.id === Id.SHAPER && expr?.latex?.length
+    || expr?.latex?.match(SHAPER_LATEX_FORMAT)?.length
+  ))?.latex;
+  
+  console.log(`shaper_latex =`, shaper_latex);
   if (shaper_latex == undefined) return;
 
   latex = shaper_latex;
