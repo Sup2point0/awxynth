@@ -12,6 +12,7 @@ export function desmos_window(
     x_lower: number; x_upper: number;
     y_lower: number; y_upper: number;
   },
+  pi?: any,
 ): Desmos.Calculator
 {
   let window = Desmos.GraphingCalculator(el_window, {
@@ -19,7 +20,7 @@ export function desmos_window(
     expressions: false,
     showGrid: true,
     xAxisNumbers: false, yAxisNumbers: false,
-    xAxisStep: Math.PI / 2, yAxisStep: 1,
+    xAxisStep: pi ? (Math.PI / 2) : 1, yAxisStep: 1,
     settingsMenu: true,
     lockViewport: true,
   });

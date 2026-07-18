@@ -1,10 +1,15 @@
 import { Note } from "#scripts/types";
 import type { int, Amplitude, Latex, OctavedNoteRepr } from "#scripts/types";
-import { NOTE_FREQUENCIES, MIN_OCTAVE, MAX_OCTAVE, FUNC_SAMPLE_RES, DEFAULTS } from "#scripts/const";
+import { INTERNAL, DEFAULTS, NOTE_FREQUENCIES, MIN_OCTAVE, MAX_OCTAVE, FUNC_SAMPLE_RES } from "#scripts/const";
 
 import { SvelteMap } from "svelte/reactivity";
 
 
+/**
+ * A synthesiser.
+ * 
+ * `.*_latex` fields store raw LaTeX source for a shaper. `.*_amps` fields store amplitude-over-time sample data of a shaper, containing `FUNC_SAMPLE_RES` points.
+ */
 export class Synth
 {
   ctx: AudioContext | null = null;
@@ -13,29 +18,17 @@ export class Synth
 
   active_notes = new SvelteMap<OctavedNoteRepr, AudioBufferSourceNode>();
 
-  /**
-   * LaTeX source of the synth's wave function.
-   */
-  wave_latex: Latex = $state(DEFAULTS.WAVE);
+  // == OSCILLATORS == //
+  osc1_latex: Latex = $state(DEFAULTS.WAVE);
+  osc1_amps: Amplitude[] = [];
 
-  /**
-   * Amplitude-over-time data of the synth's wave function.
-   * 
-   * The array must be `FUNC_SAMPLE_RES` long.
-   */
-  wave_amps: Amplitude[] = [];
+  // == ADSR ENVELOPE == //
+  attack_latex: Latex = $state(DEFAULTS.ATTACK);
+  attack_amps: Amplitude[] = [];
 
-  /**
-   * LaTeX source of the synth's ADSR envelope function.
-   */
-  env_latex: Latex = $state(DEFAULTS.ENV);
-  
-  /**
-   * Amplitude-over-time data of the synth's ADSR envelope function.
-   * 
-   * The array must be `FUNC_SAMPLE_RES` long.
-   */
-  env_amps: Amplitude[] = [];
+  release_latex: Latex = $state(DEFAULTS.RELEASE);
+  release_amps: Amplitude[] = [];
+
 
   /**
    * Setup the synthesiser.
@@ -69,6 +62,7 @@ export class Synth
 
   stop(note: Note, octave: int)
   {
+    if (octave < MIN_OCTAVE || octave > MAX_OCTAVE) return;
     let osc = this.active_notes.get(this.repr(note, octave));
     if (osc == undefined) return;
 
@@ -120,11 +114,13 @@ export class Synth
 
   private create_note(note: Note, octave: int): AudioBufferSourceNode | undefined
   {
-    if (!this.ctx) { window.alert("Internal Error: no AudioContext set"); return; }
-    if (this.wave_amps.length === 0) { window.alert("Internal Error: wave data is absent"); return; }
-    if (this.env_amps.length === 0) { window.alert("Internal Error: envelope data is absent"); return; }
+    if (!this.ctx) { console.error("Internal Error: no AudioContext set"); return; }
+    if (this.osc1_amps.length === 0) { console.error("Internal Error: oscillator 1 shaper data is absent"); return; }
+    if (this.attack_amps.length === 0) { console.error("Internal Error: attack shaper data is absent"); return; }
+    if (this.release_amps.length === 0) { console.error("Internal Error: release shaper data is absent"); return; }
 
-    let frequency = NOTE_FREQUENCIES[octave][note] ?? 400;  // FIXME
+    let frequency = NOTE_FREQUENCIES[octave][note];
+    if (frequency == undefined) return;
     
     let buffer = this.ctx.createBuffer(1, 44100, 44100);
     let channel = buffer.getChannelData(0);
@@ -132,17 +128,18 @@ export class Synth
     for (let i = 0; i < 44100; i++) {
       let progress = frequency * i / 44100;
       let idx = (progress * FUNC_SAMPLE_RES) % FUNC_SAMPLE_RES;
-      channel[i] = this.wave_amps[Math.floor(idx)];
+      channel[i] = this.osc1_amps[Math.floor(idx)];
     }
 
     let osc = this.ctx.createBufferSource();
     osc.buffer = buffer;
     osc.loop = true;
 
-    // let gain = this.ctx.createGain();
+    let max_gain = this.ctx.createGain();
+    max_gain.gain.setValueAtTime(INTERNAL.MAX_GAIN, this.ctx.currentTime);
 
-    // osc.connect(gain);
-    // gain.connect(this.ctx.destination);
+    osc.connect(max_gain);
+    max_gain.connect(this.ctx.destination);
     osc.connect(this.ctx.destination);
 
     return osc;
@@ -155,4 +152,5 @@ export class Synth
 }
 
 
+/** The global synthesiser instance. */
 export const synth = new Synth();

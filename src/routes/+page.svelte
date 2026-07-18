@@ -3,6 +3,7 @@
 import "#styles/essence.scss";
 
 import { synth } from "#scripts/synth";
+import { Colour } from "#scripts/const";
 
 import { bind_keybinds } from "./keybinds";
 
@@ -24,70 +25,93 @@ onMount(() => {
 
 <Overlay />
 
-<main>
-  <div class="core">
-    <div class="side">
-      <GraphEditor
-        bind:latex={synth.wave_latex}
-        bind:amps={synth.wave_amps}
-        bounds={{ x: { upper: 2 * Math.PI }, y: { lower: -1.0 }}}
-      />
+<div class="root">
+  <main>
+    <section>
+      <h2> OSCILLATORS </h2>
 
-      <GraphEditor
-        bind:latex={synth.env_latex}
-        bind:amps={synth.env_amps}
+      <GraphEditor title="OSCILLATOR 1" pi
+        bind:latex={synth.osc1_latex}
+        bind:amps={synth.osc1_amps}
+        bounds={{ x: [0, 2*Math.PI], y: [-1.05, 1.05] }}
       />
-    </div>
+      <GraphEditor title="OSCILLATOR 2" pi
+        bind:latex={synth.osc1_latex}
+        bind:amps={synth.osc1_amps}
+        bounds={{ x: [0, 2*Math.PI], y: [-1.05, 1.05] }}
+      />
+    </section>
 
-    <div class="side">
-      <GraphEditor
-        bind:latex={synth.env_latex}
-        bind:amps={synth.env_amps}
-      />
-      <GraphEditor
-        bind:latex={synth.wave_latex}
-        bind:amps={synth.wave_amps}
-        bounds={{ x: { upper: 2 * Math.PI }, y: { lower: -1.0 }}}
-      />
+    <section>
+      <h2> ENVELOPE </h2>
 
-    </div>
-  </div>
+      <GraphEditor title="ATTACK" colour={Colour.BLUE}
+        bind:latex={synth.attack_latex}
+        bind:amps={synth.attack_amps}
+      />
+      <GraphEditor title="RELEASE" colour={Colour.PURPLE}
+        bind:latex={synth.release_latex}
+        bind:amps={synth.release_amps}
+      />
+    </section>
+  </main>
   
-  <div class="lower">
+  <div class="keyboard-container">
     <Keyboard />
   </div>
-</main>
+</div>
 
 
 <style lang="scss">
 
-$flex-gap: 0.4rem;
+$flex-gap: 0.5rem;
 
-main {
+.root {
   width: 100vw;
   height: 100vh;
   display: flex;
   flex-flow: column nowrap;
-  justify-content: stretch;
   align-items: stretch;
   gap: $flex-gap;
+  background: rgb(black, 96%);
 }
 
-.core {
-  flex: 1;
-  display: flex;
-  flex-flow: row nowrap;
-  gap: $flex-gap;
-}
-
-.side {
+main {
   flex: 1;
   display: flex;
   flex-flow: column nowrap;
   gap: $flex-gap;
 }
 
-.lower {
+section {
+  flex: 1;
+  max-height: 16rem;
+  padding: 0.25rem 0;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: stretch;
+  gap: $flex-gap;
+  background: rgb(white, 3%);
+
+  h2 {
+    @include font-ui;
+    color: $col-prot;
+    font-weight: 300;
+    writing-mode: sideways-lr;
+    text-align: center;
+    opacity: 0.5;
+  }
+
+  &:where(:hover, :focus-within) {
+    background: rgb(white, 5%);
+
+    h2 {
+      opacity: 1;
+    }
+  }
+}
+
+.keyboard-container {
   flex: 0;
   background: black;
 }

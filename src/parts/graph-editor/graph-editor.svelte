@@ -16,6 +16,11 @@ import { onMount } from "svelte";
 
 
 interface Props {
+  title?: string;
+
+  /** Colour of the title text. */
+  colour?: string;
+
   /** The LaTeX source this editor controls. */
   latex: Latex;
 
@@ -24,22 +29,27 @@ interface Props {
 
   /** The viewport bounds of this editor. */
   bounds?: {
-    x?: { lower?: number; upper?: number };
-    y?: { lower?: number; upper?: number };
+    x?: [number, number];
+    y?: [number, number];
   };
+
+  pi?: any;
 }
 
 let {
+  title = "SHAPER",
+  colour = Colour.PINK,
   latex = $bindable(),
   amps = $bindable(),
   bounds,
+  pi,
 }: Props = $props();
 
 // window viewport bounds
-let x_lower = $derived(bounds?.x?.lower ?? 0);
-let x_upper = $derived(bounds?.x?.upper ?? 1);
-let y_lower = $derived(bounds?.y?.lower ?? 0);
-let y_upper = $derived(bounds?.y?.upper ?? 1);
+let x_lower = $derived(bounds?.x?.at(0) ?? 0);
+let x_upper = $derived(bounds?.x?.at(1) ?? 1);
+let y_lower = $derived(bounds?.y?.at(0) ?? 0);
+let y_upper = $derived(bounds?.y?.at(1) ?? 1);
 
 
 let el_editor: HTMLElement; let desmos_editor: Desmos.Calculator;
@@ -57,7 +67,7 @@ $effect(() => {
 
 
 onMount(() => {
-  desmos_window = setup.desmos_window(el_window, { x_lower, x_upper, y_lower, y_upper });
+  desmos_window = setup.desmos_window(el_window, { x_lower, x_upper, y_lower, y_upper }, pi);
   setup_desmos_editor();
   sync_all();
 });
@@ -139,31 +149,50 @@ function sync_all()
 
 
 <div class="graph-editor"
-  onmouseenter={() => { is_focused = true; }}
+  onmouseenter={() => { is_focused = true; }} onfocuscapture={() => { is_focused = true; }}
   onmouseleave={() => { is_focused = false; }}
   role="application"
 >
-  <div class="editor" bind:this={el_editor}></div>
-  <div class="window" bind:this={el_window}></div>
+  <h3 style:color={colour}> {title} </h3>
+
+  <div class="embeds">
+    <div class="editor" bind:this={el_editor}></div>
+    <div class="window" bind:this={el_window}></div>
+  </div>
 </div>
 
 
 <style lang="scss">
 
 .graph-editor {
+  flex: 1;
   height: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+h3 {
+  @include font-ui;
+  font-size: 60%;
+  font-weight: 300;
+  transform: scaleX(120%);
+  transform-origin: 0%;
+}
+
+.embeds {
+  flex: 1;
   display: flex;
   flex-flow: row nowrap;
   align-items: stretch;
   background: #444;
-}
 
-.editor {
-  flex: 1;
-}
+  .editor {
+    flex: 1;
+  }
 
-.window {
-  flex: 2;
+  .window {
+    flex: 2;
+  }
 }
 
 </style>
