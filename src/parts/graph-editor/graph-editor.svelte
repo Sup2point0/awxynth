@@ -6,6 +6,7 @@ A generic graphing window for describing the shape of any parameter.
 <script lang="ts">
 
 import { FUNC_SAMPLE_RES, Theme, Colour } from "#scripts/const";
+import * as util from "#scripts/utils";
 import type { int, Amplitude, Latex } from "#scripts/types";
 
 import * as setup from "./setup";
@@ -38,7 +39,7 @@ interface Props {
 
 let {
   title = "SHAPER",
-  colour = Colour.PINK,
+  colour = Colour.GREEN,
   latex = $bindable(),
   amps = $bindable(),
   bounds,
@@ -115,12 +116,12 @@ function sync_with_editor()
   desmos_window.setExpression({
     id: Id.SHAPER_RENDER,
     latex: shaper_latex,
-    color: Colour.GREEN_INV,
+    color: util.invert(colour),
   });
   desmos_window.setExpression({
     id: Id.SHAPER_FILL,
     latex: String.raw `\min(f(x), 0) \le y \le \max(f(x), 0)`,
-    color: Colour.GREEN_INV,
+    color: util.invert(colour),
     lines: false,
     fillOpacity: Theme.WAVE_OPACITY,
   });
@@ -184,7 +185,6 @@ h3 {
   display: flex;
   flex-flow: row nowrap;
   align-items: stretch;
-  background: #444;
 
   .editor {
     flex: 1;

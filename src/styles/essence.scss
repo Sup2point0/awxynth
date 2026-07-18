@@ -1,3 +1,5 @@
+@use 'mixins/colours' as *;
+
 * {
   box-sizing: border-box;
   padding: 0;
@@ -8,4 +10,13 @@
   color-scheme: light dark;
   font-size: 100%;
   overflow: hidden;
+}
+
+::selection {
+  color: white !important;
+  background: $col-prot !important;
+}
+
+.dcg-container {
+  border: none !important;
 }

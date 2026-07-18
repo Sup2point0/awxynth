@@ -53,6 +53,7 @@ $note-height: 4rem;
 }
 
 .segment {
+  user-select: none;
   width: $note-width;
   position: relative;
 }

@@ -76,7 +76,7 @@ $flex-gap: 0.5rem;
   flex-flow: column nowrap;
   align-items: stretch;
   gap: $flex-gap;
-  background: rgb(black, 96%);
+  background: rgb(black, 95%);
 }
 
 main {
@@ -94,7 +94,7 @@ section {
   flex-flow: row nowrap;
   justify-content: stretch;
   gap: $flex-gap;
-  background: rgb(white, 3%);
+  background: rgb(white, 2%);
 
   h2 {
     @include font-ui;
@@ -106,7 +106,7 @@ section {
   }
 
   &:where(:hover, :focus-within) {
-    background: rgb(white, 5%);
+    background: rgb(white, 4%);
 
     h2 {
       opacity: 1;

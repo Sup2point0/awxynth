@@ -25,7 +25,7 @@ function close() {
     onkeydown={close}
     transition:blur={{ duration: 1000 }}
   >
-    <h1> awxynth </h1>
+    <h1> Awxynth </h1>
     <p> click to start </p>
   </aside>
 {/if}
@@ -34,6 +34,7 @@ function close() {
 <style lang="scss">
 
 aside {
+  cursor: pointer;
   width: 100vw;
   height: 100vh;
   position: fixed;
@@ -45,19 +46,30 @@ aside {
   justify-content: center;
   align-items: center;
   gap: 4rem;
-  background: linear-gradient(to right in oklch, #ff0090, #9090f1);
+  background: black;
 }
 
 h1 {
-  @include font-fun;
+  @include font-ui;
   font-size: 500%;
-  color: white;
+  font-weight: normal;
+  color: transparent;
+  background: linear-gradient(to right in oklch, $col-deut, $col-prot);
+  background-clip: text;
+  -webkit-background-clip: textn;
 }
 
 p {
   @include font-fun;
   font-size: 150%;
-  color: oklch(0.8074 0.1603 75.71);
+  font-weight: 100;
+  color: white;
+  animation: 2.0s infinite alternate ease-in-out flash;
+
+  @keyframes flash {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
 }
 
 </style>
