@@ -16,9 +16,6 @@ import Content from "../../../CHANGELOG.md";
 
 
 .changelog {
-  padding: 2rem 3rem;
-  overflow-y: auto;
-
   :global(.changelog-layout) {
     display: grid;
     grid-template-columns: max-content 1fr;
@@ -27,8 +24,9 @@ import Content from "../../../CHANGELOG.md";
   }
 
   :global(h1) {
+    margin: 0;
     @include font-ui;
-    color: white;
+    color: $col-green;
     font-weight: 100;
   }
 
@@ -46,8 +44,11 @@ import Content from "../../../CHANGELOG.md";
 
   :global(p) {
     display: block;
-    @include font-ui;
+    @include font-body;
     color: white;
+    font-weight: 150;
+    font-size: 120%;
+    line-height: 1.4;
   }
 
   :global(h3) {
@@ -57,6 +58,7 @@ import Content from "../../../CHANGELOG.md";
     font-size: 0.8em;
     font-weight: normal;
     text-transform: uppercase;
+    transform: translateY(-0.2em);
   }
 
   // change
