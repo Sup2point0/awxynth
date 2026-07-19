@@ -1,13 +1,8 @@
-/**
- * Defaults for a synth.
- */
 export const DEFAULTS =
 {
   GAIN: 0.7,
   
   OCTAVE: 4,
-  
-  OSC: String.raw `f \left( t \right) = \sin{t}`,
 
   ATTACK_LATEX: String.raw `f \left( t \right) = t`,
   ATTACK_TIME:  1,

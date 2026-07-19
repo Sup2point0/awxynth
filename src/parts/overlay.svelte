@@ -9,7 +9,8 @@ import { blur } from "svelte/transition";
 let open = $state(true);
 
 
-function close() {
+function close()
+{
   open = false;
   synth.init();
 }

@@ -3,7 +3,8 @@
 import "#styles/essence.scss";
 
 import { synth } from "#scripts/synth";
-import { Colour } from "#scripts/const";
+import { PRESETS } from "#scripts/const";
+import { Colour } from "#scripts/types";
 
 import { bind_keybinds } from "./keybinds";
 
@@ -36,6 +37,8 @@ onMount(() => {
       <GraphEditor title="OSCILLATOR 1" pi
         bind:latex={synth.osc1_latex}
         bind:amps={synth.osc1_amps}
+        presets={PRESETS.WAVES}
+        preset={PRESETS.WAVES[0]}
         bounds={{ x: [0, 2*Math.PI], y: [-1.05, 1.05] }}
       />
       <GraphEditor title="OSCILLATOR 2" pi
@@ -67,7 +70,9 @@ onMount(() => {
 
 <style lang="scss">
 
-$flex-gap: 0.5rem;
+$gap-vert: 0.5rem;
+$gap-horiz: 1rem;
+
 
 .root {
   width: 100vw;
@@ -75,7 +80,7 @@ $flex-gap: 0.5rem;
   display: flex;
   flex-flow: column nowrap;
   align-items: stretch;
-  gap: $flex-gap;
+  gap: $gap-vert;
   background: rgb(black, 95%);
 }
 
@@ -83,17 +88,16 @@ main {
   flex: 1;
   display: flex;
   flex-flow: column nowrap;
-  gap: $flex-gap;
+  gap: $gap-vert;
 }
 
 section {
   flex: 1;
-  max-height: 16rem;
-  padding: 0.25rem 0;
+  padding-bottom: 0.25rem;
   display: flex;
   flex-flow: row nowrap;
   justify-content: stretch;
-  gap: $flex-gap;
+  gap: $gap-horiz;
   background: rgb(white, 2%);
 
   h2 {

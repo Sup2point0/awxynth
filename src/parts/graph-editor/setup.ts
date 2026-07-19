@@ -12,7 +12,7 @@ export function desmos_window(
     x_lower: number; x_upper: number;
     y_lower: number; y_upper: number;
   },
-  pi?: any,
+  pi?: true,
 ): Desmos.Calculator
 {
   let window = Desmos.GraphingCalculator(el_window, {

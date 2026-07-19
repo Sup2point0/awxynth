@@ -1,6 +1,9 @@
 import { Note } from "#scripts/types";
 import type { int, Scalar, Amplitude, Seconds, Latex, OctavedNoteRepr } from "#scripts/types";
-import { INTERNAL, DEFAULTS, NOTE_FREQUENCIES, MIN_OCTAVE, MAX_OCTAVE, FUNC_SAMPLE_RES } from "#scripts/const";
+import {
+  INTERNAL, DEFAULTS, PRESETS,
+  NOTE_FREQUENCIES, MIN_OCTAVE, MAX_OCTAVE, FUNC_SAMPLE_RES,
+} from "#scripts/const";
 
 import { SvelteMap } from "svelte/reactivity";
 
@@ -30,7 +33,7 @@ export class Synth
   active_notes = new SvelteMap<OctavedNoteRepr, NoteNodeChain>()
 
   // == OSCILLATORS == //
-  osc1_latex: Latex       = $state(DEFAULTS.OSC)
+  osc1_latex: Latex       = $state(PRESETS.WAVES[0].latex)
   osc1_amps:  Amplitude[] = []
   osc1_gain:  Amplitude   = DEFAULTS.GAIN
 
@@ -54,7 +57,7 @@ export class Synth
    */
   init()
   {
-    if (this.ctx) return;
+    if (this.ctx != null) return;
 
     this.ctx = new AudioContext();
     this.ctx.resume();
