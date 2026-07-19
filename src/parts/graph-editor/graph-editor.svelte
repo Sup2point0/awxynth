@@ -81,7 +81,7 @@ onMount(() => {
   desmos_window = setup.desmos_window(el_window, { x_lower, x_upper, y_lower, y_upper }, pi);
   desmos_editor = setup_desmos_editor(el_editor);
 
-  let preset = presets_list[self.preset_index];
+  preset = presets_list[self.preset_index];
   sync.apply_preset(desmos_editor, preset);
 
   setup_sample_helper(desmos_editor);
@@ -155,7 +155,7 @@ function cycle_presets(direction: "left" | "right")
         break;
     }
 
-    let preset = presets_list[self.preset_index];
+    preset = presets_list[self.preset_index];
     sync.apply_preset(desmos_editor, preset);
 
     setup_sample_helper(desmos_editor);
