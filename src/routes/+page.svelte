@@ -31,6 +31,11 @@ onMount(() => {
 <Overlay />
 
 <div class="root">
+  <nav>
+    <h1> Awxynth </h1>
+    <a href="https://github.com/Sup2point0/awxynth" target="_blank"> GitHub </a>
+  </nav>
+
   <main>
     <section>
       <h2> OSCILLATORS </h2>
@@ -85,6 +90,37 @@ $gap-horiz: 1rem;
   background: rgb(black, 95%);
 }
 
+nav {
+  padding: 0 1rem;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  background: black;
+
+  h1 {
+    width: max-content;
+    @include font-ui;
+    color: transparent;
+    font-size: 80%;
+    font-weight: normal;
+    background: linear-gradient(to right in oklch, $col-pink, $col-yellow);
+    background-clip: text;
+    -webkit-background-clip: textn;
+  }
+  
+  a {
+    display: block;
+    @include font-ui;
+    color: white;
+    font-size: 80%;
+    text-decoration: none;
+
+    &:hover, &:focus-visible {
+      color: $col-prot;
+    }
+  }
+}
+
 main {
   flex: 1;
   display: flex;
@@ -110,10 +146,18 @@ section {
     opacity: 0.5;
   }
 
+  :global(h3) {
+    opacity: 0.5;
+  }
+
   &:where(:hover, :focus-within) {
     background: rgb(white, 4%);
 
     h2 {
+      opacity: 1;
+    }
+
+    :global(h3) {
       opacity: 1;
     }
   }

@@ -55,9 +55,9 @@ h1 {
   font-size: 500%;
   font-weight: normal;
   color: transparent;
-  background: linear-gradient(to right in oklch, $col-deut, $col-prot);
+  background: linear-gradient(to right in oklch, $col-pink, $col-yellow);
   background-clip: text;
-  -webkit-background-clip: textn;
+  -webkit-background-clip: text;
 }
 
 p {
