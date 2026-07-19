@@ -62,7 +62,7 @@ h1 {
 }
 
 p {
-  @include font-fun;
+  @include font-ui;
   font-size: 150%;
   font-weight: 100;
   color: white;

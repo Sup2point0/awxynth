@@ -65,7 +65,7 @@ $note-height: 4rem;
     display: flex;
     justify-content: center;
     align-items: end;
-    @include font-fun;
+    @include font-ui;
     font-size: 75%;
     color: rgb(black, 25%);
     background: white;
