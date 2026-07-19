@@ -1,12 +1,11 @@
-name: 'deploy'
+name: 'GitHub Pages Deployment'
 
 on:
   workflow_dispatch:
   push:
     paths:
+      - 'CHANGELOG.md'
       - '**.yml'
-  schedule:
-    - cron: '20 4 4,20 * *'
 
 jobs:
   build:
@@ -14,7 +13,10 @@ jobs:
         
     steps:
       - name: 'github / checkout'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
+        with:
+          submodules: true
+          token: ${{ secrets.SUPPETY_PAT }}
 
       - name: 'github / node / setup'
         uses: actions/setup-node@v6
@@ -23,11 +25,10 @@ jobs:
           cache: 'npm'
 
       - name: 'svelte / npm install'
-        run: npm install
+        run: |
+          npm install
 
       - name: 'svelte / npm run build'
-        env:
-          BASE_PATH: '/${{ github.event.repository.name }}'
         run: |
           npm run build
 
@@ -51,4 +52,4 @@ jobs:
     steps:
       - name: 'github / deploy'
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
