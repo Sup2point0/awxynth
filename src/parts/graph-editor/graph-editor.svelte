@@ -268,14 +268,18 @@ function toggle_clip()
       &.prev div { transform: translateX(-0.15em); }
       &.next div { transform: translateX(0.15em); }
 
-      .graph-editor.focused &:not(:where(:hover, :focus-visible)) {
+      .graph-editor.focused &:not(:where(:hover, :focus-visible, :active)) {
         opacity: 40%;
       }
 
-      &:where(:hover, :focus-visible) {
+      &:hover, &:focus-visible, &:active {
         cursor: pointer;
         opacity: 100%;
         background: rgb(white, 5%);
+      }
+
+      &:active {
+        color: $col-prot;
       }
     }
   }
