@@ -1,8 +1,9 @@
+<!-- @component LandingOverlay -->
+
 <script lang="ts">
 
 import { synth } from "#scripts/synth";
 
-import { onMount } from "svelte";
 import { blur } from "svelte/transition";
 
 
@@ -66,6 +67,10 @@ p {
   font-weight: 100;
   color: white;
   animation: 2.0s infinite alternate ease-in-out flash;
+
+  aside:active & {
+    color: $col-prot;
+  }
 
   @keyframes flash {
     from { opacity: 0; }

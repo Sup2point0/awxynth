@@ -7,12 +7,14 @@ import { PRESETS } from "#scripts/const";
 import { Colour } from "#scripts/types";
 
 import { bind_keybinds } from "./keybinds";
+import { OverlayTab } from "./tabs";
 
 import {
   Add,
   GraphEditor,
   Keyboard,
-  Overlay,
+  Nav,
+  Landing,
 } from "#parts";
 
 import { onMount } from "svelte";
@@ -28,13 +30,11 @@ onMount(() => {
 <svelte:window onblur={() => synth.stop_all()} />
 
 
-<Overlay />
+<Landing />
 
 <div class="root">
-  <nav>
-    <h1> Awxynth </h1>
-    <a href="https://github.com/Sup2point0/awxynth" target="_blank"> GitHub </a>
-  </nav>
+  <Nav bind:tab />
+  <Overlay bind:tab />
 
   <main>
     <section>
