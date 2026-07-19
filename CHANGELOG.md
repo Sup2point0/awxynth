@@ -1,22 +1,32 @@
 # Changelog
 
+<!--
+
+Fix:
+- Variables needed for function not synced between editor and window
+
+-->
+
 
 ## 19 July 2026
 
 ### ***Feature***
+Added **Clip** setting for shapers.
+
+
+## 18 July 2026
+
+### ***Feature***
 Attack and release envelopes are now working!
+
+### ***Feature***
+Pressing space now force stops all notes, for the odd circumstance where a note may be left hanging.
 
 ### **Change**
 Desmos windows now have their own themed colours.
 
 ### **Change**
 Settled on vertical row-by-row UI layout with a reorderable transform sequence. Maybe a grid layout for multiple oscillators chains could work too?
-
-
-## 18 July 2026
-
-### ***Feature***
-Pressing space now force stops all notes, for the odd circumstance where a note may be left hanging.
 
 
 ## 15 July 2026

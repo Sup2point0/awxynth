@@ -5,14 +5,12 @@ A generic graphing window for describing the shape of any parameter.
 
 <script lang="ts">
 
-import { FUNC_SAMPLE_RES, Theme } from "#scripts/const";
 import { Colour } from "#scripts/types";
 import * as util from "#scripts/utils";
 import type { int, Amplitude, Latex, ShaperPreset } from "#scripts/types";
 
 import * as setup from "./setup";
 import * as sync from "./sync";
-import { Id, is_shaper } from "./expressions";
 
 import { onMount } from "svelte";
 
@@ -64,7 +62,8 @@ const presets_list = Object.values(presets).flat();
 // svelte-ignore state_referenced_locally
 let self = $state({
   latex: "",
-  latex_helper: null as any,
+  sampler_helper: null as any,
+  clip_enabled: false,
   preset_index: presets_list.indexOf(preset),
   is_focused: false,
 });
@@ -78,14 +77,14 @@ let desmos_editor: Desmos.Calculator;
 let desmos_window: Desmos.Calculator;
 
 onMount(() => {
-  desmos_window = setup.desmos_window(el_window, { x_lower, x_upper, y_lower, y_upper }, pi);
+  desmos_window = setup.desmos_window(self, el_window, { x_lower, x_upper, y_lower, y_upper }, pi);
   desmos_editor = setup_desmos_editor(el_editor);
+  setup_sampler_helper();
 
   preset = presets_list[self.preset_index];
   sync.apply_preset(desmos_editor, preset);
 
-  setup_sample_helper(desmos_editor);
-  sync.window_with_editor(desmos_window, desmos_editor, colour);
+  sync.window_with_editor(self, desmos_window, desmos_editor, colour);
 });
 
 
@@ -104,27 +103,25 @@ function setup_desmos_editor(el_editor: HTMLElement): Desmos.Calculator
   // @ts-ignore: outdated types
   editor.observeEvent("change", (_, e) => {
     if (!e.isUserInitiated) return;
-    sync.window_with_editor(desmos_window, desmos_editor, colour);
+    sync.window_with_editor(self, desmos_window, desmos_editor, colour);
   });
   
   return editor;
 }
 
-function setup_sample_helper(desmos_editor: Desmos.Calculator)
+function setup_sampler_helper()
 {
-  const w = FUNC_SAMPLE_RES - 1;
-
-  let helper = desmos_editor.HelperExpression({
-    latex: `f(${x_lower} + ${x_upper - x_lower} * [0...${w}] / ${w-1})`
-  });
+  let helper = self.sampler_helper;
 
   helper.observe("listValue", () => {
     if (helper.listValue == undefined) return;
-    amps = helper.listValue;
+    let data = helper.listValue;
+    amps = self.clip_enabled ? util.clip(data) : data;
   });
   helper.observe("numericValue", () => {
     if (helper.numericValue == undefined) return;
-    amps = [helper.numericValue, helper.numericValue];
+    let data = [helper.numericValue, helper.numericValue];
+    amps = self.clip_enabled ? util.clip(data) : data;
   });
 }
 
@@ -158,9 +155,20 @@ function cycle_presets(direction: "left" | "right")
     preset = presets_list[self.preset_index];
     sync.apply_preset(desmos_editor, preset);
 
-    setup_sample_helper(desmos_editor);
-    sync.window_with_editor(desmos_window, desmos_editor, colour);
+    sync.window_with_editor(self, desmos_window, desmos_editor, colour);
+    sync.focus_window(desmos_window, self.is_focused);
   };
+}
+
+function toggle_clip()
+{
+  self.clip_enabled = !self.clip_enabled;
+  
+  if (self.clip_enabled) {
+
+  }
+  sync.window_with_editor(self, desmos_window, desmos_editor, colour);
+  sync.focus_window(desmos_window, self.is_focused);
 }
 
 </script>
@@ -170,15 +178,29 @@ function cycle_presets(direction: "left" | "right")
   class:focused={self.is_focused}
   onmouseenter={focus(true)} onfocuscapture={focus(true)}
   onmouseleave={focus(false)}
+  style:--colour={colour}
   role="application"
 >
   <div class="upper">
-    <h3 style:color={colour}> {title} </h3>
+    <div class="left">
+      <h3 style:color={colour}> {title} </h3>
+    </div>
 
     <div class="preset">
-      <button class="left" onclick={cycle_presets("left")}> ‹ </button>
+      <button class="prev" onclick={cycle_presets("left")}> <div>‹</div> </button>
       <button class="title"> {preset.title} </button>
-      <button class="right" onclick={cycle_presets("right")}> › </button>
+      <button class="next" onclick={cycle_presets("right")}> <div>›</div> </button>
+    </div>
+
+    <div class="right">
+      <button class="clip"
+        class:enabled={self.clip_enabled}
+        onclick={toggle_clip}
+      >
+        {#if self.clip_enabled}
+          <span style:font-family="Segoe UI">&check;</span>
+        {/if}<span style:padding-right="0.25em"></span>CLIP
+      </button>
     </div>
   </div>
 
@@ -204,6 +226,10 @@ function cycle_presets(direction: "left" | "right")
   justify-content: space-between;
   align-items: center;
 
+  > * {
+    flex: 1;
+  }
+
   h3 {
     @include font-ui;
     font-size: 60%;
@@ -215,10 +241,11 @@ function cycle_presets(direction: "left" | "right")
   .preset {
     display: flex;
     flex-flow: row nowrap;
+    justify-content: center;
 
     button {
-      min-width: 3.5em;
-      padding: 0.2rem 0;
+      min-width: 3em;
+      padding: 0.25rem 0;
       @include font-ui;
       color: white;
       background: none;
@@ -226,15 +253,20 @@ function cycle_presets(direction: "left" | "right")
       outline: none;
       opacity: 8%;
 
-      &.left, &.right {
+      &.title {
+        min-width: 8em;
+        padding: 0 0.5em;
+        font-size: 75%;
+        transform: translateY(-0.05em);
+      }
+
+      &.prev, &.next {
         font-size: 50%;
         font-weight: 800;
       }
 
-      &.title {
-        font-size: 75%;
-        transform: translateY(-0.05em);
-      }
+      &.prev div { transform: translateX(-0.15em); }
+      &.next div { transform: translateX(0.15em); }
 
       .graph-editor.focused &:not(:where(:hover, :focus-visible)) {
         opacity: 40%;
@@ -243,6 +275,38 @@ function cycle_presets(direction: "left" | "right")
       &:where(:hover, :focus-visible) {
         cursor: pointer;
         opacity: 100%;
+        background: rgb(white, 5%);
+      }
+    }
+  }
+
+  .right {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: end;
+
+    button {
+      @include font-ui;
+      color: white;
+      font-size: 70%;
+      background: none;
+      border: none;
+      outline: none;
+      opacity: 0.5;
+
+      &:hover {
+        cursor: pointer;
+        color: var(--colour);
+        opacity: 1;
+      }
+
+      &.enabled {
+        color: var(--colour);
+        opacity: 1;
+
+        &:hover {
+          color: white;
+        }
       }
     }
   }
