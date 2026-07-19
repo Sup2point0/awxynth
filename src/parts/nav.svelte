@@ -2,7 +2,10 @@
 
 <script lang="ts">
 
-import { OverlayTab } from "../routes/tabs";
+import { synth } from "#scripts/synth";
+import { OverlayTab } from "#src/routes/tabs";
+
+import { Meter } from "#parts";
 
 
 interface Props {
@@ -23,6 +26,8 @@ function open($tab: OverlayTab)
 <nav>
   <div class="left">
     <h1> Awxynth </h1>
+
+    <Meter node={synth.analyser!} />
   </div>
 
   <div class="right">
@@ -55,6 +60,10 @@ nav {
   }
 
   > div {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    gap: 1rem;
     transform: translateY(-0.1rem);
   }
 }
@@ -62,21 +71,19 @@ nav {
 .left {
   h1 {
     width: max-content;
+    padding-right: 1rem;
     @include font-ui;
     color: transparent;
     font-size: 80%;
     font-weight: normal;
     background: linear-gradient(to right in oklch, $col-pink, $col-yellow);
     background-clip: text;
-    -webkit-background-clip: textn;
+    -webkit-background-clip: text;
+    border-right: 1px solid rgb(white, 15%);
   }
 }
 
 .right {
-  display: flex;
-  flex-flow: row nowrap;
-  gap: 1rem;
-  
   .nav-clicky {
     display: block;
     @include font-ui;

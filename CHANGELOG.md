@@ -29,6 +29,9 @@ Todo:
 We’ve now got randomised tips and a slick animation on the landing page!
 
 ### ***Feature***
+Added a level meter in the top-left.
+
+### ***Feature***
 Added **Clip** toggle for shapers to keep their values in $[-1.0, 1.0]$. Also added **Show Raw** toggle to view the difference before and after clipping.
 
 ### ***Feature***

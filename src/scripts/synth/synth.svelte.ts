@@ -24,8 +24,9 @@ interface NoteNodeChain
  */
 export class Synth
 {
-  ctx:    AudioContext | null = null
-  master: GainNode | null = null
+  ctx:      AudioContext | null = null
+  master:   GainNode     | null = null
+  analyser: AnalyserNode | null = null
 
   gain:   Scalar = $state(DEFAULTS.GAIN)
   octave: int    = $state(DEFAULTS.OCTAVE)
@@ -54,11 +55,13 @@ export class Synth
   {
     if (this.ctx != null) return;
 
-    this.ctx = new AudioContext();
+    this.ctx      = new AudioContext();
+    this.master   = new GainNode(this.ctx, { gain: INTERNAL.MAX_GAIN });
+    this.analyser = new AnalyserNode(this.ctx);
+
     this.ctx.resume();
-    
-    this.master = new GainNode(this.ctx, { gain: INTERNAL.MAX_GAIN });
-    this.master.connect(this.ctx.destination);
+    this.master.connect(this.analyser);
+    this.analyser.connect(this.ctx.destination);
   }
 
   /**
