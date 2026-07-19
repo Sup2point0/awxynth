@@ -91,6 +91,10 @@ nav {
       cursor: pointer;
       color: $col-prot;
     }
+
+    &:active {
+      color: $col-deut;
+    }
   }
 }
 

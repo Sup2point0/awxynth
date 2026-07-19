@@ -234,7 +234,7 @@ function toggle_clip()
     @include font-ui;
     font-size: 60%;
     font-weight: 300;
-    transform: scaleX(120%);
+    transform: scaleX(110%);
     transform-origin: 0%;
   }
 

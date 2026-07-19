@@ -24,45 +24,54 @@ let { tab = $bindable() }: Props = $props();
 
 
 {#if tab !== null}
-  <aside transition:scale={{ duration: 500, easing: expoOut, start: 0.97 }}>
-    {#key tab}
-      <div class="overlay-content" in:scale={{ duration: 500, easing: quartOut, start: 0.97 }}>
+  <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+  <!-- svelte-ignore a11y_click_events_have_key_events -->
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
+  <div class="screen-protector" onclick={() => { tab = null; }}>
+    <aside transition:scale={{ duration: 500, easing: expoOut, start: 0.97 }} onclick={e => e.stopPropagation()}>
+      {#key tab}
+        <div class="overlay-content" in:scale={{ duration: 500, easing: quartOut, start: 0.97 }}>
 
-        {#if tab === OverlayTab.HELP}
-          <Help />
-        {:else if tab === OverlayTab.CHANGELOG}
-          <Changelog />
-        {/if}
+          {#if tab === OverlayTab.HELP}
+            <Help />
+          {:else if tab === OverlayTab.CHANGELOG}
+            <Changelog />
+          {/if}
 
-      </div>
+        </div>
 
-      <button onclick={() => { tab = null; }}>
-        <div> × </div>
-      </button>
-    {/key}
-  </aside>
+        <button onclick={() => { tab = null; }}>
+          <div> × </div>
+        </button>
+      {/key}
+    </aside>
+  </div>
 {/if}
 
 
 <style lang="scss">
 
+.screen-protector {
+  width: 100vw;
+  height: calc(100vh - 1.5rem);  // NOTE: Leave just enough space to keep access to navbar
+  position: fixed;
+  top: 1.5rem;
+  left: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 aside {
   width: 80vw;
   height: 80vh;
-  position: fixed;
-  left: 10vw;
-  top: 10vh;
-  z-index: 10;
+  overflow-y: auto;
+  scrollbar-color: $col-prot black;
+  scrollbar-width: thin;
   background: rgb(#ccc, 4%);
   backdrop-filter: blur(16px);
   box-shadow: 0 0 24px black;
-
-  .overlay-content {
-    height: 100%;
-    overflow-y: auto;
-    scrollbar-color: $col-prot black;
-    scrollbar-width: thin;
-  }
 
   button {
     width: 2rem;
@@ -78,8 +87,14 @@ aside {
     border: none;
     outline: none;
 
-    &:hover {
+    &:hover, &:focus-visible {
+      cursor: pointer;
+      color: $col-prot;
       background: rgb(white, 5%);
+    }
+
+    &:active {
+      color: $col-deut;
     }
 
     div {
