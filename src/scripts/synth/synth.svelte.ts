@@ -1,9 +1,9 @@
 import { Note } from "#scripts/types";
-import type { int, Scalar, Amplitude, Seconds, Latex, OctavedNoteRepr } from "#scripts/types";
 import {
-  INTERNAL, DEFAULTS, PRESETS,
+  INTERNAL, DEFAULTS,
   NOTE_FREQUENCIES, MIN_OCTAVE, MAX_OCTAVE, FUNC_SAMPLE_RES,
 } from "#scripts/const";
+import type { int, Scalar, Amplitude, Seconds, OctavedNoteRepr } from "#scripts/types";
 
 import { SvelteMap } from "svelte/reactivity";
 

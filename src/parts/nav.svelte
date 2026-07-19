@@ -64,7 +64,6 @@ nav {
     flex-flow: row nowrap;
     align-items: center;
     gap: 1rem;
-    transform: translateY(-0.1rem);
   }
 }
 
@@ -84,6 +83,8 @@ nav {
 }
 
 .right {
+  transform: translateY(-0.1rem);
+
   .nav-clicky {
     display: block;
     @include font-ui;
