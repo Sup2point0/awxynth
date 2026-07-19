@@ -1,3 +1,7 @@
 @mixin font-ui {
   font-family: 'Orbit', 'Segoe UI', system-ui, sans-serif;
 }
+
+@mixin font-body {
+  font-family: 'Outfit', 'Segoe UI', system-ui, sans-serif;
+}

@@ -73,6 +73,10 @@ aside {
   backdrop-filter: blur(16px);
   box-shadow: 0 0 24px black;
 
+  .overlay-content {
+    padding: 2rem 3rem;
+  }
+
   button {
     width: 2rem;
     height: 2rem;
