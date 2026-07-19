@@ -5,6 +5,18 @@
 Fix:
 - Variables needed for function not synced between editor and window
 
+Todo:
+• animate progression along envelope
+• transform: amplitude clamper
+• legato
+• adding oscillators
+• global volume
+• enable/disable components
+• allow clicking keys in virtual keyboard
+• zoom editor windows horizontally
+• panning
+• adding transforms
+
 -->
 
 
