@@ -26,6 +26,9 @@ Todo:
 ## 19 July 2026
 
 ### ***Feature***
+We’ve now got randomised tips and a slick animation on the landing page!
+
+### ***Feature***
 Added **Clip** toggle for shapers to keep their values in $[-1.0, 1.0]$. Also added **Show Raw** toggle to view the difference before and after clipping.
 
 ### ***Feature***

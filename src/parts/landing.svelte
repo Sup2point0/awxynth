@@ -36,17 +36,17 @@ function close()
     out:blur={{ duration: 1000 }}
   >
     <h1>
-      <div style:--i={1}>A</div>
-      <div style:--i={2}>w</div>
-      <div style:--i={3}>x</div>
+      <div style:--i={7}>A</div>
+      <div style:--i={6}>w</div>
+      <div style:--i={5}>x</div>
       <div style:--i={4}>y</div>
-      <div style:--i={5}>n</div>
-      <div style:--i={6}>t</div>
-      <div style:--i={7}>h</div>
+      <div style:--i={3}>n</div>
+      <div style:--i={2}>t</div>
+      <div style:--i={1}>h</div>
     </h1>
     
     {#if tip}
-      <small in:blur={{ duration: 500 }}>
+      <small in:blur={{ duration: 1000, delay: 200 }}>
         {@html tip}
       </small>
     {/if}
@@ -82,20 +82,22 @@ h1 {
   @include font-ui;
   font-size: 800%;
   font-weight: normal;
-  color: transparent;
-  background: linear-gradient(to right in oklch, $col-pink, $col-yellow);
-  background-clip: text;
-  -webkit-background-clip: text;
   transform: translateY(-100%);
 
   > div {
-    animation: 2s cubic-bezier(0.19, 1, 0.22, 1) swoop-in;  // ease-out-exp
-    animation-delay: calc(var(--i, 1) * 0.2s);
+    background: linear-gradient(to right in oklch,
+      color-mix(in oklch, $col-yellow, $col-pink calc(100% * (var(--i, 1) - 1) / 7)),
+      color-mix(in oklch, $col-yellow, $col-pink calc(100% * (var(--i, 1) - 0) / 7)));
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    animation: 1.0s cubic-bezier(0.19, 1, 0.22, 1) swoop-in;  // ease-out-exp
+    animation-delay: calc(var(--i, 1) * 0.06s);
     animation-fill-mode: backwards;
 
     @keyframes swoop-in {
-      from { color: red; transform: translateX(-50vw); }
-      to   { color: transparent; transform: translateX(0); }
+      from { transform: translateX(-5rem); opacity: 0; }
     }
   }
 }
