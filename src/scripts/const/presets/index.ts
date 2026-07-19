@@ -9,9 +9,11 @@ export const PRESETS = {
 };
 
 
+import { ltx } from "#scripts/utils";
+
 const _ = [
     {
       title: "",
-      latex: String.raw ``,
+      latex: ltx `f\left(t\right) = `,
     },
 ];
