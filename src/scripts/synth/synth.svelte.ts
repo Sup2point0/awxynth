@@ -20,7 +20,7 @@ interface NoteNodeChain
 /**
  * A synthesiser.
  * 
- * `.*_latex` fields store raw LaTeX source for a shaper. `.*_amps` fields store amplitude-over-time sample data of a shaper, containing `FUNC_SAMPLE_RES` points.
+ * `.*_amps` fields store amplitude-over-time sample data of a shaper, containing `FUNC_SAMPLE_RES` points.
  */
 export class Synth
 {
@@ -32,17 +32,12 @@ export class Synth
 
   active_notes = new SvelteMap<OctavedNoteRepr, NoteNodeChain>()
 
-  // == OSCILLATORS == //
-  osc1_latex: Latex       = $state(PRESETS.WAVES[0].latex)
   osc1_amps:  Amplitude[] = []
   osc1_gain:  Amplitude   = DEFAULTS.GAIN
 
-  // == ADSR ENVELOPE == //
-  attack_latex: Latex       = $state(DEFAULTS.ATTACK_LATEX)
   attack_amps:  Amplitude[] = []
   attack_time:  Seconds     = DEFAULTS.ATTACK_TIME
 
-  release_latex: Latex       = $state(DEFAULTS.RELEASE_LATEX)
   release_amps:  Amplitude[] = []
   release_time:  Seconds     = DEFAULTS.RELEASE_TIME
 

@@ -9,6 +9,7 @@ import { Colour } from "#scripts/types";
 import { bind_keybinds } from "./keybinds";
 
 import {
+  Add,
   GraphEditor,
   Keyboard,
   Overlay,
@@ -35,30 +36,30 @@ onMount(() => {
       <h2> OSCILLATORS </h2>
 
       <GraphEditor title="OSCILLATOR 1" pi
-        bind:latex={synth.osc1_latex}
         bind:amps={synth.osc1_amps}
-        presets={PRESETS.WAVES}
-        preset={PRESETS.WAVES[0]}
+        presets={PRESETS.waves}
+        preset={PRESETS.waves.core[0]}
         bounds={{ x: [0, 2*Math.PI], y: [-1.05, 1.05] }}
       />
-      <GraphEditor title="OSCILLATOR 2" pi
-        bind:latex={synth.osc1_latex}
-        bind:amps={synth.osc1_amps}
-        bounds={{ x: [0, 2*Math.PI], y: [-1.05, 1.05] }}
-      />
+
+      <Add />
     </section>
 
     <section>
       <h2> ENVELOPE </h2>
 
       <GraphEditor title="ATTACK" colour={Colour.BLUE}
-        bind:latex={synth.attack_latex}
         bind:amps={synth.attack_amps}
+        presets={PRESETS.attacks}
+        preset={PRESETS.attacks.builtins[0]}  // linear
       />
       <GraphEditor title="RELEASE" colour={Colour.PURPLE}
-        bind:latex={synth.release_latex}
         bind:amps={synth.release_amps}
+        presets={PRESETS.releases}
+        preset={PRESETS.releases.builtins[1]} // exponential
       />
+
+      <Add />
     </section>
   </main>
   

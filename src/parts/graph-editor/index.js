@@ -1,1 +1,1 @@
-export { default } from "./graph-editor.svelte"
+export { default } from "./graph-editor.svelte";

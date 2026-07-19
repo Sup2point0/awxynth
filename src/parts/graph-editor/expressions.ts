@@ -1,3 +1,6 @@
+import type { Latex } from "#scripts/types";
+
+
 export enum Id {
   SHAPER        = "shaper",
   SHAPER_RENDER = "shaper-render",
@@ -5,7 +8,7 @@ export enum Id {
 }
 
 /** Is `expr` the shaper function we want from the user? */
-export function is_shaper(expr: Desmos.ExpressionState): boolean
+export function is_shaper(expr: Desmos.ExpressionState): expr is Desmos.ExpressionState & { latex: Latex }
 {
   const SHAPER_LATEX_FORMAT = /f *(\\left)?\( *[a-z] *(\\right)?\)/;
 

@@ -1,7 +1,7 @@
 /**
  * Initialise the curve rendering window to `el_window`, with the provided viewport bounds.
  * 
- * This does not initialise any expressions - those are left for `sync_with_editor()`, to avoid duplication.
+ * This does not initialise any expressions - those are left for `sync.window_with_editor()`, to avoid duplication.
  */
 export function desmos_window(
   el_window: HTMLElement,
