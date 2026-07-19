@@ -14,7 +14,7 @@ Fix:
 ## 19 July 2026
 
 ### ***Feature***
-Added **Clip** setting for shapers.
+Added **Clip** toggle for shapers to keep their values in $[-1.0, 1.0]$. Also added **Show Raw** toggle to view the difference before and after clipping.
 
 ### ***Feature***
 Added presets for oscillators and envelopes.

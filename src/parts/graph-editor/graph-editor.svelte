@@ -64,6 +64,7 @@ let self = $state({
   latex: "",
   sampler_helper: null as any,
   clip_enabled: false,
+  ghost_enabled: false,
   preset_index: presets_list.indexOf(preset),
   is_focused: false,
 });
@@ -84,7 +85,7 @@ onMount(() => {
   preset = presets_list[self.preset_index];
   sync.apply_preset(desmos_editor, preset);
 
-  sync.window_with_editor(self, desmos_window, desmos_editor, colour);
+  sync_all();
 });
 
 
@@ -126,6 +127,15 @@ function setup_sampler_helper()
 }
 
 
+// == SYNC == //
+
+function sync_all()
+{
+  sync.window_with_editor(self, desmos_window, desmos_editor, colour);
+  sync.focus_window(desmos_window, self.is_focused);
+}
+
+
 // == EVENT HANDLERS == //
 
 function focus(is_focused: boolean)
@@ -154,21 +164,20 @@ function cycle_presets(direction: "left" | "right")
 
     preset = presets_list[self.preset_index];
     sync.apply_preset(desmos_editor, preset);
-
-    sync.window_with_editor(self, desmos_window, desmos_editor, colour);
-    sync.focus_window(desmos_window, self.is_focused);
+    sync_all();
   };
 }
 
 function toggle_clip()
 {
   self.clip_enabled = !self.clip_enabled;
-  
-  if (self.clip_enabled) {
+  sync_all();
+}
 
-  }
-  sync.window_with_editor(self, desmos_window, desmos_editor, colour);
-  sync.focus_window(desmos_window, self.is_focused);
+function toggle_ghost()
+{
+  self.ghost_enabled = !self.ghost_enabled;
+  sync_all();
 }
 
 </script>
@@ -197,10 +206,17 @@ function toggle_clip()
         class:enabled={self.clip_enabled}
         onclick={toggle_clip}
       >
-        {#if self.clip_enabled}
-          <span style:font-family="Segoe UI">&check;</span>
-        {/if}<span style:padding-right="0.25em"></span>CLIP
+        {#if self.clip_enabled} <div class="tick">✓</div> {/if} <div>CLIP</div>
       </button>
+      
+      {#if self.clip_enabled}
+        <button class="ghost"
+          class:enabled={self.ghost_enabled}
+          onclick={toggle_ghost}
+        >
+          {#if self.ghost_enabled} <div class="tick">✓</div> {/if} <div>SHOW RAW</div>
+        </button>
+      {/if}
     </div>
   </div>
 
@@ -286,10 +302,15 @@ function toggle_clip()
 
   .right {
     display: flex;
-    flex-flow: row nowrap;
+    flex-flow: row-reverse nowrap;
     justify-content: end;
+    gap: 1rem;
 
     button {
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center;
+      gap: 0.5em;
       @include font-ui;
       color: white;
       font-size: 70%;
@@ -304,13 +325,27 @@ function toggle_clip()
         opacity: 1;
       }
 
+      &:active {
+        color: $col-deut;
+      }
+
       &.enabled {
         color: var(--colour);
         opacity: 1;
 
-        &:hover {
+        &:hover, &:focus-visible {
           color: white;
         }
+
+        &:active {
+          color: $col-deut;
+        }
+      }
+
+      .tick {
+        @include font-code;
+        font-size: 100%;
+        transform: scale(150%);
       }
     }
   }

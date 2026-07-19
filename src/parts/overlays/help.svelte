@@ -44,10 +44,6 @@ import Content from "./HELP.md"
     font-weight: 200;
     font-style: normal;
   }
-
-  :global(span.math) {
-    color: color.adjust($col-purp, $lightness: 10);
-  }
 }
 
 </style>

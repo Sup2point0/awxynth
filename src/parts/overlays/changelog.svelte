@@ -42,15 +42,6 @@ import Content from "../../../CHANGELOG.md";
     border-bottom: 1px solid rgb(white, 10%);
   }
 
-  :global(p) {
-    display: block;
-    @include font-body;
-    color: white;
-    font-weight: 150;
-    font-size: 120%;
-    line-height: 1.4;
-  }
-
   :global(h3) {
     padding-top: 0.5em;
     display: block;
@@ -89,9 +80,18 @@ import Content from "../../../CHANGELOG.md";
     color: rgb(white, 60%);
   }
 
+  :global(p) {
+    display: block;
+    @include font-body;
+    color: white;
+    font-weight: 150;
+    font-size: 120%;
+    line-height: 1.4;
+  }
+
   :global(p > strong) {
     font-weight: normal;
-    color: $col-purp;
+    color: $col-yellow;
   }
 }
 

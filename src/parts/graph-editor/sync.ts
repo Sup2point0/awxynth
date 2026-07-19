@@ -16,7 +16,7 @@ export function focus_window(window: Desmos.Calculator, is_focused: boolean)
   });
 
   window?.setExpression({
-    id: Id.SHAPER_FILL,
+    id: Id.SHAPER_RENDER_FILL,
     fillOpacity: (is_focused ? 1.5 : 1) * Theme.WAVE_OPACITY
   });
 }
@@ -35,25 +35,42 @@ export function window_with_editor(
   let latex = find_shaper_in_editor(editor);
   if (latex == undefined) return;
 
-  let clipped = String.raw `\operatorname{min}(1, \operatorname{max}(-1, f(x)))`;
-
   window.setExpression({
     id: Id.SHAPER,
     latex,
     hidden: true,
   });
+
+  let clipped = String.raw `\operatorname{min}(1, \operatorname{max}(-1, f(x)))`;
+
+  /* NOTE: Sample from this curve, which handles clipping. */
   window.setExpression({
-    id: Id.SHAPER_RENDER,
+    id: Id.SHAPER_CLIPPER,
     latex: (
       self.clip_enabled ?
         ltx `g(x) = ${clipped}`
       : ltx `g(x) = f(x)`
     ),
+    hidden: true,
+  });
+
+  /* NOTE: These 2 are purely for display purposes */
+  window.setExpression({
+    id: Id.SHAPER_RENDER,
+    latex: ltx `y = f(x)`,
     color: util.invert(colour),
-    hidden: false,
+    lineOpacity: self.clip_enabled ? 0.2 : 1,
+    hidden: self.clip_enabled && !self.ghost_enabled,
   });
   window.setExpression({
-    id: Id.SHAPER_FILL,
+    id: Id.SHAPER_RENDER_CLIPPED,
+    latex: ltx `y = ${clipped}`,
+    color: util.invert(colour),
+    hidden: !self.clip_enabled,
+  });
+
+  window.setExpression({
+    id: Id.SHAPER_RENDER_FILL,
     latex: (
       self.clip_enabled ?
         String.raw `\min(${clipped}, 0) \le y \le \max(${clipped}, 0)`

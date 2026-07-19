@@ -1,7 +1,18 @@
+@font-face {
+  font-family: 'Monaspace Neon';
+  src:
+    url('/fonts/monaspace-neon.ttf') format('truetype'),
+}
+
+
 @mixin font-ui {
   font-family: 'Orbit', 'Segoe UI', system-ui, sans-serif;
 }
 
 @mixin font-body {
   font-family: 'Outfit', 'Segoe UI', system-ui, sans-serif;
+}
+
+@mixin font-code {
+  font-family: 'Monaspace Neon', monospace;
 }

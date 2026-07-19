@@ -1,4 +1,7 @@
+@use 'sass:color';
+
 @use 'mixins/colours' as *;
+
 
 * {
   box-sizing: border-box;
@@ -19,6 +22,10 @@
 
 .katex {
   font-size: 100%;
+}
+
+span.math {
+  color: color.adjust($col-purp, $lightness: 10);
 }
 
 .dcg-container {
