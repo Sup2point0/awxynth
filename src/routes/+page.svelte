@@ -90,37 +90,6 @@ $gap-horiz: 1rem;
   background: rgb(black, 95%);
 }
 
-nav {
-  padding: 0 1rem;
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: space-between;
-  background: black;
-
-  h1 {
-    width: max-content;
-    @include font-ui;
-    color: transparent;
-    font-size: 80%;
-    font-weight: normal;
-    background: linear-gradient(to right in oklch, $col-pink, $col-yellow);
-    background-clip: text;
-    -webkit-background-clip: textn;
-  }
-  
-  a {
-    display: block;
-    @include font-ui;
-    color: white;
-    font-size: 80%;
-    text-decoration: none;
-
-    &:hover, &:focus-visible {
-      color: $col-prot;
-    }
-  }
-}
-
 main {
   flex: 1;
   display: flex;
