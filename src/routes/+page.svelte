@@ -13,12 +13,15 @@ import {
   Add,
   GraphEditor,
   Keyboard,
-  Nav,
   Landing,
+  Nav,
+  Overlay,
 } from "#parts";
 
 import { onMount } from "svelte";
 
+
+let tab: OverlayTab | null = $state(null);
 
 onMount(() => {
   return bind_keybinds();
@@ -38,7 +41,7 @@ onMount(() => {
 
   <main>
     <section>
-      <h2> OSCILLATORS </h2>
+      <h2 style:color={Colour.GREEN}> OSCILLATORS </h2>
 
       <GraphEditor title="OSCILLATOR 1" pi
         bind:amps={synth.osc1_amps}
@@ -51,7 +54,7 @@ onMount(() => {
     </section>
 
     <section>
-      <h2> ENVELOPE </h2>
+      <h2 style:color={Colour.PURPLE}> ENVELOPE </h2>
 
       <GraphEditor title="ATTACK" colour={Colour.BLUE}
         bind:amps={synth.attack_amps}
@@ -108,7 +111,6 @@ section {
 
   h2 {
     @include font-ui;
-    color: $col-prot;
     font-weight: 300;
     writing-mode: sideways-lr;
     text-align: center;

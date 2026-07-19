@@ -8,10 +8,16 @@ Fix:
 -->
 
 
+<div class="changelog-layout">
+
+
 ## 19 July 2026
 
 ### ***Feature***
 Added **Clip** setting for shapers.
+
+### ***Feature***
+Added presets for oscillators and envelopes.
 
 
 ## 18 July 2026
@@ -51,3 +57,6 @@ You can now play notes on the virtual piano keyboard by pressing keys on your ph
 
 ###
 Project started!
+
+
+</div>
