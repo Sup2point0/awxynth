@@ -38,6 +38,9 @@ interface Props {
 
   /** (attribute) Should the viewport axes gridlines be relative to pi? */
   pi?: true;
+
+  /** (attribute) Should clipping be enabled by default? */
+  clip?: true;
 }
 
 let {
@@ -48,6 +51,7 @@ let {
   preset = { title: "Custom", latex: "" },
   bounds,
   pi,
+  clip,
 }: Props = $props();
 
 /** Window viewport bounds. */
@@ -63,7 +67,7 @@ const presets_list = Object.values(presets).flat();
 let self = $state({
   latex: "",
   sampler_helper: null as any,
-  clip_enabled: false,
+  clip_enabled: clip,
   ghost_enabled: false,
   preset_index: presets_list.indexOf(preset),
   is_focused: false,

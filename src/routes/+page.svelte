@@ -43,7 +43,8 @@ onMount(() => {
     <section>
       <h2 style:color={Colour.GREEN}> OSCILLATORS </h2>
 
-      <GraphEditor title="OSCILLATOR 1" pi
+      <GraphEditor pi
+        title="OSCILLATOR 1"
         bind:amps={synth.osc1_amps}
         presets={PRESETS.waves}
         preset={PRESETS.waves.core[0]}
@@ -56,12 +57,16 @@ onMount(() => {
     <section>
       <h2 style:color={Colour.PURPLE}> ENVELOPE </h2>
 
-      <GraphEditor title="ATTACK" colour={Colour.BLUE}
+      <GraphEditor clip
+        title="ATTACK"
+        colour={Colour.BLUE}
         bind:amps={synth.attack_amps}
         presets={PRESETS.attacks}
         preset={PRESETS.attacks.builtins[0]}  // linear
       />
-      <GraphEditor title="RELEASE" colour={Colour.PURPLE}
+      <GraphEditor clip
+        title="RELEASE"
+        colour={Colour.PURPLE}
         bind:amps={synth.release_amps}
         presets={PRESETS.releases}
         preset={PRESETS.releases.builtins[1]} // exponential

@@ -37,6 +37,9 @@ Added presets for oscillators and envelopes.
 ### ***Feature***
 Added a level meter in the top-left.
 
+### **Change**
+Clip Attack and Release by default (since this is generally the behaviour you want).
+
 
 ## 18 July 2026
 
