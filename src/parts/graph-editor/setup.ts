@@ -1,4 +1,4 @@
-import { FUNC_SAMPLE_RES } from "#scripts/const";
+import { INTERNAL } from "#scripts/const";
 import { ltx } from "#scripts/utils";
 
 
@@ -33,7 +33,7 @@ export function desmos_window(
     bottom: y_lower, top:   y_upper,
   });
 
-  const w = FUNC_SAMPLE_RES - 1;
+  const w = INTERNAL.SHAPER_SAMPLE_RES - 1;
 
   self.sampler_helper = window.HelperExpression({
     latex: ltx `g(${x_lower} + ${x_upper - x_lower} * [0...${w}] / ${w-1})`

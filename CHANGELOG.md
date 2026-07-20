@@ -23,6 +23,12 @@ Todo:
 <div class="changelog-layout">
 
 
+## 20 July 2026
+
+### *Fix*
+Fixed the audio clicking issue when holding down a note!
+
+
 ## 19 July 2026
 
 ### ***Feature***

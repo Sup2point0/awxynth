@@ -1,7 +1,7 @@
 import { Note } from "#scripts/types";
 import {
   INTERNAL, DEFAULTS,
-  NOTE_FREQUENCIES, MIN_OCTAVE, MAX_OCTAVE, FUNC_SAMPLE_RES,
+  NOTE_FREQUENCIES, MIN_OCTAVE, MAX_OCTAVE,
 } from "#scripts/const";
 import type { int, Scalar, Amplitude, Seconds, OctavedNoteRepr } from "#scripts/types";
 
@@ -156,12 +156,13 @@ export class Synth
     let frequency = NOTE_FREQUENCIES[octave][note];
     if (frequency == undefined) return;
     
-    let buffer = this.ctx.createBuffer(1, 44100, 44100);
+    let frames = Math.round(INTERNAL.AUDIO_SAMPLE_RATE / frequency);
+    let buffer = this.ctx.createBuffer(1, frames, INTERNAL.AUDIO_SAMPLE_RATE);
     let channel = buffer.getChannelData(0);
 
-    for (let i = 0; i < 44100; i++) {
-      let progress = frequency * i / 44100;
-      let idx = (progress * FUNC_SAMPLE_RES) % FUNC_SAMPLE_RES;
+    for (let i = 0; i < frames; i++) {
+      let progress = frequency * i / INTERNAL.AUDIO_SAMPLE_RATE;
+      let idx = (progress * INTERNAL.SHAPER_SAMPLE_RES) % INTERNAL.SHAPER_SAMPLE_RES;
       channel[i] = this.osc1_amps[Math.floor(idx)];
     }
 
