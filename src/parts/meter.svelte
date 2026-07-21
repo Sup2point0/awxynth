@@ -25,6 +25,8 @@ onMount(() => {
 
 function sample_level()
 {
+  if (node == undefined) return;
+  
   let data = new Float32Array(2048);
   node.getFloatTimeDomainData(data);
 
