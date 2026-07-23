@@ -4,8 +4,9 @@
 
 import { OverlayTab } from "#src/routes/tabs";
 
-import Help from "./help.svelte";
+import Help from "./HELP.md";
 import Changelog from "./changelog.svelte";
+import Credits from "./CREDITS.md";
 
 import { scale } from "svelte/transition";
 import { expoOut, quartOut } from "svelte/easing";
@@ -33,9 +34,11 @@ let { tab = $bindable() }: Props = $props();
         <div class="overlay-content" in:scale={{ duration: 500, easing: quartOut, start: 0.97 }}>
 
           {#if tab === OverlayTab.HELP}
-            <Help />
+            <article><Help /></article>
           {:else if tab === OverlayTab.CHANGELOG}
             <Changelog />
+          {:else if tab === OverlayTab.CREDITS}
+            <article><Credits /></article>
           {/if}
 
         </div>

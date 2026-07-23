@@ -1,0 +1,75 @@
+@use 'mixins/fonts' as *;
+@use 'mixins/colours' as *;
+
+
+article {
+  h1 {
+    margin-bottom: 1em;
+    @include font-ui;
+    color: $col-green;
+    font-weight: 100;
+  }
+
+  h2 {
+    padding-bottom: 0.5em;
+    margin: 2em 0 1em;
+    @include font-ui;
+    color: $col-prot;
+    font-weight: normal;
+    border-bottom: 1px solid rgb(white, 10%);
+  }
+
+  p, li {
+    margin-bottom: 1em;
+    @include font-body;
+    color: white;
+    font-size: 120%;
+    font-weight: 150;
+    line-height: 1.4;
+  }
+
+  p strong {
+    color: $col-yellow;
+    font-weight: 300;
+  }
+
+  p strong em {
+    color: $col-pink;
+    font-weight: 200;
+    font-style: normal;
+  }
+
+  a {
+    position: relative;
+    @include font-body;
+    color: $col-blue;
+    text-decoration: none;
+
+    &::after {
+      content: '';
+      width: 100%;
+      height: 1px;
+      position: absolute;
+      left: 0;
+      display: block;
+      background: $col-blue;
+    }
+
+    &:hover, &:focus-visible {
+      color: $col-prot;
+
+      &::after {
+        background: $col-prot;
+      }
+    }
+  }
+
+  ul {
+    list-style-type: '›';
+
+    li {
+      padding-left: 1em;
+      margin-bottom: 0.5em;
+    }
+  }
+}

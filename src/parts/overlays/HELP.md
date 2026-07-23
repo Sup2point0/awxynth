@@ -1,3 +1,5 @@
+# Help
+
 Welcome to *Awxynth*, **the mathematical synthesiser!**
 
 > Note: *Awxynth* is currently under development – expect some bits to be unfinished or missing!

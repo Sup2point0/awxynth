@@ -39,6 +39,10 @@ function open($tab: OverlayTab)
       Changelog
     </button>
 
+    <button class="nav-clicky" onclick={open(OverlayTab.CREDITS)}>
+      Credits
+    </button>
+
     <a class="nav-clicky" href="https://github.com/Sup2point0/awxynth" target="_blank">
       GitHub
     </a>

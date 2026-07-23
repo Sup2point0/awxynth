@@ -126,7 +126,7 @@ p {
   color: white;
   transform: translateY(10vh);
   animation: 2.0s infinite alternate ease-in-out flash;
-  animation-delay: 4.0s;
+  animation-delay: 2.0s;
   animation-fill-mode: backwards;
 
   &:hover {
