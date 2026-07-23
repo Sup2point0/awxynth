@@ -1,13 +1,21 @@
-<!-- @component Add -->
+<!-- @component `Add`
+ 
+A button for adding a new shaper.
+-->
 
 <script lang="ts">
 
+interface Props {
+  /** Callback to execute when the button is pressed. */
+  action: () => void;
+}
 
+let { action }: Props = $props();
 
 </script>
 
 
-<button>
+<button onclick={action}>
   +
 </button>
 
@@ -23,9 +31,15 @@ button {
   border: none;
   outline: none;
 
-  &:hover {
+  &:hover, &:focus-visible {
+    cursor: pointer;
     color: $col-prot;
     background: rgb(white, 2%);
+  }
+
+  &:active {
+    color: $col-deut;
+    background: rgb(white, 8%);
   }
 }
 

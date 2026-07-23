@@ -17,14 +17,14 @@ export class ReleaseShaper
 
   presets = PRESETS.releases
 
-  preset = $state(PRESETS.releases.builtins[0])
+  preset = $state(PRESETS.releases.builtins[3])
   
   
-    constructor(duration: Seconds)
-    {
-      super("RELEASE");
-      this.duration = $state(duration);
-    }
+  constructor(duration: Seconds)
+  {
+    super("RELEASE");
+    this.duration = $state(duration);
+  }
 
 
   create(ctx: AudioContext): ReleaseInstance

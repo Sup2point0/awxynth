@@ -1,6 +1,6 @@
 <script>
 
-import Content from "../../../CHANGELOG.md";
+import Content from "../../../../CHANGELOG.md";
 
 </script>
 

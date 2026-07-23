@@ -1,22 +1,14 @@
 <script lang="ts">
 
 import "#styles/essence.scss";
+import "#styles/article.scss";
 
 import { synth } from "#scripts/synth";
-import { PRESETS } from "#scripts/const";
-import { Colour } from "#scripts/types";
 
 import { bind_keybinds } from "./keybinds";
 import { OverlayTab } from "./tabs";
 
-import {
-  Add,
-  GraphEditor,
-  Keyboard,
-  Landing,
-  Nav,
-  Overlay,
-} from "#parts";
+import { Landing, Nav, Overlay, Main, Keyboard } from "#parts";
 
 import { onMount } from "svelte";
 
@@ -38,40 +30,7 @@ onMount(() => {
 <div class="root">
   <Nav bind:tab />
   <Overlay bind:tab />
-
-  <!-- TODO extract -->
-  <main>
-    <section>
-      <h2 style:color={Colour.GREEN}> OSCILLATORS </h2>
-
-      {#each synth.oscillators.keys() as idx}
-        <GraphEditor pi
-          bind:shaper={synth.oscillators[idx]}
-          presets={PRESETS.waves}
-          preset={PRESETS.waves.core[idx]}
-          bounds={{ x: [0, 2*Math.PI], y: [-1.05, 1.05] }}
-        />
-      {/each}
-
-      <Add />
-    </section>
-
-    {#each synth.transforms as { title, colour, shapers }}
-      <section>
-        <h2 style:color={colour}> {title} </h2>
-
-        {#each shapers as shaper, idx}
-          <GraphEditor
-            bind:shaper={shapers[idx]}
-            presets={shaper.presets}
-            preset={shaper.preset}
-          />
-        {/each}
-
-        <Add />
-      </section>
-    {/each}
-  </main>
+  <Main />
   
   <div class="keyboard-container">
     <Keyboard />
@@ -81,59 +40,14 @@ onMount(() => {
 
 <style lang="scss">
 
-$gap-vert: 0.5rem;
-$gap-horiz: 1rem;
-
-
 .root {
   width: 100vw;
   height: 100vh;
   display: flex;
   flex-flow: column nowrap;
   align-items: stretch;
-  gap: $gap-vert;
+  gap: 1rem;
   background: rgb(black, 95%);
-}
-
-main {
-  flex: 1;
-  display: flex;
-  flex-flow: column nowrap;
-  gap: $gap-vert;
-}
-
-section {
-  flex: 1;
-  padding-bottom: 0.25rem;
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: stretch;
-  gap: $gap-horiz;
-  background: rgb(white, 2%);
-
-  h2 {
-    @include font-ui;
-    font-weight: 300;
-    writing-mode: sideways-lr;
-    text-align: center;
-    opacity: 0.5;
-  }
-
-  :global(h3) {
-    opacity: 0.5;
-  }
-
-  &:where(:hover, :focus-within) {
-    background: rgb(white, 4%);
-
-    h2 {
-      opacity: 1;
-    }
-
-    :global(h3) {
-      opacity: 1;
-    }
-  }
 }
 
 .keyboard-container {

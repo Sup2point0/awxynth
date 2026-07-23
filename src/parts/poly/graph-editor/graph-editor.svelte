@@ -222,7 +222,8 @@ function toggle_ghost()
 
 .graph-editor {
   flex: 1;
-  height: 100%;
+  min-width: 40rem;
+  min-height: 20rem;
   display: flex;
   flex-flow: column nowrap;
 }

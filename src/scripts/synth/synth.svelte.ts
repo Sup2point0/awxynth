@@ -38,8 +38,8 @@ export class Synth
   master!:   GainNode
   analyser!: AnalyserNode
 
-  oscillators: OscillatorShaper[] = DEFAULTS.OSCILLATORS
-  transforms: Array<ShaperChain> = DEFAULTS.TRANSFORMS
+  oscillators: OscillatorShaper[] = $state(DEFAULTS.OSCILLATORS)
+  transforms: Array<ShaperChain> = $state(DEFAULTS.TRANSFORMS)
 
   active_notes = new SvelteMap<OctavedNoteRepr, ShaperInstanceChain>()
 
@@ -66,6 +66,9 @@ export class Synth
   now(): ScheduledTime {
     return this.ctx?.currentTime ?? 0;
   }
+
+
+  // == PLAYBACK == //
 
   /**
    * Start playing `note` at `octave`, using the synth's current oscillators and attack shaper.
@@ -167,6 +170,24 @@ export class Synth
     }
   }
 
+
+  // == EXTERNAL == //
+
+  /**
+   * Add a new oscillator to the synth.
+   */
+  new_oscillator()
+  {
+    // TODO check limits
+
+    this.oscillators.push(
+      new OscillatorShaper(`OSCILLATOR ${this.oscillators.length + 1}`)
+    );
+  }
+
+
+  // == INTERNAL == //
+
   private create_note(note: Note, octave: Octave): ShaperInstanceChain | undefined
   {
     if (this.ctx == null) { console.error("Internal Error: no AudioContext set"); return; }
@@ -188,7 +209,7 @@ export class Synth
       levels.push(level);
     }
 
-    let fan_in = new GainNode(this.ctx);
+    let fan_in = new GainNode(this.ctx, { gain: 1 / this.oscillators.length });
 
     for (let level of levels) {
       level.connect(fan_in);

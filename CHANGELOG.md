@@ -25,6 +25,12 @@ Todo:
 
 ## 23 July 2026
 
+### **Change**
+Major behind-the-scenes restructuring, in preparation for arbitrary transform routing 😱
+
+### ***Feature***
+You can now add more oscillators!
+
 ### *Fix*
 Fixed a nasty off-by-1 error resulting in $\text{NaN}$ values that crash the synth!
 
