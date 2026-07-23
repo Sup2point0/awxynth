@@ -67,6 +67,10 @@ export const waves = presets(
       latex: ltx `f\left(t\right) = \frac{2}{1+e^{\frac{\pi}{2}\left(\pi-t\right)}}-1`,
     },
     {
+      title: "Choose",
+      latex: ltx `f\left(t\right) = \operatorname{nCr}\left(-0.2,\pi\left(t-\pi\right)\right)`,
+    },
+    {
       title: "Sineco",
       latex: ltx `f\left(t\right) = \sin\left( \cos\left( t \right)\right)`,
     },
@@ -90,6 +94,10 @@ export const waves = presets(
       title: "Very Smushed Sine",
       latex: ltx `f\left(t\right) = \sin\left(\tan\left(\frac{t}{2}\right)\right)`,
     },
+    {
+      title: "Weierstrass",
+      latex: ltx `f\left(t\right) = \frac{1}{\pi}\sum_{n=1}^{10}\frac{1}{n}\sin\left(\pi^{n}t\right)`,
+    },
   ],
   wacky: [
     {
@@ -99,6 +107,10 @@ export const waves = presets(
     {
       title: "Audiovisual",
       latex: ltx `f\left(t\right) = \left(\left|2\sin t\right|-1\right)\operatorname{sign}\left(\pi-t\right)`,
+    },
+    {
+      title: "Bell",
+      latex: ltx `f\left(t\right) = \sum_{n=1}^{7}\frac{1}{\sqrt{2}n}\sin\left(nt\right)\sin\left(\cos\left(2^{n}t\right)\right)`,
     },
     {
       title: "Bounce",
@@ -161,6 +173,28 @@ export const waves = presets(
     {
       title: "Whee",
       latex: ltx `f\left(t\right) = t^{\sin t}-1`,
+    },
+  ],
+  neuro: [
+    {
+      title: "",
+      latex: ltx `f\left(t\right) = \sum_{n=1}^{10}\frac{1}{2^{n}}\sin\left(t^{n}\ln\left(1+nt\right)\right)`,
+    },
+    {
+      title: "",
+      latex: ltx `f\left(t\right) = \sum_{n=1}^{4}\frac{1}{2^{n}}\sin\left(2\pi t^{n}\right)`,
+    },
+    {
+      title: "",
+      latex: ltx `f\left(t\right) = \sum_{n=1}^{5}\frac{1}{2^{n}}\sin\left(t\sin\left(n\sin\left(nt\right)\right)\right)`,
+    },
+    {
+      title: "",
+      latex: ltx `f\left(t\right) = \sum_{n=1}^{10}\frac{1}{2^{n}}\sin\left(2^{n}t\right)\cos\left(t^{n}\right)`,
+    },
+    {
+      title: "Organ",
+      latex: ltx `f\left(t\right) = \sin\left(\sum_{n=1}^{7}\frac{1}{n}\sin\left(2^{n}t\right)\right)`,
     },
   ],
   special: [
