@@ -109,13 +109,11 @@ function setup_sampler_helper()
     if (helper.listValue == undefined) return;
     let data = helper.listValue;
     shaper.amps = shaper.clip_on ? util.clip(data) : data;
-    console.log(`shaper.amps =`, shaper.amps);
   });
   helper.observe("numericValue", () => {
     if (helper.numericValue == undefined) return;
     let data = [helper.numericValue, helper.numericValue];
     shaper.amps = shaper.clip_on ? util.clip(data) : data;
-    console.log(`shaper.amps =`, shaper.amps);
   });
 }
 
