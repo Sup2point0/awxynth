@@ -39,41 +39,38 @@ onMount(() => {
   <Nav bind:tab />
   <Overlay bind:tab />
 
+  <!-- TODO extract -->
   <main>
     <section>
       <h2 style:color={Colour.GREEN}> OSCILLATORS </h2>
 
-      <GraphEditor pi
-        title="OSCILLATOR 1"
-        bind:amps={synth.osc1_amps}
-        presets={PRESETS.waves}
-        preset={PRESETS.waves.core[0]}
-        bounds={{ x: [0, 2*Math.PI], y: [-1.05, 1.05] }}
-      />
+      {#each synth.oscillators.keys() as idx}
+        <GraphEditor pi
+          bind:shaper={synth.oscillators[idx]}
+          presets={PRESETS.waves}
+          preset={PRESETS.waves.core[idx]}
+          bounds={{ x: [0, 2*Math.PI], y: [-1.05, 1.05] }}
+        />
+      {/each}
 
       <Add />
     </section>
 
-    <section>
-      <h2 style:color={Colour.PURPLE}> ENVELOPE </h2>
+    {#each synth.transforms as { title, colour, shapers }}
+      <section>
+        <h2 style:color={colour}> {title} </h2>
 
-      <GraphEditor clip
-        title="ATTACK"
-        colour={Colour.BLUE}
-        bind:amps={synth.attack_amps}
-        presets={PRESETS.attacks}
-        preset={PRESETS.attacks.builtins[0]}  // linear
-      />
-      <GraphEditor clip
-        title="RELEASE"
-        colour={Colour.PURPLE}
-        bind:amps={synth.release_amps}
-        presets={PRESETS.releases}
-        preset={PRESETS.releases.builtins[1]} // exponential
-      />
+        {#each shapers as shaper, idx}
+          <GraphEditor
+            bind:shaper={shapers[idx]}
+            presets={shaper.presets}
+            preset={shaper.preset}
+          />
+        {/each}
 
-      <Add />
-    </section>
+        <Add />
+      </section>
+    {/each}
   </main>
   
   <div class="keyboard-container">

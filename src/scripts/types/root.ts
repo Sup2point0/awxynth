@@ -1,7 +1,7 @@
 export type int = number;
 
 /** An integer in `[MIN_OCTAVE, MAX_OCTAVE]`. */
-export type Octave = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+export type Octave = int;
 
 /** A float in `[0.0, 1.0]`. */
 export type Scalar = number;
@@ -11,6 +11,9 @@ export type Amplitude = Scalar;
 
 /** A duration in seconds. */
 export type Seconds = number;
+
+/** A scheduled time calculated from `AudioContext.currentTime`. */
+export type ScheduledTime = number;
 
 
 export type Latex = string;

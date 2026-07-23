@@ -1,6 +1,7 @@
 import { Theme } from "#scripts/const";
 import { ltx } from "#scripts/utils";
 import * as util from "#scripts/utils";
+import { Shaper } from "#scripts/shapers";
 import type { Latex, ShaperPreset } from "#scripts/types";
 
 import { Id, is_shaper } from "./expressions";
@@ -27,9 +28,9 @@ export function focus_window(window: Desmos.Calculator, is_focused: boolean)
  */
 export function window_with_editor(
   self: any,
+  shaper: Shaper<any, any>,
   window: Desmos.Calculator,
   editor: Desmos.Calculator,
-  colour: string,
 )
 {
   let latex = find_shaper_in_editor(editor);
@@ -47,7 +48,7 @@ export function window_with_editor(
   window.setExpression({
     id: Id.SHAPER_CLIPPER,
     latex: (
-      self.clip_enabled ?
+      shaper.clip_on ?
         ltx `g(x) = ${clipped}`
       : ltx `g(x) = f(x)`
     ),
@@ -58,25 +59,25 @@ export function window_with_editor(
   window.setExpression({
     id: Id.SHAPER_RENDER,
     latex: ltx `y = f(x)`,
-    color: util.invert(colour),
-    lineOpacity: self.clip_enabled ? 0.2 : 1,
-    hidden: self.clip_enabled && !self.ghost_enabled,
+    color: util.invert(shaper.colour),
+    lineOpacity: shaper.clip_on ? 0.2 : 1,
+    hidden: shaper.clip_on && !self.ghost_enabled,
   });
   window.setExpression({
     id: Id.SHAPER_RENDER_CLIPPED,
     latex: ltx `y = ${clipped}`,
-    color: util.invert(colour),
-    hidden: !self.clip_enabled,
+    color: util.invert(shaper.colour),
+    hidden: !shaper.clip_on,
   });
 
   window.setExpression({
     id: Id.SHAPER_RENDER_FILL,
     latex: (
-      self.clip_enabled ?
+      shaper.clip_on ?
         String.raw `\min(${clipped}, 0) \le y \le \max(${clipped}, 0)`
       : String.raw `\min(f(x), 0) \le y \le \max(f(x), 0)`
     ),
-    color: util.invert(colour),
+    color: util.invert(shaper.colour),
     lines: false,
     fillOpacity: Theme.WAVE_OPACITY,
     hidden: false,

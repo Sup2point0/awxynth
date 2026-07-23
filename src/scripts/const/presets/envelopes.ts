@@ -1,8 +1,9 @@
 import { ltx } from "#scripts/utils";
-import type { ShaperPreset } from "#scripts/types";
+
+import { presets } from "./shared";
 
 
-export const attacks: Record<string, ShaperPreset[]> =
+export const attacks = presets(
 {
   builtins: [
     {
@@ -46,10 +47,10 @@ export const attacks: Record<string, ShaperPreset[]> =
       latex: ltx `f\left(t\right) = 1-\sqrt{1-t^{2}}`,
     },
   ],
-};
+});
 
 
-export const releases: Record<string, ShaperPreset[]> =
+export const releases = presets(
 {
   builtins: [
     {
@@ -93,4 +94,4 @@ export const releases: Record<string, ShaperPreset[]> =
       latex: ltx `f\left(t\right) = 1-\sqrt{1-\left(t-1\right)^{2}}`,
     },
   ],
-};
+});

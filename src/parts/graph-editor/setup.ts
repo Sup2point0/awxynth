@@ -21,6 +21,7 @@ export function desmos_window(
   let window = Desmos.GraphingCalculator(el_window, {
     invertedColors: true,
     expressions: false,
+    // expressions: true,  // DEBUG
     showGrid: true,
     xAxisNumbers: false, yAxisNumbers: false,
     xAxisStep: pi ? (Math.PI / 2) : 1, yAxisStep: 1,

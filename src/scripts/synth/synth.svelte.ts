@@ -1,59 +1,58 @@
+import { OscillatorShaper, OscillatorInstance } from "#scripts/shapers";
+import type { Shaper, ShaperInstance } from "#scripts/shapers";
+
+import { INTERNAL, DEFAULTS, NOTE_FREQUENCIES, MIN_OCTAVE, MAX_OCTAVE } from "#scripts/const";
 import { Note } from "#scripts/types";
-import {
-  INTERNAL, DEFAULTS,
-  NOTE_FREQUENCIES, MIN_OCTAVE, MAX_OCTAVE,
-} from "#scripts/const";
-import type { int, Scalar, Amplitude, Seconds, OctavedNoteRepr } from "#scripts/types";
+import type { Octave, Scalar, OctavedNoteRepr, ScheduledTime } from "#scripts/types";
 
 import { SvelteMap } from "svelte/reactivity";
 
 
-/** A chain of audio nodes applied to a played note. */
-interface NoteNodeChain
+export interface ShaperChain
 {
-  osc: AudioBufferSourceNode;
-  attack: GainNode;
-  release: GainNode;
+  title: string;
+  colour: string;
+  shapers: Shaper<any, any>[];
+}
+
+
+/**
+ * Oscillator and transforms for a currently playing note.
+ */
+interface ShaperInstanceChain
+{
+  oscillators: OscillatorInstance[];
+  transforms: ShaperInstance<any, any>[];
 }
 
 
 /**
  * A synthesiser.
  * 
- * `.*_amps` fields store amplitude-over-time sample data of a shaper, containing `FUNC_SAMPLE_RES` points.
+ * `.init()` must be called client-side before using the synth in any way!
  */
 export class Synth
 {
-  ctx:      AudioContext | null = null
-  master:   GainNode     | null = null
-  analyser: AnalyserNode | null = null
+  /* NOTE: These fields are initialised client-side with `.init()` */
+  ctx!:      AudioContext
+  master!:   GainNode
+  analyser!: AnalyserNode
+
+  oscillators: OscillatorShaper[] = DEFAULTS.OSCILLATORS
+  transforms: Array<ShaperChain> = DEFAULTS.TRANSFORMS
+
+  active_notes = new SvelteMap<OctavedNoteRepr, ShaperInstanceChain>()
 
   gain:   Scalar = $state(DEFAULTS.GAIN)
-  octave: int    = $state(DEFAULTS.OCTAVE)
-
-  active_notes = new SvelteMap<OctavedNoteRepr, NoteNodeChain>()
-
-  osc1_amps:  Amplitude[] = []
-  osc1_gain:  Amplitude   = DEFAULTS.GAIN
-
-  attack_amps:  Amplitude[] = []
-  attack_time:  Seconds     = DEFAULTS.ATTACK_TIME
-
-  release_amps:  Amplitude[] = []
-  release_time:  Seconds     = DEFAULTS.RELEASE_TIME
-
-
-  get now() {
-    return this.ctx?.currentTime ?? 0;
-  }
+  octave: Octave = $state(DEFAULTS.OCTAVE)
 
 
   /**
-   * Setup the synthesiser.
+   * Setup the synthesiser client-side with its `AudioContext`.
    */
   init()
   {
-    if (this.ctx != null) return;
+    if (this.ctx != undefined) return;
 
     this.ctx      = new AudioContext();
     this.master   = new GainNode(this.ctx, { gain: INTERNAL.MAX_GAIN });
@@ -61,7 +60,11 @@ export class Synth
 
     this.ctx.resume();
     this.master.connect(this.analyser);
-    this.analyser.connect(this.ctx.destination);
+    this.master.connect(this.ctx.destination);
+  }
+  
+  now(): ScheduledTime {
+    return this.ctx?.currentTime ?? 0;
   }
 
   /**
@@ -69,45 +72,65 @@ export class Synth
    * 
    * Call `.stop()` with the same note to end it.
    */
-  start(note: Note, octave: int)
+  start(note: Note, octave: Octave)
   {
     if (octave < MIN_OCTAVE || octave > MAX_OCTAVE) return;
     if (this.active_notes.has(repr(note, octave))) return;
 
-    let nodes = this.create_note(note, octave);
-    if (nodes == undefined) return;
+    let chain = this.create_note(note, octave);
+    if (chain == undefined) return;
 
-    nodes.osc.start();
-    this.active_notes.set(repr(note, octave), nodes);
+    for (let osc of chain.oscillators) {
+      osc.node.start();
+    }
+    this.active_notes.set(repr(note, octave), chain);
   }
 
   /**
-   * Stop playing `note` at `octave`, using the synth's current release shaper.
+   * Stop playing `note` at `octave`, first applying any release shapers before stopping the oscillator.
    */
-  stop(note: Note, octave: int)
+  stop(note: Note, octave: Octave)
   {
     if (octave < MIN_OCTAVE || octave > MAX_OCTAVE) return;
 
-    let nodes = this.active_notes.get(repr(note, octave));
-    if (nodes == undefined) return;
+    let chain = this.active_notes.get(repr(note, octave));
+    if (chain == undefined) return;
 
-    nodes.attack.gain.cancelScheduledValues(this.now);
-    nodes.release.gain.setValueCurveAtTime(this.release_amps, this.now, this.release_time);
-    nodes.osc.stop(this.now + this.release_time + 0.5);
+    let scheduled_release = this.now();
 
+    for (let transform of chain.transforms) {
+      let release_time = transform.drop();
+
+      if (release_time == undefined) continue;
+      if (release_time < scheduled_release) continue;
+      scheduled_release = release_time;
+    }
+
+    for (let osc of chain.oscillators) {
+      osc.node.stop(scheduled_release + 0.2);
+    }
     this.active_notes.delete(repr(note, octave));
   }
 
   /**
-   * Force stop all current oscillators, without applying release envelopes. For killing hanging oscillators.
+   * Immediately stop playing `note` at `octave`, skipping any release shapers.
+   */
+  private force_stop(repr: OctavedNoteRepr, chain: ShaperInstanceChain)
+  {
+    for (let osc of chain.oscillators) {
+      osc.node.stop();
+    }
+    this.active_notes.delete(repr);
+  }
+
+  /**
+   * Immediately stop playing all currently active notes, skipping any release shapers.
    * */
   stop_all()
   {
-    for (let nodes of this.active_notes.values()) {
-      nodes.osc.stop();
+    for (let [repr, chain] of this.active_notes) {
+      this.force_stop(repr, chain);
     }
-
-    this.active_notes.clear();
   }
 
   /**
@@ -122,10 +145,9 @@ export class Synth
 
     let note_reprs = [];
 
-    for (let [note_repr, nodes] of this.active_notes) {
-      note_reprs.push(note_repr);
-      nodes.osc.stop();
-      this.active_notes.delete(note_repr);
+    for (let [repr, chain] of this.active_notes) {
+      note_reprs.push(repr);
+      this.force_stop(repr, chain);
     }
 
     switch (direction) {
@@ -133,9 +155,8 @@ export class Synth
       case "up":   this.octave++; break;
     }
 
-    for (let note_repr of note_reprs) {
-      let note = note_repr.slice(0, -1) as Note;
-      let octave = Number(note_repr.at(-1)!);
+    for (let repr of note_reprs) {
+      let { note, octave } = derepr(repr);
       
       switch (direction) {
         case "down": octave--; break;
@@ -146,45 +167,51 @@ export class Synth
     }
   }
 
-  private create_note(note: Note, octave: int): NoteNodeChain | undefined
+  private create_note(note: Note, octave: Octave): ShaperInstanceChain | undefined
   {
     if (this.ctx == null) { console.error("Internal Error: no AudioContext set"); return; }
-    if (this.osc1_amps.length === 0) { console.error("Internal Error: oscillator 1 shaper data is absent"); return; }
-    if (this.attack_amps.length === 0) { console.error("Internal Error: attack shaper data is absent"); return; }
-    if (this.release_amps.length === 0) { console.error("Internal Error: release shaper data is absent"); return; }
 
-    let frequency = NOTE_FREQUENCIES[octave][note];
-    if (frequency == undefined) return;
-    
-    let frames = Math.round(INTERNAL.AUDIO_SAMPLE_RATE / frequency);
-    let buffer = this.ctx.createBuffer(1, frames, INTERNAL.AUDIO_SAMPLE_RATE);
-    let channel = buffer.getChannelData(0);
+    // setup
+    const freq = NOTE_FREQUENCIES[octave][note];
+    if (freq == undefined) return;
 
-    for (let i = 0; i < frames; i++) {
-      let progress = frequency * i / INTERNAL.AUDIO_SAMPLE_RATE;
-      let idx = (progress * INTERNAL.SHAPER_SAMPLE_RES) % INTERNAL.SHAPER_SAMPLE_RES;
-      channel[i] = this.osc1_amps[Math.floor(idx)];
+    let oscillators = [];
+    let levels = [];
+    let transforms = [];
+
+    for (let osc of this.oscillators) {
+      let instance = osc.create(this.ctx, freq);
+      let level = new GainNode(this.ctx, { gain: osc.mix });
+      instance.connect(level);
+
+      oscillators.push(instance);
+      levels.push(level);
     }
 
-    let osc = this.ctx.createBufferSource();
-    osc.buffer = buffer;
-    osc.loop = true;
+    let fan_in = new GainNode(this.ctx);
 
-    let level = new GainNode(this.ctx, { gain: this.osc1_gain });
+    for (let level of levels) {
+      level.connect(fan_in);
+    }
+    
+    // connect
+    let prev = fan_in as { connect: (node: AudioNode) => void };
 
-    let attack = new GainNode(this.ctx);
-    attack.gain.setValueCurveAtTime(this.attack_amps, this.now, this.attack_time);
+    for (let group of this.transforms) {
+      for (let transform of group.shapers) {
+        if (!transform.enabled) continue;
 
-    let release = new GainNode(this.ctx, {
-      gain: Math.min(1.0, this.release_amps[0]),
-    });
+        let instance = transform.create(this.ctx);
+        transforms.push(instance);
 
-    osc.connect(level);
-    level.connect(attack);
-    attack.connect(release);
-    release.connect(this.master!);
+        prev.connect(instance.node);
+        prev = instance;
+      }
+    }
 
-    return { osc, attack, release };
+    prev.connect(this.master!);
+
+    return { oscillators, transforms };
   }
 }
 
@@ -193,7 +220,15 @@ export class Synth
 export const synth = new Synth();
 
 
-function repr(note: Note, octave: int): OctavedNoteRepr
+function repr(note: Note, octave: Octave): OctavedNoteRepr
 {
   return `${note}${octave}`;
+}
+
+function derepr(repr: OctavedNoteRepr): { note: Note, octave: Octave }
+{
+  let note = repr.slice(0, -1) as Note;
+  let octave = Number(repr.at(-1)!) as Octave;
+
+  return { note, octave };
 }

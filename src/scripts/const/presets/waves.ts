@@ -1,8 +1,9 @@
 import { ltx } from "#scripts/utils";
-import type { ShaperPreset } from "#scripts/types";
+
+import { presets } from "./shared";
 
 
-export const waves: Record<string, ShaperPreset[]> =
+export const waves = presets(
 {
   core: [
     {
@@ -168,4 +169,4 @@ export const waves: Record<string, ShaperPreset[]> =
       latex: ltx `f\left(t\right) = \sin\left( t^3 \right)`,
     },
   ],
-};
+});

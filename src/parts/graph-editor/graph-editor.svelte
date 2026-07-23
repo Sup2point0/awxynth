@@ -5,9 +5,9 @@ A generic graphing window for describing the shape of any parameter.
 
 <script lang="ts">
 
-import { Colour } from "#scripts/types";
 import * as util from "#scripts/utils";
-import type { int, Amplitude, Latex, ShaperPreset } from "#scripts/types";
+import type { Shaper } from "#scripts/shapers";
+import type { ShaperPreset } from "#scripts/types";
 
 import * as setup from "./setup";
 import * as sync from "./sync";
@@ -16,13 +16,8 @@ import { onMount } from "svelte";
 
 
 interface Props {
-  title?: string;
-
-  /** Colour of the title text. */
-  colour?: string;
-
-  /** The amplitude-over-time data this editor's function emits. */
-  amps: Amplitude[];
+  /** The shaper this editor controls. */
+  shaper: Shaper<any, any>;
 
   /** Preset configurations for the user to start from, grouped by category. */
   presets?: Record<string, ShaperPreset[]>;
@@ -38,20 +33,14 @@ interface Props {
 
   /** (attribute) Should the viewport axes gridlines be relative to pi? */
   pi?: true;
-
-  /** (attribute) Should clipping be enabled by default? */
-  clip?: true;
 }
 
 let {
-  title = "SHAPER",
-  colour = Colour.GREEN,
-  amps = $bindable(),
+  shaper = $bindable(),
   presets = {},
   preset = { title: "Custom", latex: "" },
   bounds,
   pi,
-  clip,
 }: Props = $props();
 
 /** Window viewport bounds. */
@@ -67,7 +56,6 @@ const presets_list = Object.values(presets).flat();
 let self = $state({
   latex: "",
   sampler_helper: null as any,
-  clip_enabled: clip,
   ghost_enabled: false,
   preset_index: presets_list.indexOf(preset),
   is_focused: false,
@@ -86,7 +74,6 @@ onMount(() => {
   desmos_editor = setup_desmos_editor(el_editor);
   setup_sampler_helper();
 
-  preset = presets_list[self.preset_index];
   sync.apply_preset(desmos_editor, preset);
 
   sync_all();
@@ -108,7 +95,7 @@ function setup_desmos_editor(el_editor: HTMLElement): Desmos.Calculator
   // @ts-ignore: outdated types
   editor.observeEvent("change", (_, e) => {
     if (!e.isUserInitiated) return;
-    sync.window_with_editor(self, desmos_window, desmos_editor, colour);
+    sync.window_with_editor(self, shaper, desmos_window, desmos_editor);
   });
   
   return editor;
@@ -121,12 +108,14 @@ function setup_sampler_helper()
   helper.observe("listValue", () => {
     if (helper.listValue == undefined) return;
     let data = helper.listValue;
-    amps = self.clip_enabled ? util.clip(data) : data;
+    shaper.amps = shaper.clip_on ? util.clip(data) : data;
+    console.log(`shaper.amps =`, shaper.amps);
   });
   helper.observe("numericValue", () => {
     if (helper.numericValue == undefined) return;
     let data = [helper.numericValue, helper.numericValue];
-    amps = self.clip_enabled ? util.clip(data) : data;
+    shaper.amps = shaper.clip_on ? util.clip(data) : data;
+    console.log(`shaper.amps =`, shaper.amps);
   });
 }
 
@@ -135,7 +124,7 @@ function setup_sampler_helper()
 
 function sync_all()
 {
-  sync.window_with_editor(self, desmos_window, desmos_editor, colour);
+  sync.window_with_editor(self, shaper, desmos_window, desmos_editor);
   sync.focus_window(desmos_window, self.is_focused);
 }
 
@@ -174,7 +163,7 @@ function cycle_presets(direction: "left" | "right")
 
 function toggle_clip()
 {
-  self.clip_enabled = !self.clip_enabled;
+  shaper.clip_on = !shaper.clip_on;
   sync_all();
 }
 
@@ -191,12 +180,12 @@ function toggle_ghost()
   class:focused={self.is_focused}
   onmouseenter={focus(true)} onfocuscapture={focus(true)}
   onmouseleave={focus(false)}
-  style:--colour={colour}
+  style:--colour={shaper.colour}
   role="application"
 >
   <div class="upper">
     <div class="left">
-      <h3 style:color={colour}> {title} </h3>
+      <h3 style:color={shaper.colour}> {shaper.title} </h3>
     </div>
 
     <div class="preset">
@@ -207,13 +196,13 @@ function toggle_ghost()
 
     <div class="right">
       <button class="clip"
-        class:enabled={self.clip_enabled}
+        class:enabled={shaper.clip_on}
         onclick={toggle_clip}
       >
-        {#if self.clip_enabled} <div class="tick">✓</div> {/if} <div>CLIP</div>
+        {#if shaper.clip_on} <div class="tick">✓</div> {/if} <div>CLIP</div>
       </button>
       
-      {#if self.clip_enabled}
+      {#if shaper.clip_on}
         <button class="ghost"
           class:enabled={self.ghost_enabled}
           onclick={toggle_ghost}

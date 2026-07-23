@@ -1,6 +1,6 @@
-export { INTERNAL } from "./internal";
-export { DEFAULTS } from "./defaults";
-export { PRESETS } from "./presets";
+export * as INTERNAL from "./internal";
+export * as DEFAULTS from "./defaults";
+export * as PRESETS from "./presets";
 
 export { Theme } from "./theme";
 
