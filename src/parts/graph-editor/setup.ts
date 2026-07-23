@@ -36,7 +36,7 @@ export function desmos_window(
   const w = INTERNAL.SHAPER_SAMPLE_RES - 1;
 
   self.sampler_helper = window.HelperExpression({
-    latex: ltx `g(${x_lower} + ${x_upper - x_lower} * [0...${w}] / ${w-1})`
+    latex: ltx `g(${x_lower} + ${x_upper - x_lower} * [0...${w}] / ${w})`
   });
 
   return window;

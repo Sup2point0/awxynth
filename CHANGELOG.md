@@ -23,6 +23,12 @@ Todo:
 <div class="changelog-layout">
 
 
+## 23 July 2026
+
+### *Fix*
+Fixed a nasty off-by-1 error resulting in $\text{NaN}$ values that crash the synth!
+
+
 ## 20 July 2026
 
 ### *Fix*
