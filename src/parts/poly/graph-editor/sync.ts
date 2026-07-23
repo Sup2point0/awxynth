@@ -10,15 +10,15 @@ import { Id, is_shaper } from "./expressions";
 /**
  * Update `desmos_window` settings to reflect `is_focused`.
  */
-export function focus_window(window: Desmos.Calculator, is_focused: boolean)
+export function focus_window(window: Desmos.Calculator, should_focus: boolean)
 {
   window?.updateSettings({
-    xAxisNumbers: is_focused, yAxisNumbers: is_focused,
+    xAxisNumbers: should_focus, yAxisNumbers: should_focus,
   });
 
   window?.setExpression({
     id: Id.SHAPER_RENDER_FILL,
-    fillOpacity: (is_focused ? 1.5 : 1) * Theme.WAVE_OPACITY
+    fillOpacity: (should_focus ? 1.5 : 1) * Theme.WAVE_OPACITY
   });
 }
 

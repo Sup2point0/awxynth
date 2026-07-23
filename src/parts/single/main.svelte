@@ -91,6 +91,7 @@ section {
   backdrop-filter: blur(8px);
 
   h2 {
+    user-select: none;
     margin: 0;
     @include font-ui;
     font-weight: 300;

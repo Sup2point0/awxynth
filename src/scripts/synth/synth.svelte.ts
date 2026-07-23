@@ -200,7 +200,9 @@ export class Synth
     let levels = [];
     let transforms = [];
 
-    for (let osc of this.oscillators) {
+    let enabled_oscillators = this.oscillators.filter(osc => osc.enabled);
+
+    for (let osc of enabled_oscillators) {
       let instance = osc.create(this.ctx, freq);
       let level = new GainNode(this.ctx, { gain: osc.mix });
       instance.connect(level);
@@ -209,13 +211,13 @@ export class Synth
       levels.push(level);
     }
 
-    let fan_in = new GainNode(this.ctx, { gain: 1 / this.oscillators.length });
+    let fan_in = new GainNode(this.ctx, { gain: 1 / enabled_oscillators.length });
 
+    // connect
     for (let level of levels) {
       level.connect(fan_in);
     }
     
-    // connect
     let prev = fan_in as { connect: (node: AudioNode) => void };
 
     for (let group of this.transforms) {

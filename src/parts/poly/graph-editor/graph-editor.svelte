@@ -61,7 +61,7 @@ let self = $state({
   is_focused: false,
 });
 
-$effect(() => sync.focus_window(desmos_window, self.is_focused));
+$effect(() => sync.focus_window(desmos_window, shaper.enabled && self.is_focused));
 
 
 let el_editor: HTMLElement;
@@ -123,7 +123,7 @@ function setup_sampler_helper()
 function sync_all()
 {
   sync.window_with_editor(self, shaper, desmos_window, desmos_editor);
-  sync.focus_window(desmos_window, self.is_focused);
+  sync.focus_window(desmos_window, shaper.enabled && self.is_focused);
 }
 
 
@@ -174,7 +174,9 @@ function toggle_ghost()
 </script>
 
 
-<div class="graph-editor"
+<div
+  class="graph-editor"
+  class:disabled={!shaper.enabled}
   class:focused={self.is_focused}
   onmouseenter={focus(true)} onfocuscapture={focus(true)}
   onmouseleave={focus(false)}
@@ -183,7 +185,15 @@ function toggle_ghost()
 >
   <div class="upper">
     <div class="left">
-      <h3 style:color={shaper.colour}> {shaper.title} </h3>
+      <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+      <h3
+        onclick={() => { shaper.enabled = !shaper.enabled }}
+        onkeydown={e => {
+          if (e.key === "Enter" || e.key === " ") {
+            shaper.enabled = !shaper.enabled;
+          }
+        }}
+      > {shaper.title} </h3>
     </div>
 
     <div class="preset">
@@ -239,11 +249,26 @@ function toggle_ghost()
   }
 
   h3 {
+    user-select: none;
     @include font-ui;
+    color: var(--colour, $col-prot);
     font-size: 60%;
     font-weight: 300;
     transform: scaleX(110%);
     transform-origin: 0%;
+
+    &:hover, &:focus-visible {
+      cursor: pointer;
+      color: white;
+    }
+
+    &:active {
+      color: $col-deut;
+    }
+
+    .disabled &:not(:where(:hover, :focus-visible, :active)) {
+      color: rgb(white, 40%);
+    }
   }
 
   .preset {
@@ -355,6 +380,11 @@ function toggle_ghost()
 
   .window {
     flex: 2;
+  }
+
+  .disabled & {
+    opacity: 0.4;
+    filter: brightness(80%);
   }
 }
 

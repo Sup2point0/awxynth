@@ -31,6 +31,9 @@ Major behind-the-scenes restructuring, in preparation for arbitrary transform ro
 ### ***Feature***
 You can now add more oscillators!
 
+### ***Feature***
+You can now toggle oscillators on and off!
+
 ### *Fix*
 Fixed a nasty off-by-1 error resulting in $\text{NaN}$ values that crash the synth!
 
