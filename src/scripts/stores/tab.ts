@@ -1,6 +1,14 @@
-import { OverlayTab } from "#src/routes/tabs";
-
 import { writable } from "svelte/store";
+
+
+export enum OverlayTab
+{
+  HELP,
+  CHANGELOG,
+  CREDITS,
+
+  ADD_SHAPER,
+}
 
 
 /** The currently open overlay tab, if any. */

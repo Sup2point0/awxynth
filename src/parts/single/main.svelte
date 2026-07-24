@@ -1,6 +1,7 @@
 <script lang="ts">
 
 import { synth } from "#scripts/synth";
+import { overlay_tab, OverlayTab } from "#scripts/stores";
 import { PRESETS } from "#scripts/const";
 import { Colour } from "#scripts/types";
 
@@ -53,7 +54,7 @@ import {
   {/each}
 
   <section style:margin-top="1rem">
-    <Add action={() => { }} />
+    <Add action={() => { $overlay_tab = OverlayTab.ADD_SHAPER; }} />
   </section>
 </main>
 
@@ -63,6 +64,8 @@ import {
 main {
   flex: 1;
   overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: $col-prot black;
 }
 
 section {

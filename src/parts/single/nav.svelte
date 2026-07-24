@@ -2,9 +2,8 @@
 
 <script lang="ts">
 
-import { overlay_tab } from "#src/scripts/stores";
 import { synth } from "#scripts/synth";
-import { OverlayTab } from "#src/routes/tabs";
+import { overlay_tab, OverlayTab } from "#scripts/stores";
 
 import { Meter } from "#parts";
 

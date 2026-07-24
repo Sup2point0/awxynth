@@ -2,8 +2,7 @@
 
 <script lang="ts">
 
-import { overlay_tab } from "#scripts/stores";
-import { OverlayTab } from "#src/routes/tabs";
+import { overlay_tab, OverlayTab } from "#scripts/stores";
 
 import Help from "./HELP.md";
 import Changelog from "./changelog.svelte";

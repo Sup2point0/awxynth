@@ -1,1 +1,1 @@
-export { overlay_tab } from "./tab";
+export { overlay_tab, OverlayTab } from "./tab";
