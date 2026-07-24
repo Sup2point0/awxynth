@@ -3,24 +3,21 @@
 <!--
 
 Fix:
-- Variables needed for function not synced between editor and window
 
 Todo:
-• animate progression along envelope
-• transform: amplitude clamper
-• legato
-• adding oscillators
-• global volume
-• enable/disable components
-• allow clicking keys in virtual keyboard
-• zoom editor windows horizontally
-• panning
-• adding transforms
+• sync full editor to window
+• white for preset name when applied, grey when changed
 
 -->
 
 
 <div class="changelog-layout">
+
+
+## 24 July 2026
+
+### *Fix*
+Skip release-time transforms when they are disabled.
 
 
 ## 23 July 2026

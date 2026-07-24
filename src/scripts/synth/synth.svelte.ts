@@ -102,6 +102,8 @@ export class Synth
     let scheduled_release = this.now();
 
     for (let transform of chain.transforms) {
+      if (!transform.shaper.enabled) continue;
+      
       let release_time = transform.drop();
 
       if (release_time == undefined) continue;
