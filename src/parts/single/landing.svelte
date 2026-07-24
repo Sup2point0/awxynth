@@ -59,6 +59,7 @@ function close()
 <style lang="scss">
 
 aside {
+  user-select: none;
   cursor: pointer;
   width: 100vw;
   height: 100vh;

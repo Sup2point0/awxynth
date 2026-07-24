@@ -8,7 +8,6 @@ import { Colour } from "#scripts/types";
 import {
   Add,
   GraphEditor,
-  Toggle,
 } from "#parts";
 
 </script>
