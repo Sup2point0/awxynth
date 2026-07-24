@@ -1,0 +1,17 @@
+@use 'mixins/colours' as *;
+
+
+@mixin interact($hover-color) {
+  &:hover, &:focus-visible {
+    cursor: pointer;
+    background: $col-hover;
+
+    @if $hover-color {
+      color: $hover-color;
+    }
+  }
+
+  &:active {
+    filter: brightness(60%);
+  }
+}

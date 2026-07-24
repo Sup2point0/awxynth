@@ -94,15 +94,7 @@ nav {
     background: none;
     border: none;
     outline: none;
-
-    &:hover, &:focus-visible {
-      cursor: pointer;
-      color: $col-prot;
-    }
-
-    &:active {
-      color: $col-deut;
-    }
+    @include interact($col-prot);
   }
 }
 

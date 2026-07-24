@@ -48,6 +48,7 @@ const config = {
         prependData: `
           @use 'mixins/colours' as *;
           @use 'mixins/fonts' as *;
+          @use 'mixins/interact' as *;
         `,
       }
     }),

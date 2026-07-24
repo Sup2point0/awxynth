@@ -1,7 +1,6 @@
 <script lang="ts">
 
 import { synth } from "#scripts/synth";
-import { OscillatorShaper } from "#scripts/shapers";
 import { PRESETS } from "#scripts/const";
 import { Colour } from "#scripts/types";
 
@@ -27,13 +26,20 @@ import {
       />
     {/each}
 
-    <Add action={() => synth.new_oscillator()} />
+    <div class="right">
+      <Add action={() => synth.new_oscillator()} />
+    </div>
   </section>
 
-  {#each synth.transforms as { title, colour, shapers }}
-    <section>
+  {#each synth.transforms as { title, colour, disabled, shapers }}
+    <section class:disabled>
       <div class="left">
-        <h2 style:color={colour}> {title} </h2>
+        <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+        <h2 class="toggle"
+          onclick={() => { disabled = !disabled; }}
+          onkeydown={e => { if (e.key === "Enter" || e.key === " ") disabled = !disabled; }}
+          style:--colour={colour}
+        > {title} </h2>
       </div>
 
       {#each shapers as shaper, idx}
@@ -45,6 +51,10 @@ import {
       {/each}
     </section>
   {/each}
+
+  <section style:margin-top="1rem">
+    <Add action={() => { }} />
+  </section>
 </main>
 
 
@@ -61,25 +71,20 @@ section {
   scrollbar-width: none;
   display: flex;
   flex-flow: row nowrap;
-  justify-content: stretch;
-  align-items: stretch;
   gap: 1rem;
   background: rgb(white, 2%);
 
   &:where(:hover, :focus-within) {
     background: rgb(white, 4%);
+  }
 
-    h2 {
-      opacity: 1;
-    }
-
-    :global(h3) {
-      opacity: 1;
-    }
+  &.disabled {
+    opacity: 0.5;
   }
 }
 
 .left {
+  margin-right: -0.5rem;
   position: sticky;
   left: 0;
   z-index: 5;
@@ -93,16 +98,43 @@ section {
     user-select: none;
     margin: 0;
     @include font-ui;
+    color: var(--colour, $col-prot);
     font-weight: 300;
     font-size: 100%;
     writing-mode: sideways-lr;
     text-align: center;
-    opacity: 0.5;
+
+    &.toggle:where(:hover, :focus-visible) {
+      cursor: pointer;
+      color: white;
+    }
+
+    .disabled & {
+      color: rgb(white, 50%);
+
+      &:hover, &:focus-visible {
+        color: var(--colour, $col-prot);
+      }
+    }
+
+    &.toggle:active {
+      filter: brightness(60%);
+    }
   }
 
-  :global(h3) {
-    opacity: 0.5;
+  &:hover {
+    background: $col-hover;
   }
+}
+
+.right {
+  position: sticky;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgb(black, 40%);
+  backdrop-filter: blur(8px);
 }
 
 </style>

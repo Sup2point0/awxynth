@@ -16,6 +16,9 @@ Todo:
 
 ## 24 July 2026
 
+### ***Feature***
+You can now toggle entire shaper chains on and off!
+
 ### *Fix*
 Skip release-time transforms when they are disabled.
 

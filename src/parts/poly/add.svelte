@@ -23,24 +23,17 @@ let { action }: Props = $props();
 <style lang="scss">
 
 button {
-  padding: 1rem;
+  width: 100%;
+  height: 100%;
+  padding: 0 0.2em 0.15em;
   @include font-ui;
   color: rgb(white, 20%);
   font-size: 200%;
+  line-height: 1;
   background: none;
   border: none;
   outline: none;
-
-  &:hover, &:focus-visible {
-    cursor: pointer;
-    color: $col-prot;
-    background: rgb(white, 2%);
-  }
-
-  &:active {
-    color: $col-deut;
-    background: rgb(white, 8%);
-  }
+  @include interact($col-prot);
 }
 
 </style>

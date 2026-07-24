@@ -12,6 +12,7 @@ export interface ShaperChain
 {
   title: string;
   colour: string;
+  disabled: boolean;
   shapers: Shaper<any, any>[];
 }
 
@@ -223,6 +224,8 @@ export class Synth
     let prev = fan_in as { connect: (node: AudioNode) => void };
 
     for (let group of this.transforms) {
+      if (group.disabled) continue;
+      
       for (let transform of group.shapers) {
         if (!transform.enabled) continue;
 

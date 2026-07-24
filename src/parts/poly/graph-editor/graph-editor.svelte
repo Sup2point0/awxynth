@@ -308,7 +308,7 @@ function toggle_ghost()
       &:hover, &:focus-visible, &:active {
         cursor: pointer;
         opacity: 100%;
-        background: rgb(white, 5%);
+        background: $col-hover;
       }
 
       &:active {
@@ -376,6 +376,11 @@ function toggle_ghost()
 
   .editor {
     flex: 1;
+    min-width: 16em;
+
+    &:focus-within {
+      min-width: 24em;
+    }
   }
 
   .window {
