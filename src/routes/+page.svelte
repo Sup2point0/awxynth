@@ -13,8 +13,6 @@ import { Landing, Nav, Overlay, Main, Keyboard } from "#parts";
 import { onMount } from "svelte";
 
 
-let tab: OverlayTab | null = $state(null);
-
 onMount(() => {
   return bind_keybinds();
 });
@@ -28,8 +26,8 @@ onMount(() => {
 <Landing />
 
 <div class="root">
-  <Nav bind:tab />
-  <Overlay bind:tab />
+  <Nav />
+  <Overlay />
   <Main />
   
   <div class="keyboard-container">

@@ -2,22 +2,16 @@
 
 <script lang="ts">
 
+import { overlay_tab } from "#src/scripts/stores";
 import { synth } from "#scripts/synth";
 import { OverlayTab } from "#src/routes/tabs";
 
 import { Meter } from "#parts";
 
 
-interface Props {
-  tab: OverlayTab | null;
-}
-
-let { tab = $bindable() }: Props = $props();
-
-
-function open($tab: OverlayTab)
+function open(tab: OverlayTab)
 {
-  return () => { tab = $tab; };
+  return () => { $overlay_tab = tab; };
 }
 
 </script>
@@ -60,18 +54,19 @@ nav {
   background: black;
 
   &:hover, &:focus-within {
-    background: rgb(white, 8%);
+    background: $col-hover;
   }
 
   > div {
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
-    gap: 1rem;
   }
 }
 
 .left {
+  gap: 1rem;
+
   h1 {
     width: max-content;
     padding-right: 1rem;
@@ -90,6 +85,7 @@ nav {
   transform: translateY(-0.1rem);
 
   .nav-clicky {
+    padding: 0 0.5em;
     display: block;
     @include font-ui;
     color: white;

@@ -2,6 +2,7 @@
 
 <script lang="ts">
 
+import { overlay_tab } from "#scripts/stores";
 import { OverlayTab } from "#src/routes/tabs";
 
 import Help from "./HELP.md";
@@ -11,39 +12,32 @@ import Credits from "./CREDITS.md";
 import { scale } from "svelte/transition";
 import { expoOut, quartOut } from "svelte/easing";
 
-
-interface Props {
-  tab: OverlayTab | null;
-}
-
-let { tab = $bindable() }: Props = $props();
-
 </script>
 
 
-<svelte:window onkeydown={e => { if (e.key === "Escape") tab = null; }} />
+<svelte:window onkeydown={e => { if (e.key === "Escape") $overlay_tab = null; }} />
 
 
-{#if tab !== null}
+{#if $overlay_tab !== null}
   <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
   <!-- svelte-ignore a11y_click_events_have_key_events -->
   <!-- svelte-ignore a11y_no_static_element_interactions -->
-  <div class="screen-protector" onclick={() => { tab = null; }}>
+  <div class="screen-protector" onclick={() => { $overlay_tab = null; }}>
     <aside transition:scale={{ duration: 500, easing: expoOut, start: 0.97 }} onclick={e => e.stopPropagation()}>
-      {#key tab}
+      {#key $overlay_tab}
         <div class="overlay-content" in:scale={{ duration: 500, easing: quartOut, start: 0.97 }}>
 
-          {#if tab === OverlayTab.HELP}
+          {#if $overlay_tab === OverlayTab.HELP}
             <article><Help /></article>
-          {:else if tab === OverlayTab.CHANGELOG}
+          {:else if $overlay_tab === OverlayTab.CHANGELOG}
             <Changelog />
-          {:else if tab === OverlayTab.CREDITS}
+          {:else if $overlay_tab === OverlayTab.CREDITS}
             <article><Credits /></article>
           {/if}
 
         </div>
 
-        <button onclick={() => { tab = null; }}>
+        <button onclick={() => { $overlay_tab = null; }}>
           <div> × </div>
         </button>
       {/key}
@@ -93,16 +87,7 @@ aside {
     background: none;
     border: none;
     outline: none;
-
-    &:hover, &:focus-visible {
-      cursor: pointer;
-      color: $col-prot;
-      background: rgb(white, 5%);
-    }
-
-    &:active {
-      color: $col-deut;
-    }
+    @include interact($col-prot);
 
     div {
       transform: translateY(-0.05em);
