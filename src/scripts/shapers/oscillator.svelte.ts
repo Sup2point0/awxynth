@@ -1,4 +1,4 @@
-import { Shaper, ShaperInstance } from "./shaper.svelte.ts";
+import { Shaper, ShaperInstance } from "#scripts/types";
 
 import * as PRESETS from "#scripts/const/presets";
 import { SHAPER_SAMPLE_RES, AUDIO_SAMPLE_RATE } from "#scripts/const/internal";

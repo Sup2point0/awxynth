@@ -8,8 +8,8 @@ import type { Scalar, Amplitude, ScheduledTime, ShaperPreset } from "#scripts/ty
  * This class stores only a shaper's *parameters*. To use the shaper, call `.create()` to construct a `ShaperInstance` which can be freely manipulated. This is so that multiple simultaneous notes can apply their shapers without disrupting each other.
  */
 export abstract class Shaper<
-  S extends Shaper<S,I>,
-  I extends ShaperInstance<S,I>
+  S extends Shaper<S,I>         = any,
+  I extends ShaperInstance<S,I> = any
 >
 {
   /** Displayed name of the shaper. */
@@ -71,9 +71,9 @@ export abstract class Shaper<
 
 
 export abstract class ShaperInstance<
-  S extends Shaper<S,I>,
-  I extends ShaperInstance<S,I>,
-  Node extends AudioNode = AudioNode
+  S extends Shaper<S,I>         = any,
+  I extends ShaperInstance<S,I> = any,
+  Node extends AudioNode        = AudioNode
 >
 {
   /** Reference to the `Shaper` that created this instance. */

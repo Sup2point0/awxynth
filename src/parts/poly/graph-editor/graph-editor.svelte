@@ -6,8 +6,7 @@ A generic graphing window for describing the shape of any parameter.
 <script lang="ts">
 
 import * as util from "#scripts/utils";
-import type { Shaper } from "#scripts/shapers";
-import type { ShaperPreset } from "#scripts/types";
+import type { Shaper, ShaperPreset } from "#scripts/types";
 
 import * as setup from "./setup";
 import * as sync from "./sync";
@@ -17,7 +16,7 @@ import { onMount } from "svelte";
 
 interface Props {
   /** The shaper this editor controls. */
-  shaper: Shaper<any, any>;
+  shaper: Shaper;
 
   /** Preset configurations for the user to start from, grouped by category. */
   presets?: Record<string, ShaperPreset[]>;

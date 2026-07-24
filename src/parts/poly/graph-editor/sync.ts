@@ -1,8 +1,7 @@
 import { Theme } from "#scripts/const";
 import { ltx } from "#scripts/utils";
 import * as util from "#scripts/utils";
-import { Shaper } from "#scripts/shapers";
-import type { Latex, ShaperPreset } from "#scripts/types";
+import type { Latex, Shaper, ShaperPreset } from "#scripts/types";
 
 import { Id, is_shaper } from "./expressions";
 
@@ -28,7 +27,7 @@ export function focus_window(window: Desmos.Calculator, should_focus: boolean)
  */
 export function window_with_editor(
   self: any,
-  shaper: Shaper<any, any>,
+  shaper: Shaper,
   window: Desmos.Calculator,
   editor: Desmos.Calculator,
 )

@@ -1,5 +1,5 @@
 import { OscillatorShaper, OscillatorInstance } from "#scripts/shapers";
-import type { Shaper, ShaperInstance } from "#scripts/shapers";
+import type { Shaper, ShaperInstance } from "#scripts/types";
 
 import { INTERNAL, DEFAULTS, NOTE_FREQUENCIES, MIN_OCTAVE, MAX_OCTAVE } from "#scripts/const";
 import { Note } from "#scripts/types";
@@ -13,7 +13,7 @@ export interface ShaperChain
   title: string;
   colour: string;
   disabled: boolean;
-  shapers: Shaper<any, any>[];
+  shapers: Shaper[];
 }
 
 
@@ -104,7 +104,7 @@ export class Synth
 
     for (let transform of chain.transforms) {
       if (!transform.shaper.enabled) continue;
-      
+
       let release_time = transform.drop();
 
       if (release_time == undefined) continue;

@@ -1,4 +1,4 @@
-import { Shaper, ShaperInstance } from "./shaper.svelte.ts";
+import { Shaper, ShaperInstance } from "#scripts/types";
 
 import * as PRESETS from "#scripts/const/presets";
 import { Colour, type Seconds } from "#scripts/types";
