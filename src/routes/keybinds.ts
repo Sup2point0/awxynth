@@ -2,18 +2,7 @@ import { synth } from "#scripts/synth";
 import { Note } from "#scripts/types";
 
 
-export function bind_keybinds()
-{
-  window.addEventListener("keydown", handle_keydown);
-  window.addEventListener("keyup",   handle_keyup);
-
-  return () => {
-    window.removeEventListener("keydown", handle_keydown);
-    window.removeEventListener("keyup",   handle_keyup);
-  };
-}
-
-function handle_keydown(e: KeyboardEvent)
+export function onkeydown(e: KeyboardEvent)
 {
   if (e.repeat) return;
   if (document.activeElement?.tagName.toLowerCase() === "textarea") return;
@@ -52,7 +41,7 @@ function handle_keydown(e: KeyboardEvent)
   e.stopPropagation();
 }
 
-function handle_keyup(e: KeyboardEvent)
+export function onkeyup(e: KeyboardEvent)
 {
   if (document.activeElement?.tagName.toLowerCase() === "textarea") return;
 

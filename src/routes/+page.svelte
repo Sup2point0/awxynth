@@ -4,23 +4,18 @@ import "#styles/essence.scss";
 import "#styles/article.scss";
 
 import { synth } from "#scripts/synth";
-
-import { bind_keybinds } from "./keybinds";
-import { OverlayTab } from "./tabs";
+import { onkeydown, onkeyup } from "./keybinds";
 
 import { Landing, Nav, Overlay, Main, Keyboard } from "#parts";
-
-import { onMount } from "svelte";
-
-
-onMount(() => {
-  return bind_keybinds();
-});
 
 </script>
 
 
-<svelte:window onblur={() => synth.stop_all()} />
+<svelte:window
+  {onkeydown}
+  {onkeyup}
+  onblur={() => synth.stop_all()}
+/>
 
 
 <Landing />
@@ -44,7 +39,6 @@ onMount(() => {
   display: flex;
   flex-flow: column nowrap;
   align-items: stretch;
-  gap: 1rem;
   background: rgb(black, 95%);
 }
 
