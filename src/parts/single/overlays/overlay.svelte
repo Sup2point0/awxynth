@@ -4,6 +4,7 @@
 
 import { overlay_tab, OverlayTab } from "#scripts/stores";
 
+import AddShaper from "./add-shaper.svelte";
 import Help from "./HELP.md";
 import Changelog from "./changelog.svelte";
 import Credits from "./CREDITS.md";
@@ -26,7 +27,9 @@ import { expoOut, quartOut } from "svelte/easing";
       {#key $overlay_tab}
         <div class="overlay-content" in:scale={{ duration: 500, easing: quartOut, start: 0.97 }}>
 
-          {#if $overlay_tab === OverlayTab.HELP}
+          {#if $overlay_tab === OverlayTab.ADD_SHAPER}
+            <AddShaper />
+          {:else if $overlay_tab === OverlayTab.HELP}
             <article><Help /></article>
           {:else if $overlay_tab === OverlayTab.CHANGELOG}
             <Changelog />

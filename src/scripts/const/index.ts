@@ -1,6 +1,7 @@
 export * as INTERNAL from "./internal";
 export * as DEFAULTS from "./defaults";
 export * as PRESETS from "./presets";
+export { SHAPER_CHAINS } from "./shaper-chains";
 
 export { Theme } from "./theme";
 
