@@ -3,7 +3,7 @@ import { ltx } from "#scripts/utils";
 import * as util from "#scripts/utils";
 import type { Latex, Shaper, ShaperPreset } from "#scripts/types";
 
-import { Id, is_shaper } from "./expressions";
+import { Id, Func, is_shaper, INTERNAL_ID_PREFIX } from "./expressions";
 
 
 /**
@@ -23,7 +23,7 @@ export function focus_window(window: Desmos.Calculator, should_focus: boolean)
 
 
 /**
- * Update `desmos_window` to reflect the shaper in `desmos_editor`, if found.
+ * Update `window` to reflect the expressions in `editor`.
  */
 export function window_with_editor(
   self: any,
@@ -32,25 +32,28 @@ export function window_with_editor(
   editor: Desmos.Calculator,
 )
 {
-  let latex = find_shaper_in_editor(editor);
-  if (latex == undefined) return;
+  let user_exprs = editor.getExpressions().map(expr => ({ ...expr, hidden: true }));
+  if (!user_exprs.some(expr => is_shaper(expr))) return;
 
-  window.setExpression({
-    id: Id.SHAPER,
-    latex,
-    hidden: true,
-  });
+  clear_user_expressions(window);
+  window.setExpressions(user_exprs);
+
+  // let latex = find_shaper_in_editor(editor);
+  // if (latex == undefined) return;
+
+  // window.setExpression({
+  //   id: Id.SHAPER,
+  //   latex,
+  //   hidden: true,
+  // });
 
   let clipped = String.raw `\operatorname{min}(1, \operatorname{max}(-1, f(x)))`;
+  let fx = shaper.clip_on ? clipped : "f(x)";
 
   /* NOTE: Sample from this curve, which handles clipping. */
   window.setExpression({
     id: Id.SHAPER_CLIPPER,
-    latex: (
-      shaper.clip_on ?
-        ltx `g(x) = ${clipped}`
-      : ltx `g(x) = f(x)`
-    ),
+    latex: ltx `${Func.SAMPLER}(x) = ${fx}`,
     hidden: true,
   });
 
@@ -71,16 +74,28 @@ export function window_with_editor(
 
   window.setExpression({
     id: Id.SHAPER_RENDER_FILL,
-    latex: (
-      shaper.clip_on ?
-        String.raw `\min(${clipped}, 0) \le y \le \max(${clipped}, 0)`
-      : String.raw `\min(f(x), 0) \le y \le \max(f(x), 0)`
-    ),
+    latex: ltx `\min(${fx}, 0) \le y \le \max(${fx}, 0)`,
     color: util.invert(shaper.colour),
     lines: false,
     fillOpacity: Theme.WAVE_OPACITY,
     hidden: false,
   });
+}
+
+/**
+ * Remove non-internal expressions from `window`.
+ */
+function clear_user_expressions(window: Desmos.Calculator)
+{
+  let user_exprs =
+    window
+    .getExpressions()
+    .filter(expr => expr.id != undefined)
+    .filter(expr => !expr.id?.startsWith(INTERNAL_ID_PREFIX))
+    .map(expr => expr as { id: string })
+  ;
+
+  window.removeExpressions(user_exprs);
 }
 
 function find_shaper_in_editor(editor: Desmos.Calculator): Latex | undefined
@@ -99,7 +114,7 @@ function find_shaper_in_editor(editor: Desmos.Calculator): Latex | undefined
 
 
 /**
- * Clear `desmos_editor` and apply `preset`.
+ * Clear `editor` and apply `preset`.
  */
 export function apply_preset(editor: Desmos.Calculator, preset: ShaperPreset)
 {

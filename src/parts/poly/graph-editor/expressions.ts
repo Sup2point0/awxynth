@@ -1,13 +1,19 @@
 import type { Latex } from "#scripts/types";
 
 
+export const INTERNAL_ID_PREFIX = "awx";
+
 export enum Id {
-  SHAPER                = "shaper",
-  SHAPER_HELPER         = "shaper-helper",
-  SHAPER_CLIPPER        = "shaper-clipper",
-  SHAPER_RENDER         = "shaper-render",
-  SHAPER_RENDER_CLIPPED = "shaper-render-clipped",
-  SHAPER_RENDER_FILL    = "shaper-fill",
+  SHAPER                = `${INTERNAL_ID_PREFIX}-shaper`,
+  SHAPER_HELPER         = `${INTERNAL_ID_PREFIX}-shaper-helper`,
+  SHAPER_CLIPPER        = `${INTERNAL_ID_PREFIX}-shaper-clipper`,
+  SHAPER_RENDER         = `${INTERNAL_ID_PREFIX}-shaper-render`,
+  SHAPER_RENDER_CLIPPED = `${INTERNAL_ID_PREFIX}-shaper-render-clipped`,
+  SHAPER_RENDER_FILL    = `${INTERNAL_ID_PREFIX}-shaper-fill`,
+}
+
+export enum Func {
+  SAMPLER = "g_{AwxynthInternal}"
 }
 
 

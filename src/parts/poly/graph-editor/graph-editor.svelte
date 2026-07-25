@@ -6,6 +6,7 @@ A generic graphing window for describing the shape of any parameter.
 <script lang="ts">
 
 import * as util from "#scripts/utils";
+import { INTERNAL } from "#scripts/const";
 import type { Shaper, ShaperPreset } from "#scripts/types";
 
 import * as setup from "./setup";
@@ -58,6 +59,7 @@ let self = $state({
   ghost_enabled: false,
   preset_index: presets_list.indexOf(preset),
   is_focused: false,
+  sync_interval: 0,
 });
 
 $effect(() => sync.focus_window(desmos_window, shaper.enabled && self.is_focused));
@@ -109,8 +111,11 @@ function setup_sampler_helper()
     let data = helper.listValue;
     shaper.amps = shaper.clip_on ? util.clip(data) : data;
   });
+  
   helper.observe("numericValue", () => {
     if (helper.numericValue == undefined) return;
+    if (Number.isNaN(helper.numericValue)) return;
+
     let data = [helper.numericValue, helper.numericValue];
     shaper.amps = shaper.clip_on ? util.clip(data) : data;
   });
@@ -123,6 +128,19 @@ function sync_all()
 {
   sync.window_with_editor(self, shaper, desmos_window, desmos_editor);
   sync.focus_window(desmos_window, shaper.enabled && self.is_focused);
+}
+
+function start_active_syncing()
+{
+  self.sync_interval = setInterval(
+    () => { console.log(`helper =`, self.sampler_helper); sync.window_with_editor(self, shaper, desmos_window, desmos_editor) },
+    1000 / INTERNAL.FRAME_RATE
+  );
+}
+
+function stop_active_syncing()
+{
+  clearInterval(self.sync_interval);
 }
 
 
@@ -221,8 +239,17 @@ function toggle_ghost()
   </div>
 
   <div class="embeds">
-    <div class="editor" bind:this={el_editor}></div>
-    <div class="window" bind:this={el_window}></div>
+    <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+    <!-- svelte-ignore a11y_no_static_element_interactions -->
+    <div class="editor"
+      bind:this={el_editor}
+      onmousedown={start_active_syncing}
+      onmouseup={stop_active_syncing}>
+    </div>
+
+    <div class="window"
+      bind:this={el_window}>
+    </div>
   </div>
 </div>
 
