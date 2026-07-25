@@ -13,7 +13,7 @@ export function invert(colour: string): string
   let ib = 0x0000ff - b;
 
   let ihex = ir | ig | ib;
-  let out = ihex.toString(16);
+  let out = ihex.toString(16).padStart(6, "0");
 
   return `#${out}`;
 }
