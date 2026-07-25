@@ -1,4 +1,5 @@
 import { INTERNAL } from "#scripts/const";
+
 import { ltx } from "#scripts/utils";
 
 import { Func, Id } from "./expressions";
@@ -22,8 +23,8 @@ export function desmos_window(
 {
   let window = Desmos.GraphingCalculator(el_window, {
     invertedColors: true,
-    // expressions: false,
-    expressions: true,  // DEBUG
+    expressions: false,
+    // expressions: true,  // DEBUG
     showGrid: true,
     xAxisNumbers: false, yAxisNumbers: false,
     xAxisStep: pi ? (Math.PI / 2) : 1, yAxisStep: 1,
@@ -38,6 +39,7 @@ export function desmos_window(
 
   const w = INTERNAL.SHAPER_SAMPLE_RES - 1;
 
+  // TEMP
   window.setExpression({
     id: Id.SHAPER_HELPER,
     latex: ltx `${Func.SAMPLER}(${x_lower} + ${x_upper - x_lower} * [0...${w}] / ${w})`

@@ -1,6 +1,7 @@
 import type { Latex } from "#scripts/types";
 
 
+export const USER_ID_PREFIX = "user";
 export const INTERNAL_ID_PREFIX = "awx";
 
 export enum Id {

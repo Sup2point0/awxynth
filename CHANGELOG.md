@@ -14,6 +14,12 @@ Todo:
 <div class="changelog-layout">
 
 
+## 25 July 2026
+
+### ***Feature***
+Your entire expression list is now synced, so you can use as many expressions as you’d like!
+
+
 ## 24 July 2026
 
 ### ***Feature***
@@ -21,6 +27,9 @@ You can now toggle entire shaper chains on and off!
 
 ### *Fix*
 Skip release-time transforms when they are disabled.
+
+### *Fix*
+UI fixes to be more consistent and efficient all-round.
 
 
 ## 23 July 2026

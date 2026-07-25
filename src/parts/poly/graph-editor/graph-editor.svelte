@@ -5,8 +5,9 @@ A generic graphing window for describing the shape of any parameter.
 
 <script lang="ts">
 
-import * as util from "#scripts/utils";
 import { INTERNAL } from "#scripts/const";
+
+import * as util from "#scripts/utils";
 import type { Shaper, ShaperPreset } from "#scripts/types";
 
 import * as setup from "./setup";

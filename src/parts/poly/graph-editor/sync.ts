@@ -1,9 +1,10 @@
 import { Theme } from "#scripts/const";
-import { ltx } from "#scripts/utils";
-import * as util from "#scripts/utils";
-import type { Latex, Shaper, ShaperPreset } from "#scripts/types";
 
-import { Id, Func, is_shaper, INTERNAL_ID_PREFIX } from "./expressions";
+import * as util from "#scripts/utils";
+import ltx from "#scripts/utils";
+import type { Shaper, ShaperPreset } from "#scripts/types";
+
+import { Id, Func, is_shaper, USER_ID_PREFIX, INTERNAL_ID_PREFIX } from "./expressions";
 
 
 /**
@@ -32,20 +33,17 @@ export function window_with_editor(
   editor: Desmos.Calculator,
 )
 {
-  let user_exprs = editor.getExpressions().map(expr => ({ ...expr, hidden: true }));
+  let user_exprs = editor.getExpressions().map(expr => ({
+    ...expr,
+    id: `${USER_ID_PREFIX}-${expr.id}`,
+    hidden: true,
+  }));
+
+  /* If the user's deleted their shaper, wait until they provide a new one before syncing again */
   if (!user_exprs.some(expr => is_shaper(expr))) return;
 
   clear_user_expressions(window);
   window.setExpressions(user_exprs);
-
-  // let latex = find_shaper_in_editor(editor);
-  // if (latex == undefined) return;
-
-  // window.setExpression({
-  //   id: Id.SHAPER,
-  //   latex,
-  //   hidden: true,
-  // });
 
   let clipped = String.raw `\operatorname{min}(1, \operatorname{max}(-1, f(x)))`;
   let fx = shaper.clip_on ? clipped : "f(x)";
@@ -98,20 +96,6 @@ function clear_user_expressions(window: Desmos.Calculator)
   window.removeExpressions(user_exprs);
 }
 
-function find_shaper_in_editor(editor: Desmos.Calculator): Latex | undefined
-{
-  let expressions = editor.getExpressions();
-  if (expressions == undefined) {
-    console.error(`awxynth: Failed to fetch desmos expressions`);
-    return;
-  }
-
-  let shaper_expr = expressions.find(expr => is_shaper(expr));
-  if (shaper_expr == undefined) return;
-
-  return shaper_expr.latex;
-}
-
 
 /**
  * Clear `editor` and apply `preset`.
@@ -121,11 +105,11 @@ export function apply_preset(editor: Desmos.Calculator, preset: ShaperPreset)
   editor.setBlank();
 
   if (!Array.isArray(preset.latex)) {
-    editor.setExpression({ id: Id.SHAPER, latex: preset.latex });
+    editor.setExpression({ id: "any", latex: preset.latex });
     return;
   }
   
   for (let [i, latex] of preset.latex.entries()) {
-    editor.setExpression({ id: `${Id.SHAPER}-${i}`, latex });
+    editor.setExpression({ id: `any-${i}`, latex });
   }
 }
