@@ -1,9 +1,6 @@
 /** How many samples points of a shaping function to take over the time range. */
 export const SHAPER_SAMPLE_RES = 512;
 
-/** Sample rate for audio buffers. */
-export const AUDIO_SAMPLE_RATE = 48000;
-
 /** Downsampling rate for frequency spectrum visualisers. */
 export const FREQUENCY_DOWNSAMPLE = 32;
 

@@ -18,14 +18,14 @@ let level = $state(0);
 
 
 onMount(() => {
-  let interval = setInterval(sample_level, 1000 / INTERNAL.FRAME_RATE);
-  return () => clearTimeout(interval);
+  let animation_frame = sample_level();
+  return () => cancelAnimationFrame(animation_frame);
 });
 
 
-function sample_level()
+function sample_level(): number
 {
-  if (node == undefined) return;
+  if (node == undefined) return 0;
   
   let data = new Float32Array(2048);
   node.getFloatTimeDomainData(data);
@@ -34,6 +34,8 @@ function sample_level()
   let mean = total / data.length;
 
   level = mean ** 0.5;
+
+  return requestAnimationFrame(sample_level);
 }
 
 </script>
@@ -46,7 +48,7 @@ function sample_level()
 
 <style lang="scss">
 
-$meter-width: 8rem;
+$meter-width: 16rem;
 
 .meter {
   width: $meter-width;

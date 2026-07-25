@@ -1,7 +1,7 @@
 import { Shaper, ShaperInstance } from "#scripts/types";
 
 import * as PRESETS from "#scripts/const/presets";
-import { SHAPER_SAMPLE_RES, AUDIO_SAMPLE_RATE } from "#scripts/const/internal";
+import { SHAPER_SAMPLE_RES } from "#scripts/const/internal";
 import type { int } from "#scripts/types";
 
 
@@ -43,18 +43,18 @@ export class OscillatorInstance
 
   update()
   {
-    const frame_count = Math.round(AUDIO_SAMPLE_RATE / this.freq);
+    const frame_count = Math.round(this.ctx.sampleRate / this.freq);
 
     let buffer = new AudioBuffer({
       numberOfChannels: 1,
       length: frame_count,
-      sampleRate: AUDIO_SAMPLE_RATE,
+      sampleRate: this.ctx.sampleRate,
     });
 
     let channel = buffer.getChannelData(0);
 
     for (let i = 0; i < frame_count; i++) {
-      let progress = this.freq * i / AUDIO_SAMPLE_RATE;
+      let progress = this.freq * i / this.ctx.sampleRate;
       let idx = (progress * SHAPER_SAMPLE_RES) % SHAPER_SAMPLE_RES;
 
       channel[i] = this.shaper.amps[Math.floor(idx)];

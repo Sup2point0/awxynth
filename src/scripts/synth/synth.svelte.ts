@@ -57,7 +57,7 @@ export class Synth
 
     this.ctx      = new AudioContext();
     this.master   = new GainNode(this.ctx, { gain: INTERNAL.MAX_GAIN });
-    this.analyser = new AnalyserNode(this.ctx);
+    this.analyser = new AnalyserNode(this.ctx, { fftSize: 4096 * 2 });
 
     this.ctx.resume();
     this.master.connect(this.analyser);
