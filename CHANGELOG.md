@@ -22,6 +22,9 @@ Your entire expression list is now synced, so you can use as many expressions as
 ### ***Feature***
 New output analysers, starting with a frequency spectrum visualiser!
 
+### ***Feature***
+Our first proper transform is here – **Distortion**!
+
 
 ## 24 July 2026
 
