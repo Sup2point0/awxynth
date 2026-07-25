@@ -16,3 +16,6 @@ export const OSCILLATORS = [
 export const TRANSFORMS: ShaperChain[] = [
   SHAPER_CHAINS["Post-Transforms"]["Envelope"](),
 ];
+
+/* NOTE: Start with instant attack and release, but have envelope shown ready to be enabled - also teaches user immediately how to enable/disable shapers! */
+TRANSFORMS[0].disabled = true;
