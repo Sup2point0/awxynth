@@ -113,7 +113,7 @@ export class Synth
     }
 
     for (let osc of chain.oscillators) {
-      osc.node.stop(scheduled_release + 0.2);
+      osc.node.stop(scheduled_release);
     }
     this.active_notes.delete(repr(note, octave));
   }
