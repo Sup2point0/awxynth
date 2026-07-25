@@ -59,7 +59,7 @@ section {
   }
 
   &.disabled {
-    opacity: 0.5;
+    opacity: 40%;
   }
 }
 

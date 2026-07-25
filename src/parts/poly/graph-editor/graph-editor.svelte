@@ -362,7 +362,7 @@ function toggle_ghost()
       background: none;
       border: none;
       outline: none;
-      opacity: 0.5;
+      opacity: 50%;
 
       &:hover {
         cursor: pointer;
@@ -416,7 +416,7 @@ function toggle_ghost()
   }
 
   .disabled & {
-    opacity: 0.4;
+    opacity: 30%;
     filter: brightness(80%);
   }
 }

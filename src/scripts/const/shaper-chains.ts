@@ -13,7 +13,7 @@ export const SHAPER_CHAINS: Record<string, Record<string, () => ShaperChain>> =
   "Post-Transforms":
   {
     "Envelope": () => ({
-      title: "Envelope",
+      title: "ENVELOPE",
       colour: Colour.PURPLE,
       disabled: false,
       shapers: [
@@ -22,7 +22,7 @@ export const SHAPER_CHAINS: Record<string, Record<string, () => ShaperChain>> =
       ],
     }),
     "Distortion": () => ({
-      title: "Distortion",
+      title: "DISTORTION",
       colour: Colour.RED,
       disabled: false,
       shapers: [
