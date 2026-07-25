@@ -9,7 +9,7 @@ import { onkeydown, onkeyup } from "./keybinds";
 
 import {
   Landing, Overlay,
-  Nav, Main, Out, Keyboard,
+  Nav, Main, AnalysersPane, Keyboard,
 } from "#parts";
 
 </script>
@@ -27,11 +27,14 @@ import {
 <div class="root">
   <Nav />
   <Overlay />
-  <Main />
 
-  {#if $nav_state.out}
-    <Out node={synth.analyser} />
-  {/if}
+  <div class="contain">
+    <Main />
+
+    {#if $nav_state.show_analysers_pane}
+      <AnalysersPane node={synth.analyser} />
+    {/if}
+  </div>
   
   <div class="keyboard-container">
     <Keyboard />
@@ -47,8 +50,16 @@ import {
   display: flex;
   flex-flow: column nowrap;
   align-items: stretch;
-  gap: 0.1rem;
+  gap: 0.4rem;
   background: rgb(black, 94%);
+}
+
+.contain {
+  flex: 1;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: $col-prot black;
+  position: relative;
 }
 
 .keyboard-container {

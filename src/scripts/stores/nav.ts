@@ -11,16 +11,20 @@ export enum OverlayPage
 }
 
 
+/** Global navigation-related state. */
 export interface NavState
 {
+  /** The currently open overlay page, if any. */
   overlay: OverlayPage | null;
 
-  out: boolean;
+  /** Should the output analyser visualisers pane be shown? */
+  show_analysers_pane: boolean;
 }
 
 
-/** The currently open overlay tab, if any. */
-export const nav_state = writable<NavState>({
+/** Global navigation-related state. */
+export const nav_state = writable<NavState>(
+{
   overlay: null,
-  out: false,
+  show_analysers_pane: false,
 });

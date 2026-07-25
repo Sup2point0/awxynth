@@ -19,6 +19,9 @@ Todo:
 ### ***Feature***
 Your entire expression list is now synced, so you can use as many expressions as you’d like!
 
+### ***Feature***
+New output analysers, starting with a frequency spectrum visualiser!
+
 
 ## 24 July 2026
 

@@ -5,6 +5,7 @@
 <script lang="ts">
 
 import { Colour } from "#scripts/types";
+import * as util from "#scripts/utils";
 import { INTERNAL } from "#scripts/const";
 
 import { onMount } from "svelte";
@@ -59,8 +60,10 @@ function render(): number
 function draw_lines(ctx: CanvasRenderingContext2D, data: Uint8Array)
 {
   const PEAK_FREQUENCY = Math.floor(node.context.sampleRate / 2);
-  
-  ctx.fillStyle = "#000";
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = "rgb(0 0 0 / 10%)";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   ctx.fillStyle = Colour.GREEN;
@@ -85,6 +88,8 @@ function draw_lines(ctx: CanvasRenderingContext2D, data: Uint8Array)
     let y_frac = amplitude / 255;
     let y = y_frac * canvas.height - 10;
 
+    ctx.fillStyle = `rgb(255 255 255 / ${1 - x_frac})`;
+
     ctx.fillRect(
       0.5 + x,
       canvas.height - y,
@@ -105,7 +110,11 @@ function draw_lines(ctx: CanvasRenderingContext2D, data: Uint8Array)
 canvas {
   width: 100%;
   height: 40vh;
-  image-rendering: pixelated;
+  position: absolute;
+  bottom: 0;
+  background: transparent;
+  backdrop-filter: blur(8px);
+  // image-rendering: pixelated;
 }
 
 </style>

@@ -24,26 +24,34 @@ function overlay(page: OverlayPage)
   </div>
 
   <div class="centre">
-    <button class="nav-clicky" onclick={() => { $nav_state.out = !$nav_state.out; }}>
+    <button class="clicky toggle"
+      class:open={$nav_state.show_analysers_pane}
+      onclick={() => { $nav_state.show_analysers_pane = !$nav_state.show_analysers_pane; }}
+    >
       <span>Output</span>
+    </button>
+
+    <button class="clicky toggle">
+      <span>Developing!</span>
     </button>
   </div>
 
   <div class="right">
-    <button class="nav-clicky" onclick={overlay(OverlayPage.HELP)}>
-      <span>Help</span>
-    </button>
+    {#each [
+      { page: OverlayPage.HELP,      title: "Help" },
+      { page: OverlayPage.CHANGELOG, title: "Changelog" },
+      { page: OverlayPage.CREDITS,   title: "Credits" },
+    ] as tab}
+      <button class="clicky"
+        class:open={$nav_state.overlay === tab.page}
+        onclick={overlay(tab.page)}
+      >
+        <span> {tab.title} </span>
+      </button>
+    {/each}
 
-    <button class="nav-clicky" onclick={overlay(OverlayPage.CHANGELOG)}>
-      <span>Changelog</span>
-    </button>
-
-    <button class="nav-clicky" onclick={overlay(OverlayPage.CREDITS)}>
-      <span>Credits</span>
-    </button>
-
-    <a class="nav-clicky" href="https://github.com/Sup2point0/awxynth" target="_blank">
-      <span>GitHub</span>
+    <a class="clicky" href="https://github.com/Sup2point0/awxynth" target="_blank">
+      <span> GitHub </span>
     </a>
   </div>
 </nav>
@@ -96,8 +104,8 @@ nav {
 }
 
 
-.nav-clicky {
-  padding: 0 0.5em;
+.clicky {
+  padding: 0 0.75em;
   display: block;
   @include font-ui;
   color: white;
@@ -107,6 +115,20 @@ nav {
   border: none;
   outline: none;
   @include interact($col-prot);
+
+  &.open {
+    color: $col-deut;
+  }
+
+  &.toggle {
+    color: rgb(white, 50%);
+    @include interact(white);
+
+    &.open {
+      color: white;
+      @include interact($col-prot);
+    }
+  }
 }
 
 span {

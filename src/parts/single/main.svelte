@@ -37,7 +37,7 @@ import {
     <ShaperChain bind:chain />
   {/each}
 
-  <div style:margin-top="1rem">
+  <div style:margin-top="0.5rem">
     <Add action={() => { $nav_state.overlay = OverlayPage.ADD_SHAPER; }} />
   </div>
 </main>
@@ -46,10 +46,9 @@ import {
 <style lang="scss">
 
 main {
-  flex: 1;
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: $col-prot black;
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 0.5rem;
 }
 
 // FIXME extract
