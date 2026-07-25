@@ -86,6 +86,10 @@ onMount(() => {
 
 function setup_desmos_editor(el_editor: HTMLElement): Desmos.Calculator
 {
+  if (Desmos == undefined) {
+    window.alert(`Failed to load Desmos embeds!`);
+  }
+
   let editor = Desmos.GraphingCalculator(el_editor, {
     invertedColors: true,
     graphpaper: false,

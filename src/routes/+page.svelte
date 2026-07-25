@@ -6,7 +6,10 @@ import "#styles/article.scss";
 import { synth } from "#scripts/synth";
 import { onkeydown, onkeyup } from "./keybinds";
 
-import { Landing, Nav, Overlay, Main, Keyboard } from "#parts";
+import {
+  Landing, Overlay,
+  Nav, Main, Out, Keyboard,
+} from "#parts";
 
 </script>
 
@@ -24,6 +27,7 @@ import { Landing, Nav, Overlay, Main, Keyboard } from "#parts";
   <Nav />
   <Overlay />
   <Main />
+  <Out node={synth.analyser} />
   
   <div class="keyboard-container">
     <Keyboard />
@@ -39,7 +43,8 @@ import { Landing, Nav, Overlay, Main, Keyboard } from "#parts";
   display: flex;
   flex-flow: column nowrap;
   align-items: stretch;
-  background: rgb(black, 95%);
+  gap: 0.1rem;
+  background: rgb(black, 94%);
 }
 
 .keyboard-container {

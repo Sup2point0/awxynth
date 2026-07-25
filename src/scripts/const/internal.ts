@@ -4,6 +4,9 @@ export const SHAPER_SAMPLE_RES = 512;
 /** Sample rate for audio buffers. */
 export const AUDIO_SAMPLE_RATE = 48000;
 
+/** Downsampling rate for frequency spectrum visualisers. */
+export const FREQUENCY_DOWNSAMPLE = 256;
+
 /** Frames per second for continuous UI updates, such as meters. */
 export const FRAME_RATE = 30;
 

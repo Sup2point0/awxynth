@@ -5,18 +5,17 @@ A row in the synth containing 1 or more `<GraphEditor>`s.
 
 <script lang="ts">
 
-interface Props
-{
-  /** The shaper chain this component manages. */
-  chain: ShaperChain;
-}
-
-
 import * as util from "#scripts/utils";
 import type { ShaperChain } from "#scripts/synth";
 
 import { GraphEditor } from "#parts";
 
+
+interface Props
+{
+  /** The shaper chain this component manages. */
+  chain: ShaperChain;
+}
 
 let { chain = $bindable() }: Props = $props();
 

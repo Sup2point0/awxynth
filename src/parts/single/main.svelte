@@ -52,7 +52,7 @@ main {
   scrollbar-color: $col-prot black;
 }
 
-// FIXME
+// FIXME extract
 section {
   overflow-x: auto;
   scrollbar-width: none;
