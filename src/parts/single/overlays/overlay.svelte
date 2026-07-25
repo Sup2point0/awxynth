@@ -2,7 +2,7 @@
 
 <script lang="ts">
 
-import { overlay_tab, OverlayTab } from "#scripts/stores";
+import { nav_state, OverlayPage } from "#scripts/stores";
 
 import AddShaper from "./add-shaper.svelte";
 import Help from "./HELP.md";
@@ -15,31 +15,31 @@ import { expoOut, quartOut } from "svelte/easing";
 </script>
 
 
-<svelte:window onkeydown={e => { if (e.key === "Escape") $overlay_tab = null; }} />
+<svelte:window onkeydown={e => { if (e.key === "Escape") $nav_state.overlay = null; }} />
 
 
-{#if $overlay_tab !== null}
+{#if $nav_state.overlay !== null}
   <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
   <!-- svelte-ignore a11y_click_events_have_key_events -->
   <!-- svelte-ignore a11y_no_static_element_interactions -->
-  <div class="screen-protector" onclick={() => { $overlay_tab = null; }}>
+  <div class="screen-protector" onclick={() => { $nav_state.overlay = null; }}>
     <aside transition:scale={{ duration: 500, easing: expoOut, start: 0.97 }} onclick={e => e.stopPropagation()}>
-      {#key $overlay_tab}
+      {#key $nav_state.overlay}
         <div class="overlay-content" in:scale={{ duration: 500, easing: quartOut, start: 0.97 }}>
 
-          {#if $overlay_tab === OverlayTab.ADD_SHAPER}
+          {#if $nav_state.overlay === OverlayPage.ADD_SHAPER}
             <AddShaper />
-          {:else if $overlay_tab === OverlayTab.HELP}
+          {:else if $nav_state.overlay === OverlayPage.HELP}
             <article><Help /></article>
-          {:else if $overlay_tab === OverlayTab.CHANGELOG}
+          {:else if $nav_state.overlay === OverlayPage.CHANGELOG}
             <Changelog />
-          {:else if $overlay_tab === OverlayTab.CREDITS}
+          {:else if $nav_state.overlay === OverlayPage.CREDITS}
             <article><Credits /></article>
           {/if}
 
         </div>
 
-        <button onclick={() => { $overlay_tab = null; }}>
+        <button onclick={() => { $nav_state.overlay = null; }}>
           <div> × </div>
         </button>
       {/key}

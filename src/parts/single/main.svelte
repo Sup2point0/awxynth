@@ -1,7 +1,7 @@
 <script lang="ts">
 
 import { synth } from "#scripts/synth";
-import { overlay_tab, OverlayTab } from "#scripts/stores";
+import { nav_state, OverlayPage } from "#scripts/stores";
 import { PRESETS } from "#scripts/const";
 import { Colour } from "#scripts/types";
 
@@ -38,7 +38,7 @@ import {
   {/each}
 
   <div style:margin-top="1rem">
-    <Add action={() => { $overlay_tab = OverlayTab.ADD_SHAPER; }} />
+    <Add action={() => { $nav_state.overlay = OverlayPage.ADD_SHAPER; }} />
   </div>
 </main>
 

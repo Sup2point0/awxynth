@@ -4,6 +4,7 @@ import "#styles/essence.scss";
 import "#styles/article.scss";
 
 import { synth } from "#scripts/synth";
+import { nav_state } from "#scripts/stores";
 import { onkeydown, onkeyup } from "./keybinds";
 
 import {
@@ -27,7 +28,10 @@ import {
   <Nav />
   <Overlay />
   <Main />
-  <Out node={synth.analyser} />
+
+  {#if $nav_state.out}
+    <Out node={synth.analyser} />
+  {/if}
   
   <div class="keyboard-container">
     <Keyboard />
