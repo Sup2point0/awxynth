@@ -134,7 +134,7 @@ function sync_all()
 function start_active_syncing()
 {
   self.sync_interval = setInterval(
-    () => { console.log(`helper =`, self.sampler_helper); sync.window_with_editor(self, shaper, desmos_window, desmos_editor) },
+    () => sync.window_with_editor(self, shaper, desmos_window, desmos_editor),
     1000 / INTERNAL.FRAME_RATE
   );
 }
@@ -203,15 +203,11 @@ function toggle_ghost()
 >
   <div class="upper">
     <div class="left">
-      <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
       <h3
-        onclick={() => { shaper.enabled = !shaper.enabled }}
-        onkeydown={e => {
-          if (e.key === "Enter" || e.key === " ") {
-            shaper.enabled = !shaper.enabled;
-          }
-        }}
-      > {shaper.title} </h3>
+        {@attach util.toggles(() => { shaper.enabled = !shaper.enabled; })}
+      >
+        {shaper.title}
+      </h3>
     </div>
 
     <div class="preset">
@@ -321,6 +317,7 @@ function toggle_ghost()
       }
 
       &.prev, &.next {
+        user-select: none;
         font-size: 50%;
         font-weight: 800;
       }

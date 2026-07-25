@@ -1,58 +1,52 @@
+<!-- @component `ShaperChain`
+
+A row in the synth containing 1 or more `<GraphEditor>`s.
+-->
+
 <script lang="ts">
 
-import { synth } from "#scripts/synth";
-import { overlay_tab, OverlayTab } from "#scripts/stores";
-import { PRESETS } from "#scripts/const";
-import { Colour } from "#scripts/types";
+interface Props
+{
+  /** The shaper chain this component manages. */
+  chain: ShaperChain;
+}
 
-import {
-  Add,
-  GraphEditor,
-  ShaperChain,
-} from "#parts";
+
+import * as util from "#scripts/utils";
+import type { ShaperChain } from "#scripts/synth";
+
+import { GraphEditor } from "#parts";
+
+
+let { chain = $bindable() }: Props = $props();
 
 </script>
 
-<main>
-  <section>
-    <div class="left">
-      <h2 style:color={Colour.GREEN}> OSCILLATORS </h2>
-    </div>
 
-    {#each synth.oscillators.keys() as idx}
-      <GraphEditor pi
-        bind:shaper={synth.oscillators[idx]}
-        presets={PRESETS.waves}
-        preset={PRESETS.waves.core[idx]}
-        bounds={{ x: [0, 2*Math.PI], y: [-1.05, 1.05] }}
-      />
-    {/each}
-
-    <div class="right">
-      <Add action={() => synth.new_oscillator()} />
-    </div>
-  </section>
-
-  {#each synth.transforms as chain}
-    <ShaperChain bind:chain />
-  {/each}
-
-  <div style:margin-top="1rem">
-    <Add action={() => { $overlay_tab = OverlayTab.ADD_SHAPER; }} />
+<section
+  class:disabled={chain.disabled}
+>
+  <div class="left">
+    <h2 class="toggle"
+      {@attach util.toggles(() => { chain.disabled = !chain.disabled; })}
+      style:--colour={chain.colour}
+    >
+      {chain.title}
+    </h2>
   </div>
-</main>
+
+  {#each chain.shapers as shaper, idx}
+    <GraphEditor
+      bind:shaper={chain.shapers[idx]}
+      presets={shaper.presets}
+      preset={shaper.preset}
+    />
+  {/each}
+</section>
 
 
 <style lang="scss">
 
-main {
-  flex: 1;
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: $col-prot black;
-}
-
-// FIXME
 section {
   overflow-x: auto;
   scrollbar-width: none;
