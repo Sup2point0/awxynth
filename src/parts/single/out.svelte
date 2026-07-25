@@ -17,20 +17,34 @@ interface Props {
 let { node }: Props = $props();
 
 
-let el_canvas: HTMLCanvasElement;
-let ctx: CanvasRenderingContext2D | null;
+const CANVAS_SCALE = 10;
+
+
+let canvas: HTMLCanvasElement;
+let ctx: CanvasRenderingContext2D;
+
 
 onMount(() => {
-  ctx = el_canvas.getContext("2d");
-  ctx?.scale(2, 2);
+  ctx = canvas.getContext("2d")!;
 
-  update();
+  setup_observer();
+  render();
 });
 
 
-function update()
+function setup_observer()
 {
-  requestAnimationFrame(update);
+  let observer = new ResizeObserver(([container]) => {
+    canvas.width = Math.ceil(container.borderBoxSize[0].inlineSize);
+    canvas.height = Math.ceil(container.borderBoxSize[0].blockSize);
+  });
+
+  observer.observe(canvas);
+}
+
+function render()
+{
+  requestAnimationFrame(render);
 
   if (node == undefined) return;
   if (ctx == null) return;
@@ -41,18 +55,24 @@ function update()
   node.getByteFrequencyData(data);
 
   ctx.fillStyle = "#000";
-  ctx.fillRect(0, 0, 300, 100);
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   ctx.fillStyle = Colour.GREEN;
 
-  for (let i = 0; i < data.length; i++) {
+  for (let i = 0; i < data.length; i++)
+  {
+    let x_frac = i / data.length;
+    let x = x_frac * canvas.width;
+
     let amplitude = data[i];
+    let y_frac = amplitude / 255;
+    let y = y_frac * canvas.height;
 
     ctx.fillRect(
-      0.5 + 1*i,
-      50 - 0.1 * amplitude,
-      0.5,
-      0.1 * amplitude
+      0.5 + x,
+      canvas.height - y,
+      1,
+      y,
     );
   }
 }
@@ -60,18 +80,15 @@ function update()
 </script>
 
 
-<canvas
-  bind:this={el_canvas}
-  width="400px"
-  height="300px"
-></canvas>
+<canvas bind:this={canvas}></canvas>
 
 
 <style lang="scss">
 
 canvas {
+  height: 50vh;
   width: 100%;
-  height: 40vh;
+  // height: 40vh;
   image-rendering: pixelated;
 }
 
