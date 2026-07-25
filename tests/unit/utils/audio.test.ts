@@ -3,7 +3,7 @@ import { clip } from "#scripts/utils";
 
 describe("audio", () =>
 {
-  describe("clip", () =>
+  describe("clip()", () =>
   {
     test("identity", () => {
       expect(clip([0.5, 0.5, 0.5])).toEqual([0.5, 0.5, 0.5]);

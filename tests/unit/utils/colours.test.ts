@@ -3,7 +3,7 @@ import { invert } from "#scripts/utils";
 
 describe("colours", () =>
 {
-  describe("invert", () =>
+  describe("invert()", () =>
   {
     test("simple", () =>
     {
