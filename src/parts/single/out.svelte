@@ -17,10 +17,6 @@ interface Props {
 let { node }: Props = $props();
 
 
-const PEAK_FREQUENCY = Math.floor(INTERNAL.AUDIO_SAMPLE_RATE / 2);
-const CANVAS_SCALE = 10;
-
-
 let canvas: HTMLCanvasElement;
 let ctx: CanvasRenderingContext2D | null;
 
@@ -29,7 +25,11 @@ onMount(() => {
   ctx = canvas.getContext("2d");
 
   setup_observer();
-  render();
+  /* Manually trigger sync to initialise canvas */
+  canvas.dispatchEvent(new Event("resize"));
+
+  let animation_frame = render();
+  return () => cancelAnimationFrame(animation_frame);
 });
 
 
@@ -43,21 +43,23 @@ function setup_observer()
   observer.observe(canvas);
 }
 
-function render()
+function render(): number
 {
-  requestAnimationFrame(render);
+  if (node == undefined) return 0;
+  if (ctx == null) return 0;
 
-  if (node == undefined) return;
-  if (ctx == null) return;
-
-  let data = new Uint8Array(PEAK_FREQUENCY);
+  let data = new Uint8Array(node.frequencyBinCount);
   node.getByteFrequencyData(data);
 
   draw_lines(ctx, data);
+
+  return requestAnimationFrame(render);
 }
 
 function draw_lines(ctx: CanvasRenderingContext2D, data: Uint8Array)
 {
+  const PEAK_FREQUENCY = Math.floor(node.context.sampleRate / 2);
+  
   ctx.fillStyle = "#000";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -78,11 +80,10 @@ function draw_lines(ctx: CanvasRenderingContext2D, data: Uint8Array)
     );
 
     let x = x_frac_ln * canvas.width;
-    // console.log(`x =`, x);
 
     let amplitude = data[i];
     let y_frac = amplitude / 255;
-    let y = y_frac * canvas.height;
+    let y = y_frac * canvas.height - 10;
 
     ctx.fillRect(
       0.5 + x,

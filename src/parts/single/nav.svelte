@@ -3,14 +3,14 @@
 <script lang="ts">
 
 import { synth } from "#scripts/synth";
-import { overlay_tab, OverlayTab } from "#scripts/stores";
+import { nav_state, OverlayPage } from "#scripts/stores";
 
 import { Meter } from "#parts";
 
 
-function open(tab: OverlayTab)
+function overlay(page: OverlayPage)
 {
-  return () => { $overlay_tab = tab; };
+  return () => { $nav_state.overlay = page; };
 }
 
 </script>
@@ -18,26 +18,32 @@ function open(tab: OverlayTab)
 
 <nav>
   <div class="left">
-    <h1> Awxynth </h1>
+    <h1> <span>Awxynth</span> </h1>
 
     <Meter node={synth.analyser!} />
   </div>
 
+  <div class="centre">
+    <button class="nav-clicky" onclick={() => { $nav_state.out = !$nav_state.out; }}>
+      <span>Output</span>
+    </button>
+  </div>
+
   <div class="right">
-    <button class="nav-clicky" onclick={open(OverlayTab.HELP)}>
-      Help
+    <button class="nav-clicky" onclick={overlay(OverlayPage.HELP)}>
+      <span>Help</span>
     </button>
 
-    <button class="nav-clicky" onclick={open(OverlayTab.CHANGELOG)}>
-      Changelog
+    <button class="nav-clicky" onclick={overlay(OverlayPage.CHANGELOG)}>
+      <span>Changelog</span>
     </button>
 
-    <button class="nav-clicky" onclick={open(OverlayTab.CREDITS)}>
-      Credits
+    <button class="nav-clicky" onclick={overlay(OverlayPage.CREDITS)}>
+      <span>Credits</span>
     </button>
 
     <a class="nav-clicky" href="https://github.com/Sup2point0/awxynth" target="_blank">
-      GitHub
+      <span>GitHub</span>
     </a>
   </div>
 </nav>
@@ -46,7 +52,6 @@ function open(tab: OverlayTab)
 <style lang="scss">
 
 nav {
-  padding: 0 1rem;
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
@@ -57,6 +62,7 @@ nav {
   }
 
   > div {
+    flex: 1;
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
@@ -68,7 +74,7 @@ nav {
 
   h1 {
     width: max-content;
-    padding-right: 1rem;
+    padding: 0 1rem;
     @include font-ui;
     color: transparent;
     font-size: 80%;
@@ -80,21 +86,32 @@ nav {
   }
 }
 
+.centre {
+  justify-content: center;
+}
+
 .right {
   transform: translateY(-0.1rem);
+  justify-content: end;
+}
 
-  .nav-clicky {
-    padding: 0 0.5em;
-    display: block;
-    @include font-ui;
-    color: white;
-    font-size: 80%;
-    text-decoration: none;
-    background: none;
-    border: none;
-    outline: none;
-    @include interact($col-prot);
-  }
+
+.nav-clicky {
+  padding: 0 0.5em;
+  display: block;
+  @include font-ui;
+  color: white;
+  font-size: 80%;
+  text-decoration: none;
+  background: none;
+  border: none;
+  outline: none;
+  @include interact($col-prot);
+}
+
+span {
+  display: block;
+  transform: translateY(-0.1em);
 }
 
 </style>
