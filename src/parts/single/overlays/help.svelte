@@ -7,6 +7,7 @@ import { nav_state, Docs } from "#scripts/stores";
 import {
   Quickstart,
   FAQ,
+  Troubleshooting,
   Glossary,
 } from "#docs";
 
@@ -18,18 +19,23 @@ let open_page = $derived($nav_state.docs_page);
 
 <nav>
   {#each Object.values(Docs) as page}
-    <button
-      class:open={open_page === page}
-      onclick={() => { $nav_state.docs_page = page; }}
-    >
-      {page}
-    </button>
+    {#if page.startsWith("Group:")}
+      <h3> {page.replace("Group:", "")} </h3>
+    {:else}
+      <button
+        class:open={open_page === page}
+        onclick={() => { $nav_state.docs_page = page; }}
+      >
+        {page}
+      </button>
+    {/if}
   {/each}
 </nav>
 
 <article class={open_page.toLowerCase()}>
-  {#if      open_page === Docs.FAQ}      <FAQ />
-  {:else if open_page === Docs.Glossary} <Glossary />
+  {#if      open_page === Docs.FAQ}             <FAQ />
+  {:else if open_page === Docs.TROUBLESHOOTING} <Troubleshooting />
+  {:else if open_page === Docs.GLOSSARY}        <Glossary />
 
   {:else}
     <Quickstart />
@@ -40,6 +46,9 @@ let open_page = $derived($nav_state.docs_page);
 
 <style lang="scss">
 
+$nav-width: 18rem;
+
+
 nav {
   width: max-content;
   display: flex;
@@ -48,8 +57,16 @@ nav {
   position: sticky;
   top: 2rem;
 
+  h3 {
+    padding: 4em 0 1.5em 1em;
+    @include font-ui;
+    color: rgb(white, 50%);
+    font-size: 75%;
+    font-weight: normal;
+  }
+
   button {
-    padding: 0.5em 1em;
+    padding: 0.4em 1em;
     @include font-ui;
     color: white;
     font-size: 90%;
@@ -67,13 +84,15 @@ nav {
 }
 
 article {
-  padding-left: 10rem;
+  padding-left: $nav-width;
 
-  &.faq :global(h3) {
-    margin: 2.5em 0 0.5em;
-    @include font-body;
-    color: $col-trit;
-    font-weight: normal;
+  &.faq, &.troubleshooting {
+    :global(h3) {
+      margin: 2.5em 0 0.5em;
+      @include font-body;
+      color: $col-trit;
+      font-weight: normal;
+    }
   }
 }
 
@@ -86,7 +105,7 @@ article {
   :global(h3) {
     min-width: max-content;
     @include font-ui;
-    color: $col-trit;
+    color: $col-orange;
     font-weight: 300;
     font-size: 100%;
   }

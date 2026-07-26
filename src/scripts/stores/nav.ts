@@ -11,9 +11,15 @@ export enum OverlayPage
 }
 
 export enum Docs {
-  Quickstart = "Quickstart",
-  FAQ        = "FAQ",
-  Glossary   = "Glossary",
+  QUICKSTART      = "Quickstart",
+  FAQ             = "FAQ",
+  TROUBLESHOOTING = "Troubleshooting",
+  GLOSSARY        = "Glossary",
+
+  // TECHNICALS         = "Group:Technicals",
+  // SOUND_FUNDAMENTALS = "Fundamentals of Sound",
+  // GRAPH_FUNDAMENTALS = "Fundamentals of Graphs",
+  // CLIPPING           = "To Clip or Not To Clip?",
 }
 
 
@@ -34,6 +40,6 @@ export interface NavState
 export const nav_state = writable<NavState>(
 {
   overlay: null,
-  docs_page: Docs.Quickstart,
+  docs_page: Docs.QUICKSTART,
   show_analysers_pane: false,
 });
