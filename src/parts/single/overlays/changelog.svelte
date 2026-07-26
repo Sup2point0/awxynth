@@ -84,7 +84,6 @@ import Content from "/CHANGELOG.md";
     display: block;
     @include font-body;
     color: white;
-    font-weight: 150;
     font-size: 120%;
     line-height: 1.4;
   }

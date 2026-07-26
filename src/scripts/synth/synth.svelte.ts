@@ -10,10 +10,12 @@ import { SvelteMap } from "svelte/reactivity";
 
 export interface ShaperChain
 {
-  title: string;
-  colour: string;
+  title:    string;
+  colour:   string;
+  desc:     string[];
+  
   disabled: boolean;
-  shapers: Shaper[];
+  shapers:  Shaper[];
 }
 
 

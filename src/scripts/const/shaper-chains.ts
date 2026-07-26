@@ -12,21 +12,27 @@ export const SHAPER_CHAINS: Record<string, Record<string, () => ShaperChain>> =
 {
   "Post-Transforms":
   {
-    "Envelope": () => ({
-      title: "ENVELOPE",
+    envelope: () => ({
+      title: "Envelope",
       colour: Colour.PURPLE,
       disabled: false,
       shapers: [
         new AttackShaper(1.0),
         new ReleaseShaper(1.0),
       ],
+      desc: [
+        // TODO
+      ],
     }),
-    "Distortion": () => ({
-      title: "DISTORTION",
+    distortion: () => ({
+      title: "Distortion",
       colour: Colour.RED,
       disabled: false,
       shapers: [
         new DistortionShaper()
+      ],
+      desc: [
+        `Reshapes your waveform by applying a nonlinearity.`,
       ],
     }),
   },

@@ -109,7 +109,6 @@ small {
   @include font-body;
   color: $col-prot;
   font-size: 125%;
-  font-weight: 150;
   transform: translateY(100%);
 
   :global(code) {

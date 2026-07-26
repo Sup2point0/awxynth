@@ -25,10 +25,18 @@ function commit(shaper: () => ShaperChain)
   <section>
     <h2> {category} </h2>
 
-    {#each Object.entries(shapers) as [title, shaper]}
+    {#each Object.values(shapers) as shaper}
+      {@const instance = shaper()}
+
       <button onclick={commit(shaper)}>
-        <div class="lower">
-          {title}
+        <div class="left"></div>
+
+        <div class="right">
+          <h3 style:color={instance.colour}> {instance.title} </h3>
+
+          {#each instance.desc as block}
+            <p> {@html block} </p>
+          {/each}
         </div>
       </button>
     {/each}
@@ -38,6 +46,57 @@ function commit(shaper: () => ShaperChain)
 
 <style lang="scss">
 
+h2 {
+  margin-bottom: 3rem;
+  @include font-ui;
+  color: $col-prot;
+  font-size: 200%;
+  font-weight: normal;
+}
 
+button {
+  width: 100%;
+  height: max-content;
+  padding: 1rem 2rem;
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 2rem;
+  margin-bottom: 1rem;
+
+  text-align: start;
+  background: transparent;
+  backdrop-filter: blur(8px);
+  border: none;
+  outline: none;
+
+  &:hover , &:focus-visible {
+    cursor: pointer;
+    background: rgb(white, 1%);
+  }
+
+  &:active {
+    filter: brightness(60%);
+  }
+
+  .left {
+    width: 20rem;  // TEMP
+    height: 10rem;  // TEMP
+    max-width: 20rem;
+    border: 1px solid rgb(white, 25%);
+  }
+
+  .right {
+    h3 {
+      margin-bottom: 1em;
+      @include font-ui;
+      font-size: 125%;
+    }
+
+    p {
+      @include font-body;
+      color: white;
+    }
+  }
+}
 
 </style>
