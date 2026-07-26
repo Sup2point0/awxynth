@@ -18,13 +18,15 @@ let level = $state(0);
 
 
 onMount(() => {
-  let animation_frame = sample_level();
-  return () => cancelAnimationFrame(animation_frame);
+  let cancel = sample_level();
+  return () => cancelAnimationFrame(cancel);
 });
 
 
 function sample_level(): number
 {
+  let cancel = requestAnimationFrame(sample_level);
+
   if (node == undefined) return 0;
   
   let data = new Float32Array(2048);
@@ -35,7 +37,7 @@ function sample_level(): number
 
   level = mean ** 0.5;
 
-  return requestAnimationFrame(sample_level);
+  return cancel;
 }
 
 </script>

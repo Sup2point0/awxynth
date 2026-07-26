@@ -18,6 +18,9 @@ Todo:
 ### ***Feature***
 The frequency spectrum visualiser now has a fancy gradient and logarithmic frequency scale!
 
+### *Fix*
+Fixed issue with the master meter crashing.
+
 
 ## 25 July 2026
 
