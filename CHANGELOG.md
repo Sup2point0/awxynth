@@ -5,13 +5,18 @@
 Fix:
 
 Todo:
-• sync full editor to window
 • white for preset name when applied, grey when changed
 
 -->
 
 
 <div class="changelog-layout">
+
+
+## 26 July 2026
+
+### ***Feature***
+The frequency spectrum visualiser now has a fancy gradient and logarithmic frequency scale!
 
 
 ## 25 July 2026

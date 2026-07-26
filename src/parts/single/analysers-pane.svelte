@@ -18,8 +18,16 @@ interface Props {
 let { node }: Props = $props();
 
 
+const CANVAS_RESOLUTION = 4;
+const SIDE_MARGIN = 10 * CANVAS_RESOLUTION;
+const LOWER_HEIGHT = 10 * CANVAS_RESOLUTION;
+
+
 let canvas: HTMLCanvasElement;
 let ctx: CanvasRenderingContext2D | null;
+
+let spectrum_width = 0;
+let spectrum_height = 0;
 
 
 onMount(() => {
@@ -29,16 +37,18 @@ onMount(() => {
   /* Manually trigger sync to initialise canvas */
   canvas.dispatchEvent(new Event("resize"));
 
-  let animation_frame = render();
-  return () => cancelAnimationFrame(animation_frame);
+  let cancel = render();
+  return () => cancelAnimationFrame(cancel);
 });
 
 
 function setup_observer()
 {
   let observer = new ResizeObserver(([container]) => {
-    canvas.width = Math.ceil(container.borderBoxSize[0].inlineSize);
-    canvas.height = Math.ceil(container.borderBoxSize[0].blockSize);
+    canvas.width = Math.ceil(container.borderBoxSize[0].inlineSize) * CANVAS_RESOLUTION;
+    canvas.height = Math.ceil(container.borderBoxSize[0].blockSize) * CANVAS_RESOLUTION;
+    spectrum_width = canvas.width - 2 * SIDE_MARGIN;
+    spectrum_height = canvas.height - LOWER_HEIGHT;
   });
 
   observer.observe(canvas);
@@ -46,6 +56,8 @@ function setup_observer()
 
 function render(): number
 {
+  let cancel = requestAnimationFrame(render);
+
   if (node == undefined) return 0;
   if (ctx == null) return 0;
 
@@ -54,7 +66,7 @@ function render(): number
 
   draw_lines(ctx, data);
 
-  return requestAnimationFrame(render);
+  return cancel;
 }
 
 function draw_lines(ctx: CanvasRenderingContext2D, data: Uint8Array)
@@ -63,10 +75,44 @@ function draw_lines(ctx: CanvasRenderingContext2D, data: Uint8Array)
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  ctx.fillStyle = "rgb(0 0 0 / 10%)";
+  ctx.fillStyle = "rgb(128 128 128 / 10%)";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  ctx.fillStyle = Colour.GREEN;
+  // lines
+  ctx.strokeStyle = "rgb(255 255 255 / 10%)";
+  ctx.lineWidth = 1 * CANVAS_RESOLUTION;
+
+  // text
+  let size = 8 * CANVAS_RESOLUTION;
+  ctx.font = `${size}px 'Orbit'`;
+  ctx.fillStyle = "rgb(255 255 255)";
+
+  for (let p = 1; p < 5; p++) {
+    let order = 10 ** p;
+
+    for (let i = 2; i <= 10; i++) {
+      let freq = i * order;
+      if (freq > INTERNAL.MAX_FREQUENCY) break;
+
+      let x_frac_ln = log_freq_normalised(freq);
+      let x = x_frac_ln * spectrum_width + SIDE_MARGIN;
+      ctx.beginPath();
+      ctx.moveTo(x + 0.5, 0);
+      ctx.lineTo(x + 0.5, spectrum_height);
+      ctx.stroke();
+
+      let freq_text = String(freq).replace(/000$/, "k");
+      x -= 2 * freq_text.length * CANVAS_RESOLUTION;
+      let y = spectrum_height + size;
+      ctx.fillText(freq_text, x, y);
+    }
+  }
+
+  let gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+  gradient.addColorStop(0.0, Colour.PURPLE + "ff");
+  gradient.addColorStop(0.5, Colour.PINK + "80");
+  gradient.addColorStop(1.0, Colour.YELLOW.replace(")", " / 10%)"));
+  ctx.strokeStyle = gradient;
 
   for (let i = 0; i < data.length; i++)
   {
@@ -76,27 +122,29 @@ function draw_lines(ctx: CanvasRenderingContext2D, data: Uint8Array)
     if (freq < INTERNAL.MIN_FREQUENCY) continue;
     if (freq > INTERNAL.MAX_FREQUENCY) continue;
 
-    /* Scale logarithmically and normalise to [0.0, 1.0] */
-    let x_frac_ln = (
-      (Math.log(freq) - Math.log(INTERNAL.MIN_FREQUENCY))
-      / (Math.log(INTERNAL.MAX_FREQUENCY) - Math.log(INTERNAL.MIN_FREQUENCY))
-    );
-
-    let x = x_frac_ln * canvas.width;
+    let x_frac_ln = log_freq_normalised(freq);
+    let x = x_frac_ln * spectrum_width + SIDE_MARGIN;
 
     let amplitude = data[i];
     let y_frac = amplitude / 255;
-    let y = y_frac * canvas.height - 10;
+    let y = y_frac * (spectrum_height - 10);
 
-    ctx.fillStyle = `rgb(255 255 255 / ${1 - x_frac})`;
-
-    ctx.fillRect(
-      0.5 + x,
-      canvas.height - y,
-      1,
-      y,
-    );
+    ctx.lineWidth = CANVAS_RESOLUTION + 2 * (1 - x_frac_ln);
+    ctx.beginPath();
+    ctx.moveTo(x + 0.5, spectrum_height - y);
+    ctx.lineTo(x + 0.5, spectrum_height);
+    ctx.stroke();
   }
+}
+
+/**
+ * Scale `freq` logarithmically and normalise to `[0.0, 1.0]`.
+ */
+function log_freq_normalised(freq: number): number
+{
+  let delta = Math.log(freq) - Math.log(INTERNAL.MIN_FREQUENCY);
+  let total = Math.log(INTERNAL.MAX_FREQUENCY) - Math.log(INTERNAL.MIN_FREQUENCY);
+  return delta / total;
 }
 
 </script>
@@ -112,9 +160,9 @@ canvas {
   height: 40vh;
   position: absolute;
   bottom: 0;
+  z-index: 10;
   background: transparent;
   backdrop-filter: blur(8px);
-  // image-rendering: pixelated;
 }
 
 </style>
