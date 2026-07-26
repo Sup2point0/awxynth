@@ -21,6 +21,9 @@ The frequency spectrum visualiser now has a fancy gradient and logarithmic frequ
 ### *Fix*
 Fixed issue with the master meter crashing.
 
+### *Fix*
+Use RMS loudness in master meter for more natural levels.
+
 
 ## 25 July 2026
 

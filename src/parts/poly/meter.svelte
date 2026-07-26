@@ -29,13 +29,13 @@ function sample_level(): number
 
   if (node == undefined) return 0;
   
-  let data = new Float32Array(2048);
+  let data = new Float32Array(node.fftSize);
   node.getFloatTimeDomainData(data);
 
-  let total = data.reduce((sum, x) => sum + Math.abs(x), 0);
+  let total = data.reduce((sum, x) => sum + x * x, 0);
   let mean = total / data.length;
-
-  level = mean ** 0.5;
+  let rms = mean ** 0.5;
+  level = rms;
 
   return cancel;
 }
