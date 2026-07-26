@@ -5,9 +5,9 @@
 import { nav_state, OverlayPage } from "#scripts/stores";
 
 import AddShaper from "./add-shaper.svelte";
-import Help from "./HELP.md";
+import HelpPages from "./help.svelte";
 import Changelog from "./changelog.svelte";
-import Credits from "./CREDITS.md";
+import Credits from "#docs/credits.md";
 
 import { scale } from "svelte/transition";
 import { expoOut, quartOut } from "svelte/easing";
@@ -30,7 +30,7 @@ import { expoOut, quartOut } from "svelte/easing";
           {#if $nav_state.overlay === OverlayPage.ADD_SHAPER}
             <AddShaper />
           {:else if $nav_state.overlay === OverlayPage.HELP}
-            <article><Help /></article>
+            <HelpPages />
           {:else if $nav_state.overlay === OverlayPage.CHANGELOG}
             <Changelog />
           {:else if $nav_state.overlay === OverlayPage.CREDITS}

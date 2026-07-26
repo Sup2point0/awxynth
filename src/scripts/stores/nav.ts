@@ -10,12 +10,20 @@ export enum OverlayPage
   ADD_SHAPER,
 }
 
+export enum Docs {
+  Quickstart = "Quickstart",
+  FAQ        = "FAQ",
+  Glossary   = "Glossary",
+}
+
 
 /** Global navigation-related state. */
 export interface NavState
 {
   /** The currently open overlay page, if any. */
   overlay: OverlayPage | null;
+
+  docs_page: Docs;
 
   /** Should the output analyser visualisers pane be shown? */
   show_analysers_pane: boolean;
@@ -26,5 +34,6 @@ export interface NavState
 export const nav_state = writable<NavState>(
 {
   overlay: null,
+  docs_page: Docs.Quickstart,
   show_analysers_pane: false,
 });

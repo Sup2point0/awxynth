@@ -1,1 +1,1 @@
-export { nav_state, OverlayPage } from "./nav";
+export { nav_state, OverlayPage, Docs } from "./nav";

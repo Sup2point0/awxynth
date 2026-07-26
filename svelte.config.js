@@ -22,9 +22,10 @@ const config = {
     },
     alias: {
       "#src":     "./src/",
-      "#parts":   "./src/parts",
-      "#styles":  "./src/styles",
-      "#scripts": "./src/scripts",
+      "#parts":   "./src/parts/",
+      "#styles":  "./src/styles/",
+      "#scripts": "./src/scripts/",
+      "#docs":    "./docs/"
     },
     prerender: {
       handleHttpError: "warn",
