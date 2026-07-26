@@ -22,6 +22,8 @@ const CANVAS_RESOLUTION = 4;
 const SIDE_MARGIN = 10 * CANVAS_RESOLUTION;
 const LOWER_HEIGHT = 10 * CANVAS_RESOLUTION;
 
+const MAX_AMPLITUDE = 255;
+
 
 let canvas: HTMLCanvasElement;
 let ctx: CanvasRenderingContext2D | null;
@@ -109,9 +111,10 @@ function draw_lines(ctx: CanvasRenderingContext2D, data: Uint8Array)
   }
 
   let gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-  gradient.addColorStop(0.0, Colour.PURPLE + "ff");
-  gradient.addColorStop(0.5, Colour.PINK + "80");
-  gradient.addColorStop(1.0, Colour.YELLOW.replace(")", " / 10%)"));
+  gradient.addColorStop(0.00, Colour.PURPLE);
+  gradient.addColorStop(0.30, Colour.PURPLE);
+  gradient.addColorStop(0.60, Colour.PINK + "80");
+  gradient.addColorStop(1.00, Colour.YELLOW.replace(")", " / 10%)"));
   ctx.strokeStyle = gradient;
 
   for (let i = 0; i < data.length; i++)
@@ -126,7 +129,31 @@ function draw_lines(ctx: CanvasRenderingContext2D, data: Uint8Array)
     let x = x_frac_ln * spectrum_width + SIDE_MARGIN;
 
     let amplitude = data[i];
-    let y_frac = amplitude / 255;
+    let y_frac = amplitude / MAX_AMPLITUDE;
+    let y = y_frac * (spectrum_height - 10);
+
+    ctx.lineWidth = CANVAS_RESOLUTION + 2 * (1 - x_frac_ln);
+    ctx.beginPath();
+    ctx.moveTo(x + 0.5, spectrum_height - y);
+    ctx.lineTo(x + 0.5, spectrum_height);
+    ctx.stroke();
+  }
+
+  for (let i = 0; i < Math.floor(data.length / 128); i++)
+  {  
+    let x_frac = (i + 0.5) / (data.length - 1);
+    let freq = x_frac * PEAK_FREQUENCY;
+
+    let x_frac_ln = log_freq_normalised(freq);
+    let x = x_frac_ln * spectrum_width + SIDE_MARGIN;
+    
+    /* NOTE: Weight lower amplitude more heavily for more prominent spikes */
+    let amp1 = data[i];
+    let amp2 = data[i+1];
+    let amp3 = Math.min(amp1, amp2)
+    let amplitude = (amp1 + amp2 + amp3) / 3;
+
+    let y_frac = amplitude / MAX_AMPLITUDE;
     let y = y_frac * (spectrum_height - 10);
 
     ctx.lineWidth = CANVAS_RESOLUTION + 2 * (1 - x_frac_ln);
@@ -163,6 +190,7 @@ canvas {
   z-index: 10;
   background: transparent;
   backdrop-filter: blur(8px);
+  box-shadow: 0 -8px 16px rgb(black, 50%);
 }
 
 </style>
