@@ -60,7 +60,7 @@ let self = $state({
   ghost_enabled: false,
   preset_index: presets_list.indexOf(preset),
   is_focused: false,
-  sync_interval: 0,
+  sync_cancel: 0,
 });
 
 $effect(() => sync.focus_window(desmos_window, shaper.enabled && self.is_focused));
@@ -137,15 +137,19 @@ function sync_all()
 
 function start_active_syncing()
 {
-  self.sync_interval = setInterval(
-    () => sync.window_with_editor(self, shaper, desmos_window, desmos_editor),
-    1000 / INTERNAL.FRAME_RATE
-  );
+  stop_active_syncing();
+
+  function frame(): number {
+    sync.window_with_editor(self, shaper, desmos_window, desmos_editor);
+    return requestAnimationFrame(frame);
+  }
+
+  self.sync_cancel = frame();
 }
 
 function stop_active_syncing()
 {
-  clearInterval(self.sync_interval);
+  cancelAnimationFrame(self.sync_cancel);
 }
 
 
