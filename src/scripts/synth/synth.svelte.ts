@@ -1,5 +1,5 @@
 import { OscillatorShaper, OscillatorInstance } from "#scripts/shapers";
-import type { Shaper, ShaperInstance } from "#scripts/types";
+import type { ShaperInstance, ShaperChainInstance } from "#scripts/types";
 
 import { INTERNAL, DEFAULTS, NOTE_FREQUENCIES, MIN_OCTAVE, MAX_OCTAVE } from "#scripts/const";
 import { Note } from "#scripts/types";
@@ -8,21 +8,10 @@ import type { Octave, Scalar, OctavedNoteRepr, ScheduledTime } from "#scripts/ty
 import { SvelteMap } from "svelte/reactivity";
 
 
-export interface ShaperChain
-{
-  title:    string;
-  colour:   string;
-  desc:     string[];
-  
-  disabled: boolean;
-  shapers:  Shaper[];
-}
-
-
 /**
  * Oscillator and transforms for a currently playing note.
  */
-interface ShaperInstanceChain
+interface NotePlaybackShapers
 {
   oscillators: OscillatorInstance[];
   transforms: ShaperInstance<any, any>[];
@@ -42,9 +31,9 @@ export class Synth
   analyser!: AnalyserNode
 
   oscillators: OscillatorShaper[] = $state(DEFAULTS.OSCILLATORS)
-  transforms: Array<ShaperChain> = $state(DEFAULTS.TRANSFORMS)
+  transforms: Array<ShaperChainInstance> = $state(DEFAULTS.TRANSFORMS)
 
-  active_notes = new SvelteMap<OctavedNoteRepr, ShaperInstanceChain>()
+  active_notes = new SvelteMap<OctavedNoteRepr, NotePlaybackShapers>()
 
   gain:   Scalar = $state(DEFAULTS.GAIN)
   octave: Octave = $state(DEFAULTS.OCTAVE)
@@ -123,7 +112,7 @@ export class Synth
   /**
    * Immediately stop playing `note` at `octave`, skipping any release shapers.
    */
-  private force_stop(repr: OctavedNoteRepr, chain: ShaperInstanceChain)
+  private force_stop(repr: OctavedNoteRepr, chain: NotePlaybackShapers)
   {
     for (let osc of chain.oscillators) {
       osc.node.stop();
@@ -193,7 +182,7 @@ export class Synth
 
   // == INTERNAL == //
 
-  private create_note(note: Note, octave: Octave): ShaperInstanceChain | undefined
+  private create_note(note: Note, octave: Octave): NotePlaybackShapers | undefined
   {
     if (this.ctx == null) { console.error("Internal Error: no AudioContext set"); return; }
 

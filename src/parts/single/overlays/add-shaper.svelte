@@ -5,15 +5,17 @@ An overlay window for selecting a new shaper to add to the chain.
 
 <script lang="ts">
 
-import { synth, type ShaperChain } from "#scripts/synth";
+import { synth } from "#scripts/synth";
 import { nav_state } from "#scripts/stores";
 import { SHAPER_CHAINS } from "#scripts/const";
+import type { ShaperChain } from "#scripts/types";
 
 
-function commit(shaper: () => ShaperChain)
+function commit(shaper_chain: ShaperChain)
 {
   return () => {
-    synth.transforms.push(shaper())
+    let instance = shaper_chain.create_instance();
+    synth.transforms.push(instance);
     $nav_state.overlay = null;
   };
 }
@@ -21,20 +23,18 @@ function commit(shaper: () => ShaperChain)
 </script>
 
 
-{#each Object.entries(SHAPER_CHAINS) as [category, shapers]}
+{#each Object.entries(SHAPER_CHAINS) as [category, shaper_chains]}
   <section>
     <h2> {category} </h2>
 
-    {#each Object.values(shapers) as shaper}
-      {@const instance = shaper()}
-
-      <button onclick={commit(shaper)}>
+    {#each shaper_chains as chain}
+      <button onclick={commit(chain)}>
         <div class="left"></div>
 
         <div class="right">
-          <h3 style:color={instance.colour}> {instance.title} </h3>
+          <h3 style:color={chain.colour}> {chain.title} </h3>
 
-          {#each instance.desc as block}
+          {#each chain.desc as block}
             <p> {@html block} </p>
           {/each}
         </div>

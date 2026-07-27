@@ -9,6 +9,7 @@ Fix:
 Todo:
 • white for preset name when applied, grey when changed
 • pin spectrum visualiser
+• symmetric/asymmetric distortion
 
 -->
 

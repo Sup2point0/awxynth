@@ -8,8 +8,8 @@ import type { Scalar, Amplitude, ScheduledTime, ShaperPreset } from "#scripts/ty
  * This class stores only a shaper's *parameters*. To use the shaper, call `.create()` to construct a `ShaperInstance` which can be freely manipulated. This is so that multiple simultaneous notes can apply their shapers without disrupting each other.
  */
 export abstract class Shaper<
-  S extends Shaper<S,I>         = any,
-  I extends ShaperInstance<S,I> = any
+  Original extends Shaper<Original,Instance>         = any,
+  Instance extends ShaperInstance<Original,Instance> = any
 >
 {
   /** Displayed name of the shaper. */
@@ -34,7 +34,7 @@ export abstract class Shaper<
 
   abstract preset: ShaperPreset
 
-  #subscribers: Array<(self: S) => void> = []
+  #subscribers: Array<(self: Original) => void> = []
 
 
   constructor(title?: string)
@@ -48,12 +48,12 @@ export abstract class Shaper<
   /**
    * Create a `ShaperInstance` for playing a note.
    */
-  abstract create(ctx: AudioContext, ...args: any[]): I;
+  abstract create(ctx: AudioContext, ...args: any[]): Instance;
 
   /**
    * Subscribe to changes on this `Shaper`.
    */
-  subscribe(callback: (self: S) => void)
+  subscribe(callback: (self: Original) => void)
   {
     this.#subscribers.push(callback);
   }
@@ -64,20 +64,20 @@ export abstract class Shaper<
   protected update_subscribers()
   {
     for (let subscriber of this.#subscribers) {
-      subscriber(this as unknown as S);
+      subscriber(this as unknown as Original);
     }
   }
 }
 
 
 export abstract class ShaperInstance<
-  S extends Shaper<S,I>         = any,
-  I extends ShaperInstance<S,I> = any,
+  Original extends Shaper<Original,Instance>         = any,
+  Instance extends ShaperInstance<Original,Instance> = any,
   Node extends AudioNode        = AudioNode
 >
 {
   /** Reference to the `Shaper` that created this instance. */
-  shaper: S;
+  shaper: Original;
 
   ctx: AudioContext;
 
@@ -85,7 +85,7 @@ export abstract class ShaperInstance<
   node: Node;
 
 
-  constructor(ctx: AudioContext, node: Node, shaper: S)
+  constructor(ctx: AudioContext, node: Node, shaper: Original)
   {
     this.ctx = ctx;
     this.node = node;
