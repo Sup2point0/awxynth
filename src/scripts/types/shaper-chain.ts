@@ -18,6 +18,7 @@ export interface ShaperChain<
 
 export interface ShaperChainInstance
 {
+  original: ShaperChain;
   disabled: boolean;
   shapers:  Shaper[];
 }

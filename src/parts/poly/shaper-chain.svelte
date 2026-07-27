@@ -6,7 +6,7 @@ A row in the synth containing 1 or more `<GraphEditor>`s.
 <script lang="ts">
 
 import * as util from "#scripts/utils";
-import type { ShaperChain } from "#scripts/synth";
+import type { ShaperChainInstance } from "#scripts/types";
 
 import { GraphEditor } from "#parts";
 
@@ -14,10 +14,10 @@ import { GraphEditor } from "#parts";
 interface Props
 {
   /** The shaper chain this component manages. */
-  chain: ShaperChain;
+  shaper_chain: ShaperChainInstance;
 }
 
-let { chain = $bindable() }: Props = $props();
+let { shaper_chain: chain = $bindable() }: Props = $props();
 
 </script>
 
@@ -28,9 +28,9 @@ let { chain = $bindable() }: Props = $props();
   <div class="left">
     <h2 class="toggle"
       {@attach util.toggles(() => { chain.disabled = !chain.disabled; })}
-      style:--colour={chain.colour}
+      style:--colour={chain.original.colour}
     >
-      {chain.title}
+      {chain.original.title}
     </h2>
   </div>
 
@@ -107,6 +107,7 @@ section {
   }
 }
 
+// TODO add
 .right {
   position: sticky;
   right: 0;

@@ -1,6 +1,6 @@
 import ltx from "#scripts/utils";
 import { Colour } from "#scripts/types";
-import type { ShaperChain, ShaperChainInstance } from "#scripts/types";
+import type { ShaperChain } from "#scripts/types";
 
 import {
   AttackShaper,
@@ -19,6 +19,7 @@ export const EnvelopeChain: ShaperChain = {
     // TODO
   ],
   create_instance: () => ({
+    original: EnvelopeChain,
     disabled: true,
     shapers: [
       new AttackShaper(1.0),
@@ -28,15 +29,16 @@ export const EnvelopeChain: ShaperChain = {
 }
 
 export const DistortionChain: ShaperChain = {
-  title: "Distortion (Symmetric)",
+  title: "Distortion / Symmetric",
   colour: Colour.RED,
   desmos: {
-    latex: ltx `\frac{\tanh\left(2x\right)}{\tanh\left(2\right)}`,
+    latex: ltx `0 \leq y \leq \frac{\tanh\left(2x\right)}{\tanh\left(2\right)}`,
   },
   desc: [
     `Reshapes your waveform by applying a nonlinearity.`,
   ],
   create_instance: () => ({
+    original: DistortionChain,
     disabled: false,
     shapers: [
       new DistortionShaper(),

@@ -33,8 +33,8 @@ import {
     </div>
   </section>
 
-  {#each synth.transforms as chain}
-    <ShaperChain bind:chain />
+  {#each synth.transforms as shaper_chain}
+    <ShaperChain bind:shaper_chain />
   {/each}
 
   <div style:margin-top="0.5rem">

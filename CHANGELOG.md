@@ -19,6 +19,9 @@ Todo:
 
 ## 27 July 2027
 
+### ***Feature***
+Fleshed out the overlay screen for adding new shapers.
+
 ### *Fix*
 Degrade gracefully instead of crashing when Desmos API is not available.
 
