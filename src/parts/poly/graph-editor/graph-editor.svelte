@@ -219,6 +219,7 @@ function toggle_ghost()
   onmouseenter={focus(true)} onfocuscapture={focus(true)}
   onmouseleave={focus(false)}
   style:--colour={shaper.colour}
+  style:--colour-inverted={util.invert(shaper.colour)}
   role="application"
 >
   <div class="upper">
