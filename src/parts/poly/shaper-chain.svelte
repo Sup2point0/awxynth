@@ -67,7 +67,7 @@ section {
   margin-right: -0.5rem;
   position: sticky;
   left: 0;
-  z-index: 5;
+  z-index: 4;
   display: flex;
   flex-flow: column nowrap;
   justify-content: center;

@@ -185,9 +185,6 @@ function log_freq_normalised(freq: number): number
 canvas {
   width: 100%;
   height: 40vh;
-  position: absolute;
-  bottom: 0;
-  z-index: 10;
   background: transparent;
   backdrop-filter: blur(8px);
   box-shadow: 0 -8px 16px rgb(black, 50%);

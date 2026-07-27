@@ -30,11 +30,11 @@ import {
 
   <div class="contain">
     <Main />
-
-    {#if $nav_state.show_analysers_pane}
-      <AnalysersPane node={synth.analyser} />
-    {/if}
   </div>
+    
+  {#if $nav_state.show_analysers_pane}
+    <AnalysersPane node={synth.analyser} />
+  {/if}
   
   <div class="keyboard-container">
     <Keyboard />
@@ -59,7 +59,6 @@ import {
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: $col-prot black;
-  position: relative;
 }
 
 .keyboard-container {

@@ -4,9 +4,11 @@
 
 Fix:
 • wrong position for analyser pane
+• use x instead of t for distortion shaper functions
 
 Todo:
 • white for preset name when applied, grey when changed
+• pin spectrum visualiser
 
 -->
 
@@ -18,6 +20,9 @@ Todo:
 
 ### *Fix*
 Degrade gracefully instead of crashing when Desmos API is not available.
+
+### *Fix*
+Fix positioning of analyser pane.
 
 
 ## 26 July 2026
