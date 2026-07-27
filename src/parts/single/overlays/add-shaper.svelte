@@ -25,6 +25,10 @@ import { AddShaperChain } from "#parts";
 
 <style lang="scss">
 
+section {
+  padding-bottom: 3rem;
+}
+
 h2 {
   margin-bottom: 2rem;
   @include font-ui;

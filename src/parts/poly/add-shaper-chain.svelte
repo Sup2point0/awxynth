@@ -127,7 +127,7 @@ button {
     h3 {
       margin-bottom: 1em;
       @include font-ui;
-      font-size: 125%;
+      font-size: 150%;
     }
 
     p {

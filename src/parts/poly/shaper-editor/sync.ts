@@ -18,7 +18,7 @@ export function focus_window(window: Desmos.Calculator, should_focus: boolean)
 
   window?.setExpression({
     id: Id.SHAPER_RENDER_FILL,
-    fillOpacity: (should_focus ? 1.5 : 1) * Theme.WAVE_OPACITY
+    fillOpacity: (should_focus ? 1.5 : 1) * Theme.WAVE_OPACITY,
   });
 }
 

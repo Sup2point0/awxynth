@@ -1,1 +1,1 @@
-export { synth, type ShaperChain } from "./synth.svelte.ts";
+export { synth, type Synth } from "./synth.svelte.ts";

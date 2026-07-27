@@ -5,7 +5,7 @@ import type { ShaperPreset } from "#scripts/types";
  * 
  * Neat hack for keeping `ShaperPreset[]` as value type but letting TypeScript infer key literals!
  */
-export function presets<T extends Record<string, ShaperPreset[]>>(
+export function define_presets<T extends Record<string, ShaperPreset[]>>(
   data: T
 )
 {

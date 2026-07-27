@@ -71,14 +71,17 @@ export class Synth
   {
     if (octave < MIN_OCTAVE || octave > MAX_OCTAVE) return;
     if (this.active_notes.has(repr(note, octave))) return;
+    
+    const freq = NOTE_FREQUENCIES[octave][note];
+    if (freq == undefined) return;
 
-    let chain = this.create_note(note, octave);
-    if (chain == undefined) return;
+    let playback = this.create_note(freq);
+    if (playback == undefined) return;
 
-    for (let osc of chain.oscillators) {
+    for (let osc of playback.oscillators) {
       osc.node.start();
     }
-    this.active_notes.set(repr(note, octave), chain);
+    this.active_notes.set(repr(note, octave), playback);
   }
 
   /**
@@ -88,12 +91,12 @@ export class Synth
   {
     if (octave < MIN_OCTAVE || octave > MAX_OCTAVE) return;
 
-    let chain = this.active_notes.get(repr(note, octave));
-    if (chain == undefined) return;
+    let playback = this.active_notes.get(repr(note, octave));
+    if (playback == undefined) return;
 
     let scheduled_release = this.now();
 
-    for (let transform of chain.transforms) {
+    for (let transform of playback.transforms) {
       if (!transform.shaper.enabled) continue;
 
       let release_time = transform.drop();
@@ -103,7 +106,7 @@ export class Synth
       scheduled_release = release_time;
     }
 
-    for (let osc of chain.oscillators) {
+    for (let osc of playback.oscillators) {
       osc.node.stop(scheduled_release);
     }
     this.active_notes.delete(repr(note, octave));
@@ -112,9 +115,9 @@ export class Synth
   /**
    * Immediately stop playing `note` at `octave`, skipping any release shapers.
    */
-  private force_stop(repr: OctavedNoteRepr, chain: NotePlaybackShapers)
+  private force_stop(repr: OctavedNoteRepr, playback: NotePlaybackShapers)
   {
-    for (let osc of chain.oscillators) {
+    for (let osc of playback.oscillators) {
       osc.node.stop();
     }
     this.active_notes.delete(repr);
@@ -125,8 +128,8 @@ export class Synth
    * */
   stop_all()
   {
-    for (let [repr, chain] of this.active_notes) {
-      this.force_stop(repr, chain);
+    for (let [repr, playback] of this.active_notes) {
+      this.force_stop(repr, playback);
     }
   }
 
@@ -142,9 +145,9 @@ export class Synth
 
     let note_reprs = [];
 
-    for (let [repr, chain] of this.active_notes) {
+    for (let [repr, playback] of this.active_notes) {
       note_reprs.push(repr);
-      this.force_stop(repr, chain);
+      this.force_stop(repr, playback);
     }
 
     switch (direction) {
@@ -182,14 +185,11 @@ export class Synth
 
   // == INTERNAL == //
 
-  private create_note(note: Note, octave: Octave): NotePlaybackShapers | undefined
+  private create_note(freq: number): NotePlaybackShapers | undefined
   {
     if (this.ctx == null) { console.error("Internal Error: no AudioContext set"); return; }
 
     // setup
-    const freq = NOTE_FREQUENCIES[octave][note];
-    if (freq == undefined) return;
-
     let oscillators = [];
     let levels = [];
     let transforms = [];
@@ -198,11 +198,12 @@ export class Synth
 
     for (let osc of enabled_oscillators) {
       let instance = osc.create(this.ctx, freq);
-      let level = new GainNode(this.ctx, { gain: osc.mix });
-      instance.connect(level);
-
       oscillators.push(instance);
+
+      let level = new GainNode(this.ctx, { gain: osc.mix });
       levels.push(level);
+
+      instance.connect(level);
     }
 
     let fan_in = new GainNode(this.ctx, { gain: 1 / enabled_oscillators.length });
@@ -233,7 +234,6 @@ export class Synth
     return { oscillators, transforms };
   }
 }
-
 
 /** The global synthesiser instance. */
 export const synth = new Synth();

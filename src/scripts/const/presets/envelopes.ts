@@ -1,9 +1,9 @@
 import { ltx } from "#scripts/utils";
 
-import { presets } from "./shared";
+import { define_presets } from "./shared";
 
 
-export const attacks = presets(
+export const attacks = define_presets(
 {
   builtins: [
     {

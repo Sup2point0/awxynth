@@ -1,8 +1,8 @@
-import type { Latex } from "#scripts/types";
+import type { Latex, MaybeArray } from "#scripts/types";
 
 
 export interface ShaperPreset
 {
   title: string;
-  latex: Latex | Latex[] | Desmos.ExpressionState[];
+  latex: MaybeArray<Latex | Desmos.ExpressionState>;
 }

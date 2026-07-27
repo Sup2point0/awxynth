@@ -442,7 +442,7 @@ function toggle_ghost()
     min-width: 16em;
 
     &:focus-within {
-      min-width: 24em;
+      min-width: max(50%, 24em);
     }
   }
 
