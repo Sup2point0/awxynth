@@ -6,11 +6,12 @@ import {
   AttackShaper,
   ReleaseShaper,
   DistortionShaper,
+  DetuneShaper,
 } from "#scripts/shapers";
 
 
 export const EnvelopeChain: ShaperChain = {
-  title:  "Envelope",
+  title: "Envelope",
   colour: Colour.PURPLE,
   desmos: {
     latex: ltx `\operatorname{polygon}\left(\left(0,\ 0\right),\ \left(0.1,\ 1\right),\ \left(0.4,\ 0.25\right),\ \left(1,\ 0\right)\right)`,
@@ -46,11 +47,33 @@ export const DistortionChain: ShaperChain = {
   }),
 };
 
+export const DetuneChain: ShaperChain = {
+  limit_single: true,
+  title: "Detune",
+  colour: Colour.PINK,
+  desmos: {
+    latex: ltx `x = [0, -0.1, 0.1, -0.3, 0.3, -0.6, 0.6, -1.0, 1.0]`,
+  },
+  desc: [
+    `Stacks copies of your waveform with offset pitch to create a fuller sound.`,
+  ],
+  create_instance: () => ({
+    original: DetuneChain,
+    disabled: false,
+    shapers: [
+      new DetuneShaper(),
+    ]
+  }),
+};
+
 
 export const SHAPER_CHAINS: Record<string, ShaperChain[]> =
 {
   "Post-Transforms": [
     EnvelopeChain,
     DistortionChain,
+  ],
+  "One-Off": [
+    DetuneChain,
   ],
 };

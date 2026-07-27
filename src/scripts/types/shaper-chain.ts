@@ -5,6 +5,9 @@ export interface ShaperChain<
   Instance extends ShaperChainInstance = ShaperChainInstance
 >
 {
+  /** Should this shaper chain be restricted to only allowing 1 global usage? */
+  limit_single?: true;
+
   title:  string;
   colour: string;
   desmos: {

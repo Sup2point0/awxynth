@@ -21,13 +21,13 @@ export abstract class Shaper<
   /** Should the shaper be applied in the processing chain? */
   enabled: boolean = $state(true)
 
-  /** Should hard clipping be applied to clamp `.amps` in the shaper's codomain? */
+  /** Should hard clipping be applied to clamp `.amps` to within the shaper's codomain? */
   clip_on: boolean = $state(false)
 
   /** How strong to apply the shaper. `[0.0, 1.0]`, with `0.0` dry and `1.0` wet. */
   mix: Scalar = $state(1.0)
 
-  /** Sampled y-over-x values of the shaper's function. */
+  /** Sampled y-over-x values of the shaper function (if relevant). */
   amps: Amplitude[] = []
 
   abstract presets: Record<string, ShaperPreset[]>
@@ -70,10 +70,15 @@ export abstract class Shaper<
 }
 
 
+/**
+ * A standalone instance of a `Shaper` that holds a reference back to the original in `.shaper` but can be freely modified.
+ * 
+ * Most instances require a backing `.node: AudioNode` that actually produces the effect, but a few exceptions will modify the audio pipeline in other ways, in which case their `.node` is `null`.
+ */
 export abstract class ShaperInstance<
   Original extends Shaper<Original,Instance>         = any,
   Instance extends ShaperInstance<Original,Instance> = any,
-  Node extends AudioNode        = AudioNode
+  Node extends AudioNode | null                      = any
 >
 {
   /** Reference to the `Shaper` that created this instance. */
@@ -81,7 +86,10 @@ export abstract class ShaperInstance<
 
   ctx: AudioContext;
 
-  /** Backing `AudioNode` to apply settings to. */
+  /** Backing `AudioNode` to apply settings to.
+   * 
+   * `null` if this shaper instance does not require an individual node (it might influence the pipeline in different ways).
+   */
   node: Node;
 
 
@@ -94,11 +102,11 @@ export abstract class ShaperInstance<
 
 
   /**
-   * Connect this shaper's backing `AudioNode` to `node`.
+   * Connect this shaper's backing `AudioNode` (if any) to `node`.
    */
   connect(node: AudioNode)
   {
-    this.node.connect(node);
+    this.node?.connect(node);
   }
 
   /**

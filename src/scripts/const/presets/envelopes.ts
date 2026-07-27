@@ -1,18 +1,19 @@
 import { ltx } from "#scripts/utils";
+import type { ShaperPreset } from "#scripts/types";
 
 import { define_presets } from "./shared";
 
 
 export const attacks = define_presets(
 {
-  builtins: [
+  builtins: set_default_duration([
     {
       title: "Linear",
-      latex: ltx `f \left( t \right) = t`,
+      latex: ltx `f\left(t\right) = t`,
     },
     {
       title: "Exponential",
-      latex: ltx `f \left( t \right) = \frac{e^{t}-1}{e-1}`,
+      latex: ltx `f\left(t\right) = \frac{e^{t}-1}{e-1}`,
     },
     {
       title: "Reciprocal (concave)",  // FIXME
@@ -46,11 +47,11 @@ export const attacks = define_presets(
       title: "Circular (convex)",
       latex: ltx `f\left(t\right) = 1-\sqrt{1-t^{2}}`,
     },
-  ],
+  ]),
 });
 
 
-export const releases = presets(
+export const releases = define_presets(
 {
   builtins: [
     {
@@ -95,3 +96,23 @@ export const releases = presets(
     },
   ],
 });
+
+
+function set_default_duration(presets: ShaperPreset[]): ShaperPreset[]
+{
+  const duration: Desmos.ExpressionState = {
+    latex: ltx `\phi_{duration} = 1`,
+    sliderBounds: { min: 0, max: 5 },
+  };
+
+  for (let preset of presets) {
+    if (Array.isArray(preset.latex)) {
+      preset.latex.push(duration);
+    }
+    else {
+      preset.latex = [preset.latex, duration];
+    }
+  }
+
+  return presets;
+}
