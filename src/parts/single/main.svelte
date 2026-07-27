@@ -7,8 +7,8 @@ import { Colour } from "#scripts/types";
 
 import {
   Add,
-  GraphEditor,
-  ShaperChain,
+  ShaperEditor,
+  ShaperChainEditor,
 } from "#parts";
 
 </script>
@@ -20,7 +20,7 @@ import {
     </div>
 
     {#each synth.oscillators.keys() as idx}
-      <GraphEditor pi
+      <ShaperEditor pi
         bind:shaper={synth.oscillators[idx]}
         presets={PRESETS.waves}
         preset={PRESETS.waves.core[idx]}
@@ -34,7 +34,7 @@ import {
   </section>
 
   {#each synth.transforms as shaper_chain}
-    <ShaperChain bind:shaper_chain />
+    <ShaperChainEditor bind:shaper_chain />
   {/each}
 
   <div style:margin-top="0.5rem">

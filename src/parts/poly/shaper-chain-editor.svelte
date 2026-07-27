@@ -1,4 +1,4 @@
-<!-- @component `ShaperChain`
+<!-- @component `ShaperChainRow`
 
 A row in the synth containing 1 or more `<GraphEditor>`s.
 -->
@@ -8,7 +8,7 @@ A row in the synth containing 1 or more `<GraphEditor>`s.
 import * as util from "#scripts/utils";
 import type { ShaperChainInstance } from "#scripts/types";
 
-import { GraphEditor } from "#parts";
+import { ShaperEditor } from "#parts";
 
 
 interface Props
@@ -35,7 +35,7 @@ let { shaper_chain: chain = $bindable() }: Props = $props();
   </div>
 
   {#each chain.shapers as shaper, idx}
-    <GraphEditor
+    <ShaperEditor
       bind:shaper={chain.shapers[idx]}
       presets={shaper.presets}
       preset={shaper.preset}

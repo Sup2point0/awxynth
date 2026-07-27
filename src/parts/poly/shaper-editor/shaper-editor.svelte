@@ -1,4 +1,4 @@
-<!-- @component GraphEditor
+<!-- @component `ShaperEditor`
 
 A generic graphing window for describing the shape of any parameter.
 -->
