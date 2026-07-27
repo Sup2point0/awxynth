@@ -25,6 +25,7 @@ export function desmos_window(
 {
   let window = Desmos.GraphingCalculator(el_window, {
     invertedColors: true,
+    border: false,
     expressions: false,
     // expressions: true,  // DEBUG
     showGrid: true,

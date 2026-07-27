@@ -29,6 +29,7 @@ onMount(() =>
   if (typeof Desmos === "undefined") return;
 
   desmos = Desmos.GraphingCalculator(el_desmos, {
+    border: false,
     invertedColors: true,
     expressions: false,
     settingsMenu: false,

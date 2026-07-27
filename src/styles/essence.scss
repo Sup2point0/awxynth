@@ -28,10 +28,6 @@ span.math {
   color: color.adjust($col-purp, $lightness: 10%);
 }
 
-.dcg-container {
-  border: none !important;
-}
-
 .dcg-exppanel {
   scrollbar-width: thin;
   scrollbar-color: var(--colour-inverted, color.invert($col-prot)) white;

@@ -96,6 +96,7 @@ function setup_desmos_editor(el_editor: HTMLElement): Desmos.Calculator
 {
   let editor = Desmos.GraphingCalculator(el_editor, {
     invertedColors: true,
+    border: false,
     graphpaper: false,
     expressions: true, expressionsTopbar: false,
     // @ts-ignore: outdated types
