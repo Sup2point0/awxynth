@@ -7,6 +7,8 @@ import { Func, Id } from "./expressions";
 
 /**
  * Initialise the curve rendering window to `el_window`, with the provided viewport bounds.
+ * 
+ * Also initialises `self.sampler_helper`.
  */
 export function desmos_window(
   self: any,
@@ -38,12 +40,6 @@ export function desmos_window(
   });
 
   const w = INTERNAL.SHAPER_SAMPLE_RES - 1;
-
-  // TEMP
-  window.setExpression({
-    id: Id.SHAPER_HELPER,
-    latex: ltx `${Func.SAMPLER}(${x_lower} + ${x_upper - x_lower} * [0...${w}] / ${w})`
-  });
 
   self.sampler_helper = window.HelperExpression({
     latex: ltx `${Func.SAMPLER}(${x_lower} + ${x_upper - x_lower} * [0...${w}] / ${w})`

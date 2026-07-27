@@ -5,8 +5,6 @@ A generic graphing window for describing the shape of any parameter.
 
 <script lang="ts">
 
-import { INTERNAL } from "#scripts/const";
-
 import * as util from "#scripts/utils";
 import type { Shaper, ShaperPreset } from "#scripts/types";
 
@@ -56,14 +54,17 @@ const presets_list = Object.values(presets).flat();
 // svelte-ignore state_referenced_locally
 let self = $state({
   latex: "",
-  sampler_helper: null as any,
+  sampler_helper: null as any | null,
   ghost_enabled: false,
   preset_index: presets_list.indexOf(preset),
   is_focused: false,
   sync_cancel: 0,
 });
 
-$effect(() => sync.focus_window(desmos_window, shaper.enabled && self.is_focused));
+$effect(() => {
+  if (no_desmos) return;
+  sync.focus_window(desmos_window, shaper.enabled && self.is_focused)
+});
 
 
 let el_editor: HTMLElement;
@@ -71,13 +72,20 @@ let el_window: HTMLElement;
 let desmos_editor: Desmos.Calculator;
 let desmos_window: Desmos.Calculator;
 
-onMount(() => {
+let no_desmos = $state(false);
+
+onMount(() =>
+{
+  if (typeof Desmos === "undefined") {
+    no_desmos = true;
+    return;
+  }
   desmos_window = setup.desmos_window(self, el_window, { x_lower, x_upper, y_lower, y_upper }, pi);
   desmos_editor = setup_desmos_editor(el_editor);
+
   setup_sampler_helper();
 
   sync.apply_preset(desmos_editor, preset);
-
   sync_all();
 });
 
@@ -86,10 +94,6 @@ onMount(() => {
 
 function setup_desmos_editor(el_editor: HTMLElement): Desmos.Calculator
 {
-  if (Desmos == undefined) {
-    window.alert(`Failed to load Desmos embeds!`);
-  }
-
   let editor = Desmos.GraphingCalculator(el_editor, {
     invertedColors: true,
     graphpaper: false,
@@ -110,6 +114,7 @@ function setup_desmos_editor(el_editor: HTMLElement): Desmos.Calculator
 function setup_sampler_helper()
 {
   let helper = self.sampler_helper;
+  if (helper == null) return;
 
   helper.observe("listValue", () => {
     if (helper.listValue == undefined) return;
@@ -131,6 +136,7 @@ function setup_sampler_helper()
 
 function sync_all()
 {
+  if (no_desmos) return;
   sync.window_with_editor(self, shaper, desmos_window, desmos_editor);
   sync.focus_window(desmos_window, shaper.enabled && self.is_focused);
 }
@@ -180,6 +186,8 @@ function cycle_presets(direction: "left" | "right")
     }
 
     preset = presets_list[self.preset_index];
+
+    if (no_desmos) return;
     sync.apply_preset(desmos_editor, preset);
     sync_all();
   };
@@ -188,12 +196,16 @@ function cycle_presets(direction: "left" | "right")
 function toggle_clip()
 {
   shaper.clip_on = !shaper.clip_on;
+
+  if (no_desmos) return;
   sync_all();
 }
 
 function toggle_ghost()
 {
   self.ghost_enabled = !self.ghost_enabled;
+  
+  if (no_desmos) return;
   sync_all();
 }
 
@@ -244,17 +256,23 @@ function toggle_ghost()
   </div>
 
   <div class="embeds">
-    <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-    <!-- svelte-ignore a11y_no_static_element_interactions -->
-    <div class="editor"
-      bind:this={el_editor}
-      onmousedown={start_active_syncing}
-      onmouseup={stop_active_syncing}>
-    </div>
+    {#if no_desmos}
+      <p> Uh oh, failed to load Desmos embeds! Try checking your internet connection and reloading the page? </p>
+    
+    {:else}
+      <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+      <!-- svelte-ignore a11y_no_static_element_interactions -->
+      <div class="editor"
+        bind:this={el_editor}
+        onmousedown={start_active_syncing}
+        onmouseup={stop_active_syncing}>
+      </div>
 
-    <div class="window"
-      bind:this={el_window}>
-    </div>
+      <div class="window"
+        bind:this={el_window}>
+      </div>
+    
+    {/if}
   </div>
 </div>
 
@@ -405,6 +423,17 @@ function toggle_ghost()
   display: flex;
   flex-flow: row nowrap;
   align-items: stretch;
+  position: relative;
+
+  p {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    @include font-body;
+    color: $col-red;
+    text-align: center;
+    transform: translateX(-50%) translateY(-50%);
+  }
 
   .editor {
     flex: 1;

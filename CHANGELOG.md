@@ -3,6 +3,7 @@
 <!--
 
 Fix:
+• wrong position for analyser pane
 
 Todo:
 • white for preset name when applied, grey when changed
@@ -11,6 +12,12 @@ Todo:
 
 
 <div class="changelog-layout">
+
+
+## 27 July 2027
+
+### *Fix*
+Degrade gracefully instead of crashing when Desmos API is not available.
 
 
 ## 26 July 2026
