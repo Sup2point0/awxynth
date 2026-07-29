@@ -5,7 +5,9 @@ on:
   push:
     paths:
       - 'CHANGELOG.md'
-      - '**.yml'
+      - 'deploy.yml'
+      - 'package.json'
+      - 'package-lock.json'
 
 jobs:
   build:
