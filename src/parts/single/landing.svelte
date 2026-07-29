@@ -14,7 +14,7 @@ let tip = $state();
 
 
 onMount(() => {
-  tip = awxynth?.tips?.sample_value();
+  tip = awxynth.sample_value();
 });
 
 
