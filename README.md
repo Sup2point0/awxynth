@@ -8,6 +8,8 @@ If you’ve ever made a cool-looking graph and wondered, “hmm, what would this
 
 Visit [sup2point0.github.io/awxynth](https://github.com/Sup2point0/awxynth) to use it!
 
+Help, FAQ and tutorials are available via the navbar.
+
 
 <br>
 
@@ -63,5 +65,5 @@ All handcoded and handwritten <3
 
 ## Licence
 
-- CC-BY SA for written content under [docs/](docs/)
-- MIT for everything else
+- [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.en) for written content under [docs/](docs/)
+- [MIT](LICENCE) for everything else
