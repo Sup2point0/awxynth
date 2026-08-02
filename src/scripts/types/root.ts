@@ -19,4 +19,4 @@ export type ScheduledTime = number;
 export type Latex = string;
 
 
-export type MaybeArray<T> = T | T[];
+export type Arrayable<T> = T | T[];

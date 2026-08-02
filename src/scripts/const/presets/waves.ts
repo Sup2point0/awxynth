@@ -95,15 +95,18 @@ export const waves = define_presets(
       latex: ltx `f\left(t\right) = \sin\left(\tan\left(\frac{t}{2}\right)\right)`,
     },
     {
+      title: "Dampened Spring",
+      latex: [
+        ltx `f\left(t\right) = \frac{\sin\left( kt \right)}{t}`,
+        ltx `k = 2`,
+      ],
+    },
+    {
       title: "Weierstrass",
       latex: ltx `f\left(t\right) = \frac{1}{\pi}\sum_{n=1}^{10}\frac{1}{n}\sin\left(\pi^{n}t\right)`,
     },
   ],
   wacky: [
-    {
-      title: "Accordion",
-      latex: ltx `f\left(t\right) = \frac{\sqrt{2}}{\pi}\sum_{n=1}^{k}\frac{1}{k+1-n}\sin\left(\sin\left(nx\right)\right)`,
-    },
     {
       title: "Audiovisual",
       latex: ltx `f\left(t\right) = \left(\left|2\sin t\right|-1\right)\operatorname{sign}\left(\pi-t\right)`,
@@ -125,15 +128,25 @@ export const waves = define_presets(
       latex: ltx `f\left(t\right) = \sin\left(t\right)\ln\left(\sin\left(t\right)^{2}\right)`,
     },
     {
-      title: "Dampened Spring",
+      title: "Event Horizon",
+      latex: ltx `f\left(t\right) = \sin\left(e^{\left(t-\pi\right)}\right)`,
+    },
+    {
+      title: "Harmonic Acid",
       latex: [
-        ltx `f\left(t\right) = \frac{\sin\left( kt \right)}{t}`,
-        ltx `k = 2`,
+        ltx `f\left(t\right)=w\left(t-k\right)`,
+        { latex: `k = 0`, sliderBounds: { min: 0, max: ltx `2\pi` } },
+        { latex: `R = 3`, sliderBounds: { min: 1, max: 5, step: 1 }},
+        ltx `w\left(t\right)=\sum_{n=1}^{R}g\left(n,\frac{t}{2}\right)g\left(n+1,\frac{t}{2}\right)`,
+        ltx `g\left(n,t\right)=\frac{1}{n}\sin\left(t^{n}\tan\left(n\sin\left(t\right)\right)\right)`,
       ],
     },
     {
-      title: "Event Horizon",
-      latex: ltx `f\left(t\right) = \sin\left(e^{\left(t-\pi\right)}\right)`,
+      title: "Harmonics",
+      latex: [
+        ltx `f\left(t\right)=\frac{\sqrt{2}}{\pi}\sum_{n=1}^{R}\frac{1}{R+1-n}\sin\left(\sin\left(nt\right)\right)`,
+        { latex: `R = 10`, sliderBounds: { min: 1, max: 20, step: 1 }},
+      ],
     },
     {
       title: "Humpback",
@@ -144,8 +157,12 @@ export const waves = define_presets(
       latex: ltx `f\left(t\right) = \frac{2}{e-e^{-1}}\left(e^{\sin t}-\frac{e+e^{-1}}{2}\right)`,
     },
     {
+      title: "Kid’s Piano",
+      latex: ltx `f\left(t\right)=\sin\left(16\pi\sin\left(t\right)\right)`,
+    },
+    {
       title: "Ladders",
-      latex: `f\left(t\right) = 2\operatorname{mod}\left(\frac{t^{2}}{2},\ 1\right)-1`,
+      latex: ltx `f\left(t\right) = 2\operatorname{mod}\left(\frac{t^{2}}{2},\ 1\right)-1`,
     },
     {
       title: "Sine Squeeze",
@@ -154,6 +171,14 @@ export const waves = define_presets(
     {
       title: "Slingshot",
       latex: ltx `f\left(t\right) = \int_{1}^{t}\frac{\ln x}{x}dx-1`,
+    },
+    {
+      title: "Slinky",
+      latex: ltx `f\left(t\right) = \sum_{n=0}^{2}\frac{\sin\left(n^{t}t\right)}{n+\ln2}`,
+    },
+    {
+      title: "SoundCloud",
+      latex: ltx `f\left(t\right)=-e^{\left(-\frac{1}{2}\left(t-\pi\right)^{2}\right)}\sin\left(10t\right)`,
     },
     {
       title: "Spastic Spring",
@@ -167,6 +192,13 @@ export const waves = define_presets(
       latex: ltx `f\left(t\right) = \frac{v\sqrt{6}}{v^{4}+v^{2}+1}\operatorname{with}v=t-\pi`,
     },
     {
+      title: "Treacherous Mountains",
+      latex: [
+        ltx `f\left(t\right)=\sum_{n=1}^{R}\frac{\sqrt{3}}{nt}\sin\left(t^{n}\sin^{-1}\left(\frac{t}{2\pi}\right)\right)`,
+        { latex: `R = 2`, sliderBounds: { min: 1, max: 5, step: 1 } },
+      ],
+    },
+    {
       title: "Twin Humps",
       latex: ltx `f\left(t\right) = \sqrt{5}ve^{-v^{2}}\operatorname{with}v=0.8\left(t-\pi\right)`,
     },
@@ -177,24 +209,32 @@ export const waves = define_presets(
   ],
   neuro: [
     {
-      title: "",
+      title: "Massive Squelchy",
       latex: ltx `f\left(t\right) = \sum_{n=1}^{10}\frac{1}{2^{n}}\sin\left(t^{n}\ln\left(1+nt\right)\right)`,
-    },
-    {
-      title: "",
-      latex: ltx `f\left(t\right) = \sum_{n=1}^{4}\frac{1}{2^{n}}\sin\left(2\pi t^{n}\right)`,
-    },
-    {
-      title: "",
-      latex: ltx `f\left(t\right) = \sum_{n=1}^{5}\frac{1}{2^{n}}\sin\left(t\sin\left(n\sin\left(nt\right)\right)\right)`,
-    },
-    {
-      title: "",
-      latex: ltx `f\left(t\right) = \sum_{n=1}^{10}\frac{1}{2^{n}}\sin\left(2^{n}t\right)\cos\left(t^{n}\right)`,
     },
     {
       title: "Organ",
       latex: ltx `f\left(t\right) = \sin\left(\sum_{n=1}^{7}\frac{1}{n}\sin\left(2^{n}t\right)\right)`,
+    },
+    {
+      title: "Spectral",
+      latex: [
+        ltx `f\left(t\right)=w\left(t-k\right)`,
+        { latex: `k = 0`, sliderBounds: { min: ltx `-\pi`, max: ltx `\pi` } },
+        ltx `w\left(t\right)=e^{-\frac{1}{2}t}\sum_{n=1}^{6}\frac{t^{n}}{n^{n}}\sin\left(e^{n}t\right)`,
+      ],
+    },
+    {
+      title: "Tiny Squelchy",
+      latex: ltx `f\left(t\right) = \sum_{n=1}^{4}\frac{1}{2^{n}}\sin\left(2\pi t^{n}\right)`,
+    },
+    {
+      title: "Upsy Daisy",
+      latex: ltx `f\left(t\right) = \sum_{n=1}^{5}\frac{1}{2^{n}}\sin\left(t\sin\left(n\sin\left(nt\right)\right)\right)`,
+    },
+    {
+      title: "Wet",
+      latex: ltx `f\left(t\right) = \sum_{n=1}^{10}\frac{1}{2^{n}}\sin\left(2^{n}t\right)\cos\left(t^{n}\right)`,
     },
   ],
   special: [
