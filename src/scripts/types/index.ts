@@ -7,3 +7,4 @@ export { Shaper, ShaperInstance } from "./shaper.svelte.ts";
 export type { ShaperChain, ShaperChainInstance } from "./shaper-chain.ts";
 export type { ShaperPreset } from "./preset";
 
+export type { GraphBounds } from "./desmos";

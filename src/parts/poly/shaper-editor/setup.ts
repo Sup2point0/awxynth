@@ -1,6 +1,8 @@
 import { INTERNAL } from "#scripts/const";
 
-import { ltx } from "#scripts/utils";
+import * as util from "#scripts/utils";
+import{ ltx } from "#scripts/utils";
+import type { Shaper, GraphBounds } from "#scripts/types";
 
 import { Func, Id } from "./expressions";
 
@@ -14,12 +16,9 @@ export function desmos_window(
   self: any,
   el_window: HTMLElement,
   {
-    x_lower, x_upper,
-    y_lower, y_upper
-  }: {
-    x_lower: number; x_upper: number;
-    y_lower: number; y_upper: number;
-  },
+    x: [x_lower, x_upper],
+    y: [y_lower, y_upper],
+  }: GraphBounds,
   pi?: true,
 ): Desmos.Calculator
 {
@@ -40,11 +39,40 @@ export function desmos_window(
     bottom: y_lower, top:   y_upper,
   });
 
+  return window;
+}
+
+
+export function sampler_helper(
+  window: Desmos.Calculator,
+  shaper: Shaper,
+  {
+    x: [x_lower, x_upper],
+    y: [y_lower, y_upper],
+  }: GraphBounds,
+)
+{
   const w = INTERNAL.SHAPER_SAMPLE_RES - 1;
 
-  self.sampler_helper = window.HelperExpression({
+  let helper = window.HelperExpression({
     latex: ltx `${Func.SAMPLER}(${x_lower} + ${x_upper - x_lower} * [0...${w}] / ${w})`
   });
 
-  return window;
+  helper.observe("listValue", () => {
+    if (helper.listValue == undefined) return;
+    let data = helper.listValue;
+    shaper.amps = shaper.clip_on ? util.clip(data) : data;
+  });
+  
+  helper.observe("numericValue", () => {
+    if (helper.numericValue == undefined) return;
+    if (Number.isNaN(helper.numericValue)) return;
+
+    let data = [helper.numericValue, helper.numericValue];
+    shaper.amps = shaper.clip_on ? util.clip(data) : data;
+  });
+
+  // for (let [key, label] of Object.entries(shaper.params)) {
+
+  // }
 }

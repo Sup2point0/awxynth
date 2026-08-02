@@ -8,6 +8,10 @@ import type { int } from "#scripts/types";
 export class OscillatorShaper
   extends Shaper<OscillatorShaper, OscillatorInstance>
 {
+  params = {
+    mix: "level"
+  }
+
   presets = PRESETS.waves
 
   preset = $state(PRESETS.waves.core[0])

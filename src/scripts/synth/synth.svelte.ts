@@ -200,7 +200,7 @@ export class Synth
       let instance = osc.create(this.ctx, freq);
       oscillators.push(instance);
 
-      let level = new GainNode(this.ctx, { gain: osc.mix });
+      let level = new GainNode(this.ctx, { gain: osc.level });
       levels.push(level);
 
       instance.connect(level);

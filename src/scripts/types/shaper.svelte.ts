@@ -30,8 +30,18 @@ export abstract class Shaper<
   /** Sampled y-over-x values of the shaper function (if relevant). */
   amps: Amplitude[] = []
 
+
+  /** Desmos variable names of additional shaper parameters shaper such as 'mix' or 'duration'.
+   * 
+   * A mapping from `key` to `name`, where `shaper[key]` is an existing property and the Desmos variable controlling it is $\phi_{name}$. */
+  params: Record<string, string> = {
+    mix: "mix"
+  }
+
+  /** The presets made for this shaper. */
   abstract presets: Record<string, ShaperPreset[]>
 
+  /** The default preset to initialise the shaper with. */
   abstract preset: ShaperPreset
 
   #subscribers: Array<(self: Original) => void> = []

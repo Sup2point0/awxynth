@@ -6,7 +6,7 @@ A generic graphing window for describing the shape of any parameter.
 <script lang="ts">
 
 import * as util from "#scripts/utils";
-import type { Shaper, ShaperPreset } from "#scripts/types";
+import type { Shaper, ShaperPreset, GraphBounds } from "#scripts/types";
 
 import * as setup from "./setup";
 import * as sync from "./sync";
@@ -25,10 +25,7 @@ interface Props {
   preset?: ShaperPreset;
 
   /** The viewport bounds of this editor. */
-  bounds?: {
-    x?: [number, number];
-    y?: [number, number];
-  };
+  bounds?: GraphBounds;
 
   /** (attribute) Should the viewport axes gridlines be relative to pi? */
   pi?: true;
@@ -38,18 +35,22 @@ let {
   shaper = $bindable(),
   presets = {},
   preset = { title: "Custom", latex: "" },
-  bounds,
+  // @ts-ignore (fields initialised separately below)
+  bounds = {},
   pi,
 }: Props = $props();
 
-/** Window viewport bounds. */
-let x_lower = $derived(bounds?.x?.at(0) ?? 0);
-let x_upper = $derived(bounds?.x?.at(1) ?? 1);
-let y_lower = $derived(bounds?.y?.at(0) ?? 0);
-let y_upper = $derived(bounds?.y?.at(1) ?? 1);
+// svelte-ignore state_referenced_locally
+(() => {
+  bounds.x ??= [0, 1];
+  bounds.y ??= [0, 1];
+  bounds.x_pi ??= false;
+  bounds.y_pi ??= false;
+})();
 
 // svelte-ignore state_referenced_locally
 const presets_list = Object.values(presets).flat();
+
 
 // svelte-ignore state_referenced_locally
 let self = $state({
@@ -80,10 +81,10 @@ onMount(() =>
     no_desmos = true;
     return;
   }
-  desmos_window = setup.desmos_window(self, el_window, { x_lower, x_upper, y_lower, y_upper }, pi);
+  desmos_window = setup.desmos_window(self, el_window, bounds, pi);
   desmos_editor = setup_desmos_editor(el_editor);
 
-  setup_sampler_helper();
+  setup.sampler_helper(desmos_window, shaper, bounds);
 
   sync.apply_preset(desmos_editor, preset);
   sync_all();
@@ -110,26 +111,6 @@ function setup_desmos_editor(el_editor: HTMLElement): Desmos.Calculator
   });
   
   return editor;
-}
-
-function setup_sampler_helper()
-{
-  let helper = self.sampler_helper;
-  if (helper == null) return;
-
-  helper.observe("listValue", () => {
-    if (helper.listValue == undefined) return;
-    let data = helper.listValue;
-    shaper.amps = shaper.clip_on ? util.clip(data) : data;
-  });
-  
-  helper.observe("numericValue", () => {
-    if (helper.numericValue == undefined) return;
-    if (Number.isNaN(helper.numericValue)) return;
-
-    let data = [helper.numericValue, helper.numericValue];
-    shaper.amps = shaper.clip_on ? util.clip(data) : data;
-  });
 }
 
 
