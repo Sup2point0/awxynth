@@ -17,7 +17,16 @@ Todo:
 <div class="changelog-layout">
 
 
-## 27 July 2027
+## 2 August 2026
+
+### *Fix*
+$\text{NaN}$ values are now treated as $0$ to avoid crashing the synth for functions with undefined points.
+
+### *Fix*
+Attempted to diagnose an issue with the Analyser Pane crashing.
+
+
+## 27 July 2026
 
 ### ***Feature***
 Fleshed out the overlay screen for adding new shapers.
@@ -26,7 +35,7 @@ Fleshed out the overlay screen for adding new shapers.
 Degrade gracefully instead of crashing when Desmos API is not available.
 
 ### *Fix*
-Fix positioning of analyser pane.
+Fix positioning of Analyser Pane.
 
 
 ## 26 July 2026
