@@ -66,25 +66,41 @@ function render(): number
   let data = new Uint8Array(node.frequencyBinCount);
   node.getByteFrequencyData(data);
 
-  draw_lines(ctx, data);
+  render_frame(ctx, data);
 
   return cancel;
 }
 
-function draw_lines(ctx: CanvasRenderingContext2D, data: Uint8Array)
+function render_frame(ctx: CanvasRenderingContext2D, data: Uint8Array)
 {
-  const PEAK_FREQUENCY = Math.floor(node.context.sampleRate / 2);
+  try {
+    clear_canvas(ctx);
+    draw_graph(ctx);
+    draw_spectrum(ctx, data)
+  }
+  catch {}
+}
+
+function clear_canvas(ctx: CanvasRenderingContext2D)
+{
+  if (ctx == null) return;
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   ctx.fillStyle = "rgb(128 128 128 / 10%)";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
 
-  // lines
+/**
+ * Render the logarithmic frequency graph skeleton.
+ */
+function draw_graph(ctx: CanvasRenderingContext2D)
+{
+  if (ctx == null) return;
+
   ctx.strokeStyle = "rgb(255 255 255 / 10%)";
   ctx.lineWidth = 1 * CANVAS_RESOLUTION;
 
-  // text
   let size = 8 * CANVAS_RESOLUTION;
   ctx.font = `${size}px 'Orbit'`;
   ctx.fillStyle = "rgb(255 255 255)";
@@ -109,11 +125,21 @@ function draw_lines(ctx: CanvasRenderingContext2D, data: Uint8Array)
       ctx.fillText(freq_text, x, y);
     }
   }
+}
+
+/**
+ * Render the frequency spectrum with a gradient over the graph skeleton.
+ */
+function draw_spectrum(ctx: CanvasRenderingContext2D, data: Uint8Array)
+{
+  if (ctx == null) return;
+
+  const PEAK_FREQUENCY = Math.floor(node.context.sampleRate / 2);
 
   let gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
   gradient.addColorStop(0.00, Colour.PURPLE);
   gradient.addColorStop(0.30, Colour.PURPLE);
-  gradient.addColorStop(0.60, Colour.PINK + "80");
+  gradient.addColorStop(0.60, Colour.PINK);
   gradient.addColorStop(1.00, Colour.YELLOW.replace(")", " / 10%)"));
   ctx.strokeStyle = gradient;
 
