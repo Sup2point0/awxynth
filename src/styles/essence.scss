@@ -1,6 +1,7 @@
 @use 'sass:color';
 
 @use 'mixins/colours' as *;
+@use 'mixins/fonts' as *;
 
 
 * {
@@ -26,6 +27,13 @@
 
 span.math {
   color: color.adjust($col-purp, $lightness: 10%);
+}
+
+.dcg-displayTextarea,
+.dcg-smart-textarea
+{
+  font-family: 'Orbit', 'Segoe UI', system-ui, sans-serif !important;
+  font-size: 90% !important;
 }
 
 .dcg-exppanel {
