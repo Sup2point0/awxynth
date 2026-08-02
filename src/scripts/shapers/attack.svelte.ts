@@ -14,6 +14,11 @@ export class AttackShaper
   /** How long the attack envelope lasts. */
   duration: number
 
+  
+  params = {
+    duration: "duration"
+  }
+
   presets = PRESETS.attacks
 
   preset = $state(PRESETS.attacks.builtins[0])

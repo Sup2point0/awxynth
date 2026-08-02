@@ -43,7 +43,10 @@ export function desmos_window(
 }
 
 
-export function sampler_helper(
+/**
+ * Initialise Desmos helper expressions for sampling amplitudes from the shaper curve, and syncing other $φ_{param}$ parameters (if any).
+ */
+export function sync_helpers(
   window: Desmos.Calculator,
   shaper: Shaper,
   {
@@ -54,25 +57,36 @@ export function sampler_helper(
 {
   const w = INTERNAL.SHAPER_SAMPLE_RES - 1;
 
-  let helper = window.HelperExpression({
+  let amps = window.HelperExpression({
     latex: ltx `${Func.SAMPLER}(${x_lower} + ${x_upper - x_lower} * [0...${w}] / ${w})`
   });
 
-  helper.observe("listValue", () => {
-    if (helper.listValue == undefined) return;
-    let data = helper.listValue;
+  amps.observe("listValue", () => {
+    if (amps.listValue == undefined) return;
+    let data = amps.listValue;
     shaper.amps = shaper.clip_on ? util.clip(data) : data;
   });
   
-  helper.observe("numericValue", () => {
-    if (helper.numericValue == undefined) return;
-    if (Number.isNaN(helper.numericValue)) return;
+  amps.observe("numericValue", () => {
+    if (amps.numericValue == undefined) return;
+    if (Number.isNaN(amps.numericValue)) return;
 
-    let data = [helper.numericValue, helper.numericValue];
+    let data = [amps.numericValue, amps.numericValue];
     shaper.amps = shaper.clip_on ? util.clip(data) : data;
   });
 
-  // for (let [key, label] of Object.entries(shaper.params)) {
+  for (let [key, label] of Object.entries(shaper.params)) {
+    let param = window.HelperExpression({
+      latex: ltx `\phi_{${label}}`
+    });
 
-  // }
+    param.observe("numericValue", () => {
+      console.log(`param =`, param, `param.numericValue =`, param.numericValue);
+      if (param.numericValue == undefined) return;
+      if (Number.isNaN(param.numericValue)) return;
+
+      // @ts-ignore (`key :: keyof shaper`)
+      shaper[key] = param.numericValue;
+    });
+  }
 }

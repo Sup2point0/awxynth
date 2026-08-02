@@ -84,7 +84,7 @@ onMount(() =>
   desmos_window = setup.desmos_window(self, el_window, bounds, pi);
   desmos_editor = setup_desmos_editor(el_editor);
 
-  setup.sampler_helper(desmos_window, shaper, bounds);
+  setup.sync_helpers(desmos_window, shaper, bounds);
 
   sync.apply_preset(desmos_editor, preset);
   sync_all();

@@ -15,6 +15,11 @@ export class ReleaseShaper
   /** How long the release envelope lasts. */
   duration: number
 
+  
+  params = {
+    duration: "duration"
+  }
+
   presets = PRESETS.releases
 
   preset = $state(PRESETS.releases.builtins[3])
