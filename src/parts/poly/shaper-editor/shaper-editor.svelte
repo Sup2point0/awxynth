@@ -67,6 +67,13 @@ $effect(() => {
   sync.focus_window(desmos_window, shaper.enabled && self.is_focused)
 });
 
+$effect(() => {
+  if (no_desmos) return;
+  let { x: [left, right], y: [bottom, top] } = shaper.bounds;
+  // @ts-ignore outdated types
+  desmos_window?.setMathBounds({ left, right, bottom, top });
+});
+
 
 let el_editor: HTMLElement;
 let el_window: HTMLElement;
@@ -81,7 +88,8 @@ onMount(() =>
     no_desmos = true;
     return;
   }
-  desmos_window = setup.desmos_window(self, el_window, bounds, pi);
+
+  desmos_window = setup.desmos_window(el_window, bounds, pi);
   desmos_editor = setup_desmos_editor(el_editor);
 
   setup.sync_helpers(desmos_window, shaper, bounds);

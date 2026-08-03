@@ -23,8 +23,8 @@ export const EnvelopeChain: ShaperChain = {
     original: EnvelopeChain,
     disabled: true,
     shapers: [
-      new AttackShaper(1.0),
-      new ReleaseShaper(1.0),
+      new AttackShaper(),
+      new ReleaseShaper(),
     ],
   }),
 }

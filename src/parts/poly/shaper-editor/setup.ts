@@ -13,25 +13,23 @@ import { Func, Id } from "./expressions";
  * Also initialises `self.sampler_helper`.
  */
 export function desmos_window(
-  self: any,
   el_window: HTMLElement,
   {
-    x: [x_lower, x_upper],
-    y: [y_lower, y_upper],
+    x: [x_lower, x_upper], x_pi,
+    y: [y_lower, y_upper], y_pi,
   }: GraphBounds,
-  pi?: true,
 ): Desmos.Calculator
 {
   let window = Desmos.GraphingCalculator(el_window, {
-    invertedColors: true,
     border: false,
     expressions: false,
     // expressions: true,  // DEBUG
-    showGrid: true,
-    xAxisNumbers: false, yAxisNumbers: false,
-    xAxisStep: pi ? (Math.PI / 2) : 1, yAxisStep: 1,
-    settingsMenu: false,
+    invertedColors: true,
     lockViewport: true,
+    settingsMenu: false,
+    showGrid: true,
+    xAxisNumbers: false, xAxisStep: x_pi ? (Math.PI / 2) : 1,
+    yAxisNumbers: false, yAxisStep: y_pi ? (Math.PI / 2) : 1,
   });
 
   window.setMathBounds({
@@ -81,7 +79,6 @@ export function sync_helpers(
     });
 
     param.observe("numericValue", () => {
-      console.log(`param =`, param, `param.numericValue =`, param.numericValue);
       if (param.numericValue == undefined) return;
       if (Number.isNaN(param.numericValue)) return;
 

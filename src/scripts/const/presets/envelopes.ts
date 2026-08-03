@@ -53,7 +53,7 @@ export const attacks = define_presets(
 
 export const releases = define_presets(
 {
-  builtins: [
+  builtins: set_default_duration([
     {
       title: "Linear",
       latex: ltx `f\left(t\right) = 1 - t`,
@@ -94,7 +94,7 @@ export const releases = define_presets(
       title: "Circular (convex)",
       latex: ltx `f\left(t\right) = 1-\sqrt{1-\left(t-1\right)^{2}}`,
     },
-  ],
+  ]),
 });
 
 
@@ -102,7 +102,7 @@ function set_default_duration(presets: ShaperPreset[]): ShaperPreset[]
 {
   const duration: Desmos.ExpressionState = {
     latex: ltx `\phi_{duration} = 1`,
-    sliderBounds: { min: 0, max: 5 },
+    sliderBounds: { min: 0, max: 2 },
   };
 
   for (let preset of presets) {
