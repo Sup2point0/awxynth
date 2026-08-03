@@ -106,7 +106,14 @@ export function apply_preset(editor: Desmos.Calculator, preset: ShaperPreset)
 
   // `Latex`
   if (!Array.isArray(preset.latex)) {
-    editor.setExpression({ id: "any", latex: preset.latex });
+    // `Latex`
+    if (typeof preset.latex === "string") {
+      editor.setExpression({ id: "any", latex: preset.latex });
+    }
+    // `Desmos.ExpressionState`
+    else {
+      editor.setExpression({ id: "any", ...preset.latex });
+    }
     return;
   }
   
