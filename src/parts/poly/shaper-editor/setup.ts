@@ -47,10 +47,7 @@ export function desmos_window(
 export function sync_helpers(
   window: Desmos.Calculator,
   shaper: Shaper,
-  {
-    x: [x_lower, x_upper],
-    y: [y_lower, y_upper],
-  }: GraphBounds,
+  { x: [x_lower, x_upper] }: GraphBounds,
 )
 {
   const w = INTERNAL.SHAPER_SAMPLE_RES - 1;
@@ -62,7 +59,7 @@ export function sync_helpers(
   amps.observe("listValue", () => {
     if (amps.listValue == undefined) return;
     let data = amps.listValue;
-    shaper.amps = shaper.clip_on ? util.clip(data) : data;
+    shaper.amps = shaper.clip_on ? util.clip(data) : util.sanitise(data);
   });
   
   amps.observe("numericValue", () => {
@@ -70,7 +67,7 @@ export function sync_helpers(
     if (Number.isNaN(amps.numericValue)) return;
 
     let data = [amps.numericValue, amps.numericValue];
-    shaper.amps = shaper.clip_on ? util.clip(data) : data;
+    shaper.amps = shaper.clip_on ? util.clip(data) : util.sanitise(data);
   });
 
   for (let [key, label] of Object.entries(shaper.params)) {
