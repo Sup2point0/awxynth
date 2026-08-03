@@ -1,12 +1,12 @@
-<!-- @component `Out`
+<!-- @component `<MasterPane>`
 
+An overlay panel with master visuals, such as the frequency spectrum visualiser.
 -->
 
 <script lang="ts">
 
-import { Colour } from "#scripts/types";
-import * as util from "#scripts/utils";
 import { INTERNAL } from "#scripts/const";
+import { Colour } from "#scripts/types";
 
 import { onMount } from "svelte";
 

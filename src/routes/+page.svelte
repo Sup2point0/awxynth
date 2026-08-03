@@ -9,7 +9,7 @@ import { onkeydown, onkeyup } from "./keybinds";
 
 import {
   Landing, Overlay,
-  Nav, Main, AnalysersPane, Keyboard,
+  Nav, Main, MasterPane, Keyboard,
 } from "#parts";
 
 </script>
@@ -32,8 +32,8 @@ import {
     <Main />
   </div>
     
-  {#if $nav_state.show_analysers_pane}
-    <AnalysersPane node={synth.analyser} />
+  {#if $nav_state.show_master_pane}
+    <MasterPane node={synth.analyser} />
   {/if}
   
   <div class="keyboard-container">

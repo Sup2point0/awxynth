@@ -31,8 +31,8 @@ export interface NavState
 
   docs_page: Docs;
 
-  /** Should the output analyser visualisers pane be shown? */
-  show_analysers_pane: boolean;
+  /** Should the master pane be shown? */
+  show_master_pane: boolean;
 }
 
 
@@ -41,5 +41,5 @@ export const nav_state = writable<NavState>(
 {
   overlay: null,
   docs_page: Docs.QUICKSTART,
-  show_analysers_pane: false,
+  show_master_pane: false,
 });

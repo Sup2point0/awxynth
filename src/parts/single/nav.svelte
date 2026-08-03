@@ -25,10 +25,10 @@ function overlay(page: OverlayPage)
 
   <div class="centre">
     <button class="clicky toggle"
-      class:open={$nav_state.show_analysers_pane}
-      onclick={() => { $nav_state.show_analysers_pane = !$nav_state.show_analysers_pane; }}
+      class:open={$nav_state.show_master_pane}
+      onclick={() => { $nav_state.show_master_pane = !$nav_state.show_master_pane; }}
     >
-      <span>Output</span>
+      <span>Master</span>
     </button>
 
     <button class="clicky toggle">
