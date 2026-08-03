@@ -1,5 +1,5 @@
 export * as INTERNAL from "./internal";
-export * as DEFAULTS from "./defaults";
+export * as defaults from "./defaults";
 export * as PRESETS from "./presets";
 export { SHAPER_CHAINS } from "./shaper-chains";
 

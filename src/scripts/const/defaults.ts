@@ -1,10 +1,9 @@
 import { OscillatorShaper } from "#scripts/shapers";
 import { EnvelopeChain } from "#scripts/const/shaper-chains";
-import type { Octave, Scalar, ShaperChainInstance } from "#scripts/types";
+import type { Amplitude, Octave, ShaperChainInstance } from "#scripts/types";
 
 
-export const GAIN: Scalar = 0.7;
-
+export const GAIN: Amplitude = 0.7;
 export const OCTAVE: Octave = 4;
 
 

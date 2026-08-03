@@ -1,7 +1,7 @@
 import { OscillatorShaper, OscillatorInstance } from "#scripts/shapers";
 import type { ShaperInstance, ShaperChainInstance } from "#scripts/types";
 
-import { INTERNAL, DEFAULTS, NOTE_FREQUENCIES, MIN_OCTAVE, MAX_OCTAVE } from "#scripts/const";
+import { INTERNAL, defaults, NOTE_FREQUENCIES, MIN_OCTAVE, MAX_OCTAVE } from "#scripts/const";
 import { Note } from "#scripts/types";
 import type { Octave, Scalar, OctavedNoteRepr, ScheduledTime } from "#scripts/types";
 
@@ -30,13 +30,13 @@ export class Synth
   master!:   GainNode
   analyser!: AnalyserNode
 
-  oscillators: OscillatorShaper[] = $state(DEFAULTS.OSCILLATORS)
-  transforms: Array<ShaperChainInstance> = $state(DEFAULTS.TRANSFORMS)
+  oscillators: OscillatorShaper[] = $state(defaults.OSCILLATORS)
+  transforms: Array<ShaperChainInstance> = $state(defaults.TRANSFORMS)
 
   active_notes = new SvelteMap<OctavedNoteRepr, NotePlaybackShapers>()
 
-  gain:   Scalar = $state(DEFAULTS.GAIN)
-  octave: Octave = $state(DEFAULTS.OCTAVE)
+  gain:   Scalar = $state(defaults.GAIN)
+  octave: Octave = $state(defaults.OCTAVE)
 
 
   /**
