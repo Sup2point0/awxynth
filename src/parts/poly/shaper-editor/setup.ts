@@ -56,7 +56,7 @@ export function sync_helpers(
   const w = INTERNAL.SHAPER_SAMPLE_RES - 1;
 
   let amps = window.HelperExpression({
-    latex: ltx `${Func.SAMPLER}(${x_lower} + ${x_upper - x_lower} * [0...${w}] / ${w})`
+    latex: ltx `${Func.SAMPLER}(${x_lower} + (${x_upper} - ${x_lower}) * [0...${w}] / ${w})`
   });
 
   amps.observe("listValue", () => {
