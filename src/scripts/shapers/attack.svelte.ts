@@ -1,33 +1,34 @@
-import { Shaper, ShaperInstance } from "#scripts/types";
+import { Colour, Shaper, ShaperInstance } from "#scripts/types";
 
 import * as PRESETS from "#scripts/const/presets";
-import { Colour, type Seconds } from "#scripts/types";
+import type { GraphBounds, Seconds } from "#scripts/types";
 
 
 export class AttackShaper
   extends Shaper<AttackShaper, AttackInstance>
 {
-  override colour = Colour.BLUE
-
   override clip_on = $state(true)
 
   /** How long the attack envelope lasts. */
-  duration: number
+  duration: Seconds = $state(1.0)
 
+
+  override colour = Colour.BLUE
+  override bounds = $derived({
+    x: [0, this.duration],
+    y: [0, 1],
+  }) as GraphBounds
   
-  params = {
+  override params = {
     duration: "duration"
   }
-
-  presets = PRESETS.attacks
-
-  preset = $state(PRESETS.attacks.builtins[0])
+  override presets = PRESETS.attacks
+  override preset = $state(PRESETS.attacks.builtins[0])
 
 
-  constructor(duration: Seconds)
+  constructor()
   {
     super("ATTACK");
-    this.duration = $state(duration);
   }
 
 

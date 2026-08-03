@@ -1,7 +1,10 @@
+import type { Latex } from "#scripts/types";
+
+
 export interface GraphBounds
 {
-  x: [lower: number, upper: number];
-  y: [lower: number, upper: number];
+  x: [lower: number | Latex, upper: number | Latex];
+  y: [lower: number | Latex, upper: number | Latex];
   
   x_pi?: boolean;
   y_pi?: boolean;

@@ -2,19 +2,23 @@ import { Shaper, ShaperInstance } from "#scripts/types";
 
 import * as PRESETS from "#scripts/const/presets";
 import { SHAPER_SAMPLE_RES } from "#scripts/const/internal";
-import type { int } from "#scripts/types";
+import ltx from "#scripts/utils";
+import type { GraphBounds, int } from "#scripts/types";
 
 
 export class OscillatorShaper
   extends Shaper<OscillatorShaper, OscillatorInstance>
 {
-  params = {
+  override bounds = {
+    x: [0, ltx `2\pi`], x_pi: true,
+    y: [-1, 1],
+  } as GraphBounds
+  
+  override params = {
     mix: "level"
   }
-
-  presets = PRESETS.waves
-
-  preset = $state(PRESETS.waves.core[0])
+  override presets = PRESETS.waves
+  override preset = $state(PRESETS.waves.core[0])
 
 
   override create(ctx: AudioContext, freq: int): OscillatorInstance

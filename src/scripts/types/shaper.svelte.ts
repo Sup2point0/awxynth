@@ -1,5 +1,6 @@
+import { defaults } from "#scripts/const";
 import { Colour } from "#scripts/types";
-import type { Scalar, Amplitude, ScheduledTime, ShaperPreset } from "#scripts/types";
+import type { Amplitude, GraphBounds, Scalar, ScheduledTime, ShaperPreset } from "#scripts/types";
 
 
 /**
@@ -12,24 +13,30 @@ export abstract class Shaper<
   Instance extends ShaperInstance<Original,Instance> = any
 >
 {
-  /** Displayed name of the shaper. */
-  title: string = "SHAPER"
-
-  /** Colour associated with the shaper for title and graph. */
-  colour: string = Colour.GREEN
-
   /** Should the shaper be applied in the processing chain? */
   enabled: boolean = $state(true)
 
   /** Should hard clipping be applied to clamp `.amps` to within the shaper's codomain? */
   clip_on: boolean = $state(false)
 
-  /** How strong to apply the shaper. `[0.0, 1.0]`, with `0.0` dry and `1.0` wet. */
-  mix: Scalar = $state(1.0)
-
   /** Sampled y-over-x values of the shaper function (if relevant). */
   amps: Amplitude[] = []
 
+  /** How strong to apply the shaper. `[0.0, 1.0]`, with `0.0` dry and `1.0` wet. */
+  mix: Scalar = $state(1.0)
+
+
+  /** Displayed name of the shaper. */
+  title: string = "SHAPER"
+
+  /** Colour associated with the shaper for title and graph. */
+  colour: string = Colour.GREEN
+
+  /** Graph bounds for the shaper function. Must be `$state()` if they can be changed! */
+  bounds: GraphBounds = $state({
+    x: [0, 1],
+    y: [0, 1],
+  })
 
   /** Desmos variable names of additional shaper parameters shaper such as 'mix' or 'duration'.
    * 

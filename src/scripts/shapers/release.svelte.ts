@@ -8,27 +8,28 @@ import type { Seconds, ScheduledTime } from "#scripts/types";
 export class ReleaseShaper
   extends Shaper<ReleaseShaper, ReleaseInstance>
 {
-  override colour = Colour.PURPLE
-  
   override clip_on = $state(true)
   
   /** How long the release envelope lasts. */
-  duration: number
+  duration: Seconds = $state(1.0)
 
   
-  params = {
+  override colour = Colour.PURPLE
+    override bounds = $derived({
+      x: [0, this.duration],
+      y: [0, 1],
+    }) as GraphBounds
+    
+  override params = {
     duration: "duration"
   }
-
-  presets = PRESETS.releases
-
-  preset = $state(PRESETS.releases.builtins[3])
+  override presets = PRESETS.releases
+  override preset = $state(PRESETS.releases.builtins[3])
   
   
-  constructor(duration: Seconds)
+  constructor()
   {
     super("RELEASE");
-    this.duration = $state(duration);
   }
 
 
