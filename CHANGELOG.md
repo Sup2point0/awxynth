@@ -13,6 +13,12 @@ Todo:
 <div class="changelog-layout">
 
 
+## 3 August 2026
+
+### *Fix*
+Those $\text{NaN}$ values were only being sanitised when clipping was enabled for a shaper. Now they’re always made safe, as well as `undefined` and `null` values!
+
+
 ## 2 August 2026
 
 ### *Fix*

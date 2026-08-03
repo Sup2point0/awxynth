@@ -1,23 +1,33 @@
 import type { int, Amplitude } from "#scripts/types";
 
 
+function bad(x: number): boolean
+{
+  return x == undefined || Number.isNaN(x);
+}
+
+
+function clamp(min: number, x: number, max: number)
+{
+  return Math.min(max, Math.max(min, x));
+}
+
+
 /**
  * Sanitise `data` by setting `NaN` and `undefined` values to `0`.
  */
 export function sanitise(data: Amplitude[]): Amplitude[]
 {
-  return data.map(x => (x == undefined || Number.isNaN(x)) ? 0 : x);
+  return data.map(x => bad(x) ? 0 : x);
 }
 
 
 /**
- * Clamp amplitudes in `data` to `[-1.0, 1.0]`.
- * 
- * `NaN` values are set to `0`.
+ * Sanitise and clamp amplitudes in `data` to `[-1.0, 1.0]`.
  */
 export function clip(data: Amplitude[]): Amplitude[]
 {
-  return data.map(x => Number.isNaN(x) ? 0 : Math.min(1.0, Math.max(-1.0, x)));
+  return data.map(x => bad(x) ? 0 : clamp(-1.0, x, 1.0));
 }
 
 
