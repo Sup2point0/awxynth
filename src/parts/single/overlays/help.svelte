@@ -2,47 +2,41 @@
 
 <script lang="ts">
 
-import { nav_state, Docs } from "#scripts/stores";
-
-import {
-  Quickstart, FAQ, Troubleshooting, Glossary,
-  SoundFundamentals,
-} from "#docs";
+import { nav_state } from "#scripts/stores";
+import { Docs, type DocsPageData } from "#scripts/const";
 
 import { InjectDesmos } from "#parts/poly";
 
 
-let open_page = $derived($nav_state.docs_page);
+let [open_page, Page]: DocsPageData = $derived($nav_state.docs_page);
 
 </script>
 
 
 <nav>
-  {#each Object.values(Docs) as page}
-    {#if page.startsWith("Group:")}
-      <h3> {page.replace("Group:", "")} </h3>
-    {:else}
+  {#each Object.values(Docs) as category}
+    {#if category.title}
+      <h3> {category.title} </h3>
+    {/if}
+
+    {#each Object.entries(category.pages) as [page, Page]}
       <button
         class:open={open_page === page}
-        onclick={() => { $nav_state.docs_page = page; }}
+        onclick={() => { $nav_state.docs_page = [page, Page]; }}
       >
         {page}
       </button>
-    {/if}
+    {/each}
   {/each}
 </nav>
 
-<article class={open_page.toLowerCase()}>
-  {#if      open_page === Docs.FAQ}             <FAQ />
-  {:else if open_page === Docs.TROUBLESHOOTING} <Troubleshooting />
-  {:else if open_page === Docs.GLOSSARY}        <Glossary />
-
-  {:else if open_page === Docs.SOUND_FUNDAMENTALS}
-    <InjectDesmos><SoundFundamentals /></InjectDesmos>
-
-  {:else}
-    <Quickstart />
-  
+<article class={open_page.toLowerCase().replaceAll(" ", "-")}>
+  {#if Page}
+    {#key open_page}
+      <InjectDesmos>
+        <Page />
+      </InjectDesmos>
+    {/key}
   {/if}
 </article>
 

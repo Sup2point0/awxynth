@@ -1,5 +1,10 @@
 import { writable } from "svelte/store";
 
+// NOTE: Direct import to avoid circular imports
+import { Docs } from "#scripts/const/docs";
+
+import type { SvelteComponent } from "svelte";
+
 
 export enum OverlayPage
 {
@@ -10,18 +15,6 @@ export enum OverlayPage
   ADD_SHAPER,
 }
 
-export enum Docs {
-  QUICKSTART      = "Quickstart",
-  FAQ             = "FAQ",
-  TROUBLESHOOTING = "Troubleshooting",
-  GLOSSARY        = "Glossary",
-
-  TECHNICALS         = "Group:Technicals",
-  SOUND_FUNDAMENTALS = "Fundamentals of Sound",
-  // GRAPH_FUNDAMENTALS = "Fundamentals of Graphs",
-  // CLIPPING           = "To Clip or Not To Clip?",
-}
-
 
 /** Global navigation-related state. */
 export interface NavState
@@ -29,7 +22,7 @@ export interface NavState
   /** The currently open overlay page, if any. */
   overlay: OverlayPage | null;
 
-  docs_page: Docs;
+  docs_page: [string, SvelteComponent];
 
   /** Should the master pane be shown? */
   show_master_pane: boolean;
@@ -40,6 +33,6 @@ export interface NavState
 export const nav_state = writable<NavState>(
 {
   overlay: null,
-  docs_page: Docs.QUICKSTART,
+  docs_page: ["Quickstart", Docs.core.pages.Quickstart],
   show_master_pane: false,
 });
