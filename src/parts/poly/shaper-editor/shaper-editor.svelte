@@ -23,30 +23,13 @@ interface Props {
 
   /** The initial preset to use by default. */
   preset?: ShaperPreset;
-
-  /** The viewport bounds of this editor. */
-  bounds?: GraphBounds;
-
-  /** (attribute) Should the viewport axes gridlines be relative to pi? */
-  pi?: true;
 }
 
 let {
   shaper = $bindable(),
   presets = {},
   preset = { title: "Custom", latex: "" },
-  // @ts-ignore (fields initialised separately below)
-  bounds = {},
-  pi,
 }: Props = $props();
-
-// svelte-ignore state_referenced_locally
-(() => {
-  bounds.x ??= [0, 1];
-  bounds.y ??= [0, 1];
-  bounds.x_pi ??= false;
-  bounds.y_pi ??= false;
-})();
 
 // svelte-ignore state_referenced_locally
 const presets_list = Object.values(presets).flat();
@@ -55,23 +38,10 @@ const presets_list = Object.values(presets).flat();
 // svelte-ignore state_referenced_locally
 let self = $state({
   latex: "",
-  sampler_helper: null as any | null,
   ghost_enabled: false,
   preset_index: presets_list.indexOf(preset),
   is_focused: false,
   sync_cancel: 0,
-});
-
-$effect(() => {
-  if (no_desmos) return;
-  sync.focus_window(desmos_window, shaper.enabled && self.is_focused)
-});
-
-$effect(() => {
-  if (no_desmos) return;
-  let { x: [left, right], y: [bottom, top] } = shaper.bounds;
-  // @ts-ignore outdated types
-  desmos_window?.setMathBounds({ left, right, bottom, top });
 });
 
 
@@ -89,13 +59,20 @@ onMount(() =>
     return;
   }
 
-  desmos_window = setup.desmos_window(el_window, bounds, pi);
+  desmos_window = setup.desmos_window(el_window, shaper.bounds);
   desmos_editor = setup_desmos_editor(el_editor);
-
-  setup.sync_helpers(desmos_window, shaper, bounds);
-
+  setup.sync_helpers(desmos_window, shaper);
+  
   sync.apply_preset(desmos_editor, preset);
-  sync_all();
+  sync.window_bounds(desmos_window, shaper);
+  sync_discrete();
+});
+
+$effect(() => {
+  sync.focus_window(desmos_window, shaper.enabled && self.is_focused)
+});
+$effect(() => {
+  sync.window_bounds(desmos_window, shaper);
 });
 
 
@@ -124,7 +101,8 @@ function setup_desmos_editor(el_editor: HTMLElement): Desmos.Calculator
 
 // == SYNC == //
 
-function sync_all()
+// FIXME still need?
+function sync_discrete()
 {
   if (no_desmos) return;
   sync.window_with_editor(self, shaper, desmos_window, desmos_editor);
@@ -179,7 +157,7 @@ function cycle_presets(direction: "left" | "right")
 
     if (no_desmos) return;
     sync.apply_preset(desmos_editor, preset);
-    sync_all();
+    sync_discrete();
   };
 }
 
@@ -188,7 +166,7 @@ function toggle_clip()
   shaper.clip_on = !shaper.clip_on;
 
   if (no_desmos) return;
-  sync_all();
+  sync_discrete();
 }
 
 function toggle_ghost()
@@ -196,7 +174,7 @@ function toggle_ghost()
   self.ghost_enabled = !self.ghost_enabled;
   
   if (no_desmos) return;
-  sync_all();
+  sync_discrete();
 }
 
 </script>

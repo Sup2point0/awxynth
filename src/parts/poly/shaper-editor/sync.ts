@@ -8,17 +8,44 @@ import { Id, Func, is_shaper, USER_ID_PREFIX, INTERNAL_ID_PREFIX } from "./expre
 
 
 /**
- * Update `desmos_window` settings to reflect `is_focused`.
+ * Update `window` settings to reflect `is_focused`.
  */
-export function focus_window(window: Desmos.Calculator, should_focus: boolean)
+export function focus_window(window: Desmos.Calculator | undefined, should_focus: boolean)
 {
-  window?.updateSettings({
+  if (window == undefined) return;
+
+  window.updateSettings({
     xAxisNumbers: should_focus, yAxisNumbers: should_focus,
   });
 
-  window?.setExpression({
+  window.setExpression({
     id: Id.SHAPER_RENDER_FILL,
     fillOpacity: (should_focus ? 1.5 : 1) * Theme.WAVE_OPACITY,
+  });
+}
+
+
+/**
+ * Update the viewport bounds of `window` to reflect `shaper`, adding some leeway for nicer rendering.
+ */
+export function window_bounds(
+  window: Desmos.Calculator | undefined,
+  shaper: Shaper,
+)
+{
+  if (window == undefined) return;
+
+  let {
+    x: [left, right],
+    y: [bottom, top],
+  } = shaper.bounds;
+
+  window.setMathBounds({
+    left,
+    right,
+    // bottom: `${bottom} - 0.05`,
+    bottom: `0 - 0.05`,
+    top: `${top} + 0.05`,
   });
 }
 

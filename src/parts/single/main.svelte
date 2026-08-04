@@ -20,11 +20,10 @@ import {
     </div>
 
     {#each synth.oscillators.keys() as idx}
-      <ShaperEditor pi
+      <ShaperEditor
         bind:shaper={synth.oscillators[idx]}
         presets={PRESETS.waves}
         preset={PRESETS.waves.core[idx]}
-        bounds={{ x: [0, 2*Math.PI], y: [-1.05, 1.05] }}
       />
     {/each}
 
