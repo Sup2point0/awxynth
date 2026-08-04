@@ -49,8 +49,6 @@ export class OscillatorInstance
     this.freq = freq;
 
     this.update();
-
-    this.shaper.subscribe(this.update.bind(this));
   }
 
   update()
