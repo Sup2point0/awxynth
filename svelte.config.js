@@ -4,10 +4,11 @@ import { mdsvex } from "mdsvex";
 
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex-svelte";
+import { visit } from "unist-util-visit";
 
 
 const config = {
-  extensions: [".svelte", ".md", ".svx"],
+  extensions: [".svelte", ".svx", ".md"],
 
   kit: {
     adapter: adapter({
@@ -38,6 +39,12 @@ const config = {
       extensions: [".md", ".svx"],
       remarkPlugins: [
         remarkMath,
+        () => tree => visit(tree, "code", node => {
+          if (node.lang !== "desmos") return;
+
+          /* NOTE: Need extra escaping since otherwise MDsveX removes them :skull: */
+          node.value = node.value.replaceAll("\\", "\\\\");
+        }),
       ],
       rehypePlugins: [
         rehypeKatex,
