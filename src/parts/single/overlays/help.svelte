@@ -5,11 +5,11 @@
 import { nav_state, Docs } from "#scripts/stores";
 
 import {
-  Quickstart,
-  FAQ,
-  Troubleshooting,
-  Glossary,
+  Quickstart, FAQ, Troubleshooting, Glossary,
+  SoundFundamentals,
 } from "#docs";
+
+import { InjectDesmos } from "#parts/poly";
 
 
 let open_page = $derived($nav_state.docs_page);
@@ -36,6 +36,9 @@ let open_page = $derived($nav_state.docs_page);
   {#if      open_page === Docs.FAQ}             <FAQ />
   {:else if open_page === Docs.TROUBLESHOOTING} <Troubleshooting />
   {:else if open_page === Docs.GLOSSARY}        <Glossary />
+
+  {:else if open_page === Docs.SOUND_FUNDAMENTALS}
+    <InjectDesmos><SoundFundamentals /></InjectDesmos>
 
   {:else}
     <Quickstart />
