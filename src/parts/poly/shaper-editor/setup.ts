@@ -1,10 +1,11 @@
-import { INTERNAL } from "#scripts/const";
-
+import { prefs } from "#scripts/stores";
+import type { GraphBounds, Shaper } from "#scripts/types";
 import * as util from "#scripts/utils";
-import{ ltx } from "#scripts/utils";
-import type { Shaper, GraphBounds } from "#scripts/types";
+import { ltx } from "#scripts/utils";
 
-import { Func, Id } from "./expressions";
+import { Func } from "./expressions";
+
+import { get } from "svelte/store";
 
 
 /**
@@ -50,7 +51,7 @@ export function sync_helpers(
   { x: [x_lower, x_upper] }: GraphBounds,
 )
 {
-  const w = INTERNAL.SHAPER_SAMPLE_RES - 1;
+  const w = get(prefs).SHAPER_SAMPLE_RES - 1;
 
   let amps = window.HelperExpression({
     latex: ltx `${Func.SAMPLER}(${x_lower} + (${x_upper} - ${x_lower}) * [0...${w}] / ${w})`

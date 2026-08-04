@@ -3,6 +3,7 @@ import { persisted } from "svelte-persisted-store";
 import type { int } from "#scripts/types";
 
 
+/** Global user settings, including technicals and preferences. */
 export interface UserPrefs
 {
   ADVANCED_FEATURES: boolean
@@ -14,6 +15,7 @@ export interface UserPrefs
 }
 
 
+/** Global user settings, including technicals and preferences. */
 export const prefs = persisted<UserPrefs>("awx.prefs",
 {
   ADVANCED_FEATURES: false,

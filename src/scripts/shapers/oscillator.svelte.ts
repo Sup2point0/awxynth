@@ -1,9 +1,10 @@
-import { Shaper, ShaperInstance } from "#scripts/types";
-
 import * as PRESETS from "#scripts/const/presets";
-import { SHAPER_SAMPLE_RES } from "#scripts/const/internal";
-import ltx from "#scripts/utils";
+import { prefs } from "#scripts/stores";
 import type { GraphBounds, int } from "#scripts/types";
+import { Shaper, ShaperInstance } from "#scripts/types";
+import ltx from "#scripts/utils";
+
+import { get } from "svelte/store";
 
 
 export class OscillatorShaper
@@ -51,6 +52,7 @@ export class OscillatorInstance
 
   update()
   {
+    const RES = get(prefs).SHAPER_SAMPLE_RES;
     const frame_count = Math.round(this.ctx.sampleRate / this.freq);
 
     let buffer = new AudioBuffer({
@@ -63,7 +65,7 @@ export class OscillatorInstance
 
     for (let i = 0; i < frame_count; i++) {
       let progress = this.freq * i / this.ctx.sampleRate;
-      let idx = (progress * SHAPER_SAMPLE_RES) % SHAPER_SAMPLE_RES;
+      let idx = (progress * RES) % RES;
 
       channel[i] = this.shaper.amps[Math.floor(idx)];
     }
