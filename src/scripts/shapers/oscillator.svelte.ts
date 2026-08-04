@@ -11,8 +11,8 @@ export class OscillatorShaper
   extends Shaper<OscillatorShaper, OscillatorInstance>
 {
   override bounds = {
-    x: [0, ltx `2\pi`], x_pi: true,
-    y: [-1, 1],
+    x: [0.0, ltx `2\pi`], x_pi: true,
+    y: [-1.0, 1.0],
   } as GraphBounds
   
   override params = {

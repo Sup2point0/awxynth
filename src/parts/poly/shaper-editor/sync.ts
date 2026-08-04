@@ -116,7 +116,7 @@ function clear_user_expressions(window: Desmos.Calculator)
     window
     .getExpressions()
     .filter(expr => expr.id != undefined)
-    .filter(expr => !expr.id?.startsWith(INTERNAL_ID_PREFIX))
+    .filter(expr => !expr.id!.startsWith(INTERNAL_ID_PREFIX))
     .map(expr => expr as { id: string })
   ;
 

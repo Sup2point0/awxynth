@@ -16,9 +16,9 @@ import { get } from "svelte/store";
 export function desmos_window(
   el_window: HTMLElement,
   {
-    x: [x_lower, x_upper], x_pi,
-    y: [y_lower, y_upper], y_pi,
-  }: GraphBounds,
+    x_pi = false,
+    y_pi = false
+  }: GraphBounds
 ): Desmos.Calculator
 {
   let window = Desmos.GraphingCalculator(el_window, {
@@ -33,11 +33,6 @@ export function desmos_window(
     yAxisNumbers: false, yAxisStep: y_pi ? (Math.PI / 2) : 1,
   });
 
-  window.setMathBounds({
-    left:   x_lower, right: x_upper,
-    bottom: y_lower, top:   y_upper,
-  });
-
   return window;
 }
 
@@ -48,10 +43,10 @@ export function desmos_window(
 export function sync_helpers(
   window: Desmos.Calculator,
   shaper: Shaper,
-  { x: [x_lower, x_upper] }: GraphBounds,
 )
 {
   const w = get(prefs).SHAPER_SAMPLE_RES - 1;
+  let { x: [x_lower, x_upper] } = shaper.bounds;
 
   let amps = window.HelperExpression({
     latex: ltx `${Func.SAMPLER}(${x_lower} + (${x_upper} - ${x_lower}) * [0...${w}] / ${w})`
