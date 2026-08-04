@@ -16,8 +16,8 @@ export enum Docs {
   TROUBLESHOOTING = "Troubleshooting",
   GLOSSARY        = "Glossary",
 
-  // TECHNICALS         = "Group:Technicals",
-  // SOUND_FUNDAMENTALS = "Fundamentals of Sound",
+  TECHNICALS         = "Group:Technicals",
+  SOUND_FUNDAMENTALS = "Fundamentals of Sound",
   // GRAPH_FUNDAMENTALS = "Fundamentals of Graphs",
   // CLIPPING           = "To Clip or Not To Clip?",
 }

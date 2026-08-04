@@ -88,15 +88,6 @@ nav {
 
 article {
   padding-left: $nav-width;
-
-  &.faq, &.troubleshooting {
-    :global(h3) {
-      margin: 2.5em 0 0.5em;
-      @include font-body;
-      color: $col-trit;
-      font-weight: normal;
-    }
-  }
 }
 
 :global(.glossary-layout) {

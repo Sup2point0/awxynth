@@ -19,6 +19,13 @@ article {
     border-bottom: 1px solid rgb(white, 10%);
   }
 
+  h3 {
+    margin: 2.5em 0 0.5em;
+    @include font-body;
+    color: $col-blue;
+    font-weight: normal;
+  }
+
   p, li {
     margin-bottom: 1em;
     @include font-body;
