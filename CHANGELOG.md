@@ -1,16 +1,13 @@
 # Changelog
 
-<!--
-
-Fix:
-
-Todo:
-• white for preset name when applied, grey when changed
-
--->
-
 
 <div class="changelog-layout">
+
+
+## 4 August 2026
+
+### ***Feature***
+Additional parameters for shapers have been implemented, so now you can tweak the duration of envelopes!
 
 
 ## 3 August 2026
@@ -25,7 +22,7 @@ Those $\text{NaN}$ values were only being sanitised when clipping was enabled fo
 $\text{NaN}$ values are now treated as $0$ to avoid crashing the synth for functions with undefined points.
 
 ### *Fix*
-Attempted to diagnose an issue with the Analyser Pane crashing.
+Attempted to diagnose an issue with the Master Pane crashing.
 
 
 ## 27 July 2026
@@ -37,7 +34,7 @@ Fleshed out the overlay screen for adding new shapers.
 Degrade gracefully instead of crashing when Desmos API is not available.
 
 ### *Fix*
-Fix positioning of Analyser Pane.
+Fixed positioning of Master Pane.
 
 
 ## 26 July 2026

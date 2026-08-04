@@ -40,13 +40,12 @@ export function window_bounds(
     y: [bottom, top],
   } = shaper.bounds;
 
-  window.setMathBounds({
-    left,
-    right,
-    // bottom: `${bottom} - 0.05`,
-    bottom: `0 - 0.05`,
-    top: `${top} + 0.05`,
-  });
+  if (shaper.bounds.pad_y) {
+    bottom -= 0.05;
+    top += 0.05;
+  }
+
+  window.setMathBounds({ left, right, bottom, top });
 }
 
 
