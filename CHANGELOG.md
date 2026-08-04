@@ -7,7 +7,10 @@
 ## 4 August 2026
 
 ### ***Feature***
-Additional parameters for shapers have been implemented, so now you can tweak the duration of envelopes!
+Additional parameters for shapers have been implemented. You can now tweak the duration of envelopes!
+
+### ***Feature***
+**Fundamentals of Sound** help pages have now been fleshed out, complete with Desmos embeds, so you can learn all about how sound works!
 
 
 ## 3 August 2026

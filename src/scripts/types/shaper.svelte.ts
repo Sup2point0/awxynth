@@ -1,4 +1,3 @@
-import { defaults } from "#scripts/const";
 import { Colour } from "#scripts/types";
 import type { Amplitude, GraphBounds, Scalar, ScheduledTime, ShaperPreset } from "#scripts/types";
 

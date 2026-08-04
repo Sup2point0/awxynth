@@ -21,7 +21,6 @@ export const Docs: Record<string, {
       Glossary,
     },
   },
-
   sound_fundamentals: {
     title: "Fundamentals of Sound",
     pages: {
