@@ -55,15 +55,20 @@ export function sync_helpers(
   amps.observe("listValue", () => {
     if (amps.listValue == undefined) return;
     let data = amps.listValue;
-    shaper.amps = shaper.clip_on ? util.clip(data) : util.sanitise(data);
+
+    shaper.update(s => {
+      s.amps = shaper.clip_on ? util.clip(data) : util.sanitise(data);
+    });
   });
   
   amps.observe("numericValue", () => {
     if (amps.numericValue == undefined) return;
     if (Number.isNaN(amps.numericValue)) return;
-
     let data = [amps.numericValue, amps.numericValue];
-    shaper.amps = shaper.clip_on ? util.clip(data) : util.sanitise(data);
+
+    shaper.update(s => {
+      s.amps = shaper.clip_on ? util.clip(data) : util.sanitise(data);
+    });
   });
 
   for (let [key, label] of Object.entries(shaper.params)) {
@@ -76,7 +81,9 @@ export function sync_helpers(
       if (Number.isNaN(param.numericValue)) return;
 
       // @ts-ignore (`key :: keyof shaper`)
-      shaper[key] = param.numericValue;
+      shaper.update(s => {
+        s[key] = param.numericValue;
+      });
     });
   }
 }

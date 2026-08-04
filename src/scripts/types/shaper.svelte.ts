@@ -27,10 +27,10 @@ export abstract class Shaper<
 
 
   /** Displayed name of the shaper. */
-  title: string = "SHAPER"
+  readonly title: string = "SHAPER"
 
   /** Colour associated with the shaper for title and graph. */
-  colour: string = Colour.GREEN
+  readonly colour: string = Colour.GREEN
 
   /** Graph bounds for the shaper function. Must be `$state()` if they can be changed! */
   bounds: GraphBounds = $state({
@@ -41,16 +41,17 @@ export abstract class Shaper<
   /** Desmos variable names of additional shaper parameters shaper such as 'mix' or 'duration'.
    * 
    * A mapping from `key` to `name`, where `shaper[key]` is an existing property and the Desmos variable controlling it is $\phi_{name}$. */
-  params: Record<string, string> = {
+  readonly params: Record<string, string> = {
     mix: "mix"
   }
 
   /** The presets made for this shaper. */
-  abstract presets: Record<string, ShaperPreset[]>
+  abstract readonly presets: Record<string, ShaperPreset[]>
 
   /** The default preset to initialise the shaper with. */
-  abstract preset: ShaperPreset
+  abstract readonly preset: ShaperPreset
 
+  /** Subscriber callbacks. */
   #subscribers: Array<(self: Original) => void> = []
 
 
@@ -68,6 +69,15 @@ export abstract class Shaper<
   abstract create(ctx: AudioContext, ...args: any[]): Instance;
 
   /**
+   * Update fields of the shaper, applying all subscribers afterwards.
+   */
+  update(updater: (self: Original) => void): void
+  {
+    updater(this as unknown as Original);
+    this.update_subscribers();
+  }
+
+  /**
    * Subscribe to changes on this `Shaper`.
    */
   subscribe(callback: (self: Original) => void)
@@ -80,6 +90,8 @@ export abstract class Shaper<
    */
   protected update_subscribers()
   {
+    // FIXME maybe callbacks don't need shaper as parameter, since only shaper instances subscribe
+    //       and they already hold a reference to the original shaper
     for (let subscriber of this.#subscribers) {
       subscriber(this as unknown as Original);
     }
@@ -99,15 +111,20 @@ export abstract class ShaperInstance<
 >
 {
   /** Reference to the `Shaper` that created this instance. */
-  shaper: Original;
+  shaper: Original
 
-  ctx: AudioContext;
+  ctx: AudioContext
 
   /** Backing `AudioNode` to apply settings to.
    * 
    * `null` if this shaper instance does not require an individual node (it might influence the pipeline in different ways).
    */
-  node: Node;
+  node: Node
+
+  /**
+   * When this shaper instance was created.
+   */
+  started_at: ScheduledTime
 
 
   constructor(ctx: AudioContext, node: Node, shaper: Original)
@@ -115,6 +132,7 @@ export abstract class ShaperInstance<
     this.ctx = ctx;
     this.node = node;
     this.shaper = shaper;
+    this.started_at = ctx.currentTime;
   }
 
 
