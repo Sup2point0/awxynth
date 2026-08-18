@@ -15,5 +15,10 @@ export default defineConfig(
   plugins: [sveltekit()],
   test: {
     globals: true,
-  }
+  },
+  server: {
+    fs: {
+      allow: [".."],
+    },
+  },
 });

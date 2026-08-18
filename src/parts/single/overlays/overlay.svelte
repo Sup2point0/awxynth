@@ -1,4 +1,7 @@
-<!-- @component Overlay -->
+<!-- @component `<Overlay>`
+ 
+The globally active overlay.
+-->
 
 <script lang="ts">
 
