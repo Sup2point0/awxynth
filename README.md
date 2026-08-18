@@ -6,9 +6,7 @@
 
 If you’ve ever made a cool-looking graph and wondered, “hmm, what would this sound like?”, this is exactly what you’re looking for.
 
-Visit [sup2point0.github.io/awxynth](https://github.com/Sup2point0/awxynth) to use it!
-
-Help, FAQ and tutorials are available via the navbar.
+Check it out at [sup2point0.github.io/awxynth](https://github.com/Sup2point0/awxynth)!
 
 
 <br>
@@ -17,13 +15,13 @@ Help, FAQ and tutorials are available via the navbar.
 ## Features
 
 - Virtual piano keyboard for playing notes
-- Builtin effects like distortion, compression, detune
+- Builtin effects like distortion
 - Tons of presets
 - Frequency spectrum visualiser
 - Straightforward and efficient UI/UX
 
 ### Future
-- Echo + reverb effects
+- More effects (compression, reverb, echo)
 - Persisted user preferences
 - Parameter routing and automation
 - Export to external format
@@ -56,6 +54,10 @@ Personal project so I probably won’t take contributions, but if you have a fea
 
 
 ## Generative AI
+
+<a href="https://brainmade.org">
+  <img align="right" height="40" src=".github/brainmade-black.svg" />
+</a>
 
 All handcoded and handwritten <3
 
