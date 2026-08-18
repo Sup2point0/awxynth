@@ -4,6 +4,12 @@
 <div class="changelog-layout">
 
 
+## 18 August 2026
+
+### *Fix*
+Awxynth now uses [Desmost](https://github.com/Sup2point0/desmost) for Desmos rendering in help pages, enabling much fancier visuals!
+
+
 ## 4 August 2026
 
 ### ***Feature***
