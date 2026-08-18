@@ -6,7 +6,8 @@ If your waveform has no movement at all, you won’t hear anything! $f(t) = 1$ i
 ```desmos
 /dark
 /desmos{
-  expressionsCollapsed: true
+  expressionsCollapsed: true,
+  settingsMenu: false,
 }
 /hide :: f(x) = 1
 
@@ -25,7 +26,8 @@ It’s just a useful way to think about oscillation! In the real world, whether 
 ```desmos
 /dark
 /desmos{
-  expressionsCollapsed: true
+  expressionsCollapsed: true,
+  settingsMenu: false,
 }
 /hide :: f(x) = \sin(x)
 
@@ -42,7 +44,8 @@ t = \{ t_2 < 0:\ 2\pi - t_1,\ t_1 \}
 ```desmos
 /dark
 /desmos{
-  expressionsCollapsed: true
+  expressionsCollapsed: true,
+  settingsMenu: false,
 }
 /hide :: f(x) = \sin(x-\pi)
 
