@@ -1,11 +1,14 @@
-<!-- @component `Docss` -->
+<!-- @component `<Docs>`
+
+The overlay of help pages.
+-->
 
 <script lang="ts">
 
+import Desmost from "desmost/svelte";
+
 import { nav_state } from "#scripts/stores";
 import { Docs, type DocsPageData } from "#scripts/const";
-
-import { InjectDesmos } from "#parts/poly";
 
 
 let [open_page, Page]: DocsPageData = $derived($nav_state.docs_page);
@@ -33,9 +36,9 @@ let [open_page, Page]: DocsPageData = $derived($nav_state.docs_page);
 <article class={open_page.toLowerCase().replaceAll(" ", "-")}>
   {#if Page}
     {#key open_page}
-      <InjectDesmos>
+      <Desmost height="20rem" style="margin: 1rem 0">
         <Page />
-      </InjectDesmos>
+      </Desmost>
     {/key}
   {/if}
 </article>
