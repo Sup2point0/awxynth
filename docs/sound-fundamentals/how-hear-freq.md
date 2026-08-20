@@ -44,6 +44,7 @@ Here’s a demonstration so you can see for yourself this is real. As you increa
 
 ```desmos
 /desmos{
+  expressionsCollapsed: false,
   expressionsTopbar: true,
 }
 
