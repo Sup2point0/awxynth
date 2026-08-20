@@ -18,10 +18,10 @@ onMount(() => {
 });
 
 
-function close()
+async function close()
 {
   open = false;
-  synth.init();
+  await synth.init();
 }
 
 </script>

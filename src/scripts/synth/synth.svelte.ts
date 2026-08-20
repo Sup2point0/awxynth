@@ -5,6 +5,8 @@ import { INTERNAL, defaults, NOTE_FREQUENCIES, MIN_OCTAVE, MAX_OCTAVE } from "#s
 import { Note } from "#scripts/types";
 import type { Octave, Scalar, OctavedNoteRepr, ScheduledTime } from "#scripts/types";
 
+import DistortionWorklet from "#scripts/shapers/distortion.worklet.ts?worker&url";
+
 import { SvelteMap } from "svelte/reactivity";
 
 
@@ -42,7 +44,7 @@ export class Synth
   /**
    * Setup the synthesiser client-side with its `AudioContext`.
    */
-  init()
+  async init()
   {
     if (this.ctx != undefined) return;
 
@@ -51,6 +53,8 @@ export class Synth
     this.analyser = new AnalyserNode(this.ctx, { fftSize: 4096 * 2 });
 
     this.ctx.resume();
+    await this.ctx.audioWorklet.addModule(DistortionWorklet);
+
     this.master.connect(this.analyser);
     this.master.connect(this.ctx.destination);
   }

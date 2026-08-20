@@ -8,11 +8,9 @@ export class DistortionShaper
   extends Shaper<DistortionShaper, DistortionInstance>
 {
   override colour = Colour.RED
-
   override clip_on = $state(true)
 
   presets = PRESETS.distortions
-
   preset = $state(PRESETS.distortions.builtins[0])
 
 
@@ -29,21 +27,21 @@ export class DistortionShaper
 
 
 export class DistortionInstance
-  extends ShaperInstance<DistortionShaper, DistortionInstance, WaveShaperNode>
+  extends ShaperInstance<DistortionShaper, DistortionInstance, AudioWorkletNode>
 {
   constructor(ctx: AudioContext, shaper: DistortionShaper)
   {
-    super(ctx, new WaveShaperNode(ctx), shaper);
-    this.node.oversample = "2x";
+    super(ctx, new AudioWorkletNode(ctx, "Distortion"), shaper);
+    // this.node.oversample = "2x";
     this.update();
   }
 
 
   update()
   {
-    this.node.curve = new Float32Array([
-        ...this.shaper.amps.slice(1).toReversed().map(a => -a),
-        ...this.shaper.amps
-    ]);
+    // this.node.curve = new Float32Array([
+    //     ...this.shaper.amps.slice(1).toReversed().map(a => -a),
+    //     ...this.shaper.amps
+    // ]);
   }
 }
