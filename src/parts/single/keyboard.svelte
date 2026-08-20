@@ -40,7 +40,7 @@ $total-notes: $degrees * $octaves;
 
 $note-gap: 0.12rem;
 $note-width: calc((100vw / $total-notes) - $note-gap);
-$note-height: 7vh;
+$note-height: max(7vh, 3rem);
 
 
 .keyboard {
@@ -73,7 +73,7 @@ $note-height: 7vh;
 
   &.black {
     width: calc($note-width * 0.65);
-    height: $note-height * 0.6;
+    height: calc($note-height * 0.6);
     position: absolute;
     top: 0;
     left: $note-width;
