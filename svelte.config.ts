@@ -19,9 +19,11 @@ const config = {
       strict: true,
     }),
     paths: {
+      // @ts-expect-error: internal
       base: process.argv.includes("dev") ? "" : process.env.BASE_PATH
     },
     alias: {
+      "#rust":    "./rust/",
       "#src":     "./src/",
       "#parts":   "./src/parts/",
       "#styles":  "./src/styles/",

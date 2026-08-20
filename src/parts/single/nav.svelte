@@ -2,6 +2,8 @@
 
 <script lang="ts">
 
+import { test } from "#rust/pkg/awxynth_audio_engine";
+
 import { synth } from "#scripts/synth";
 import { nav_state, OverlayPage } from "#scripts/stores";
 
@@ -31,7 +33,7 @@ function overlay(page: OverlayPage)
       <span>Master</span>
     </button>
 
-    <button class="clicky toggle">
+    <button class="clicky toggle" onclick={() => test("sup")}>
       <span>Developing!</span>
     </button>
   </div>
