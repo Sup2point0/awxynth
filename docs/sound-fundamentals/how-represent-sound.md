@@ -3,10 +3,6 @@
 So the air particles are oscillating, great. We can plot those oscillations over time as a graph, like so:
 
 ```desmos
-/dark
-/desmos{
-  expressionsCollapsed: true,
-}
 /viewport{ bottom: -2, top: 2 }
 
 y = \sin(x)
@@ -17,10 +13,6 @@ Here, the $x$-axis is time, and the $y$-axis is *displacement*, meaning how far 
 As a soundwave propogates through the air, the particles it passes through oscillate following the waveform. Animating this will make it a little clearer:
 
 ```desmos
-/dark
-/desmos{
-  expressionsCollapsed: true,
-}
 /viewport{ bottom: -2, top: 2 }
 
 /colour{ BLUE } /no-line :: \min(0,\ \sin(x-3t))\le y\le\max(0,\ \sin(x-3t))\ \{0\le x\}
@@ -38,10 +30,6 @@ It’s just like ocean waves – imagine you’re swimming in the ocean and wave
 Waveforms can look however we want, and interesting waveforms are how we get interesting sounds!
 
 ```desmos
-/dark
-/desmos{
-  expressionsCollapsed: true,
-}
 /viewport{ bottom: -2, top: 2 }
 
 /hide :: f(x) = \sum_{n=1}^{4}\frac{1}{n}\sin(n^{2}x)

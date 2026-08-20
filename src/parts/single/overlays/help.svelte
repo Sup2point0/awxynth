@@ -36,7 +36,15 @@ let [open_page, Page]: DocsPageData = $derived($nav_state.docs_page);
 <article class={open_page.toLowerCase().replaceAll(" ", "-")}>
   {#if Page}
     {#key open_page}
-      <Desmost height="20rem" style="margin: 1rem 0">
+      <Desmost lazy
+        height="20rem"
+        style="margin: 1rem 0"
+        settings={{
+          invertedColors: true,
+          expressionsCollapsed: true,
+          settingsMenu: false,
+        }}
+      >
         <Page />
       </Desmost>
     {/key}

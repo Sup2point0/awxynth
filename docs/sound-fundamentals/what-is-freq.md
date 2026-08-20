@@ -7,11 +7,6 @@ It comes down to the ***frequency*** of the waveform. Frequency describes how of
 In sound, frequency describes how often the waveform **repeats**. For instance, take a look at the signal below; notice how it’s formed of the same waveform repreated over and over:
 
 ```desmos
-/dark
-/desmos{
-  expressionsCollapsed: true,
-}
-
 -\frac{\pi}{f}\le x\le\frac{\pi}{f}
 y = \sin(fx)
 f = 4
@@ -22,11 +17,6 @@ If in the span of 1 second we have 440 cycles, then the frequency of our overall
 If we decrease the frequency, see what happens:
 
 ```desmos
-/dark
-/desmos{
-  expressionsCollapsed: true,
-}
-
 -\frac{\pi}{f}\le x\le\frac{\pi}{f}
 y = \sin(fx)
 f = 2
@@ -37,11 +27,6 @@ The waveform becomes ‘stretched’, because the particles oscillate slower.
 On the flip side, if we increase the frequency:
 
 ```desmos
-/dark
-/desmos{
-  expressionsCollapsed: true,
-}
-
 -\frac{\pi}{f}\le x\le\frac{\pi}{f}
 y = \sin(fx)
 f = 8
@@ -52,11 +37,6 @@ The waveform appears to ‘compress’, as the particles oscillate extremely fas
 Pretty simple, right? If it oscillates slowly, it’s low-pitched (low frequency), if it oscillates quickly, it’s high-pitched (high frequency).
 
 ```desmos
-/dark
-/desmos{
-  expressionsCollapsed: true,
-}
-
 /hide :: f_1(x) = 2+\sin(6x)
 /line{ opacity: 0.2 } :: y = f_1(x-3t)\{x<0\}
 y = f_1(x-3t)\{x>0\}
