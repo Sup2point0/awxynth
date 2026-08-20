@@ -19,7 +19,7 @@
   "dependencies":
   {
     "@sup2.0/weighted-list": "^0.2",
-    "desmost": "^0.5"
+    "desmost": "^0.6"
   },
 
   "devDependencies":
