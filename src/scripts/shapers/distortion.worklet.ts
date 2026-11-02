@@ -1,5 +1,13 @@
 class DistortionWorkletProcessor extends AudioWorkletProcessor
 {
+  static get parameterDescriptors() {
+    return [
+      {
+        name: "amps",
+      }
+    ];
+  }
+
   process(
     inputs: Float32Array[][],
     outputs: Float32Array[][],
@@ -9,6 +17,8 @@ class DistortionWorkletProcessor extends AudioWorkletProcessor
     let input = inputs.at(0);
     let output = outputs.at(0);
     if (input == undefined || output == undefined) return false;
+
+    let shaper_samples = 
 
     if (input.length != output.length) return false;
 

@@ -32,16 +32,15 @@ export class DistortionInstance
   constructor(ctx: AudioContext, shaper: DistortionShaper)
   {
     super(ctx, new AudioWorkletNode(ctx, "Distortion"), shaper);
-    // this.node.oversample = "2x";
     this.update();
   }
 
 
   update()
   {
-    // this.node.curve = new Float32Array([
-    //     ...this.shaper.amps.slice(1).toReversed().map(a => -a),
-    //     ...this.shaper.amps
-    // ]);
+    this.node.curve = new Float32Array([
+        ...this.shaper.amps.slice(1).toReversed().map(a => -a),
+        ...this.shaper.amps
+    ]);
   }
 }

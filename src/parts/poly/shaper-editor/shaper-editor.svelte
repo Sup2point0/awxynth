@@ -227,21 +227,19 @@ function toggle_ghost()
   <div class="embeds">
     {#if no_desmos}
       <p> Uh oh, failed to load Desmos embeds! Try checking your internet connection and reloading the page? </p>
-    
-    {:else}
-      <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-      <!-- svelte-ignore a11y_no_static_element_interactions -->
-      <div class="editor"
-        bind:this={el_editor}
-        onmousedown={start_active_syncing}
-        onmouseup={stop_active_syncing}>
-      </div>
-
-      <div class="window"
-        bind:this={el_window}>
-      </div>
-    
     {/if}
+    
+    <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+    <!-- svelte-ignore a11y_no_static_element_interactions -->
+    <div class="editor"
+      bind:this={el_editor}
+      onmousedown={start_active_syncing}
+      onmouseup={stop_active_syncing}>
+    </div>
+
+    <div class="window"
+      bind:this={el_window}>
+    </div>
   </div>
 </div>
 

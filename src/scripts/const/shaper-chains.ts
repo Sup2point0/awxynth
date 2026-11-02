@@ -73,7 +73,7 @@ export const SHAPER_CHAINS: Record<string, ShaperChain[]> =
     EnvelopeChain,
     DistortionChain,
   ],
-  "One-Off": [
+  "Singular": [
     DetuneChain,
   ],
 };
